@@ -8,7 +8,9 @@ on:
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    
     steps:
       - name: Kód letöltése
         uses: actions/checkout@v4
