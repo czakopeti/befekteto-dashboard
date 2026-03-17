@@ -317,7 +317,8 @@ def calc_corr_prob(data):
     if isinstance(rec, (int, float)):
         if rec > 20:   p += 25   # Komoly recessziós kockázat
         elif rec > 12: p += 12   # Sárga figyelmeztetés (volt: >15)
-    if regime == "recession_watch": p += 20  # extra kockázat
+_regime = detect_regime(data)
+if _regime == "recession_watch": p += 20  # extra kockázat
     if isinstance(skew,(int,float)):
         if skew>150: p+=10
         elif skew>145: p+=5
