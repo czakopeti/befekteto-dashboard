@@ -1,1 +1,12 @@
-{"last_run":"2026-03-17T12:48:25","status":"CRASHED","errors":[{"source":"script","error":"Script crashed before error_log was created. Check FRED_API_KEY secret!"}],"success_count":0}
+{
+  "last_run": "2026-03-17T13:02:58.822491",
+  "status": "CRASHED",
+  "errors": [
+    {
+      "source": "FATAL",
+      "error": "name 'regime' is not defined",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/befekteto-dashboard/befekteto-dashboard/auto_update.py\", line 777, in <module>\n    main()\n  File \"/home/runner/work/befekteto-dashboard/befekteto-dashboard/auto_update.py\", line 751, in main\n    cp      = calc_corr_prob(data)\n              ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/befekteto-dashboard/befekteto-dashboard/auto_update.py\", line 320, in calc_corr_prob\n    if regime == \"recession_watch\": p += 20  # extra kock\u00e1zat\n     "
+    }
+  ],
+  "success_count": 0
+}
