@@ -52,5 +52,22 @@
     "recProb": 0.8,
     "fedNetLiq": 5808.0,
     "cnnFG": 23
+  },
+  {
+    "date": "2026-03-17",
+    "spx": 6737,
+    "entryScore": 93,
+    "corrProb": 15,
+    "regime": "extreme_fear",
+    "kellyAlloc": 61,
+    "vix": 22.6,
+    "hySpread": 3.27,
+    "breadth": 34,
+    "cnnFG": 23,
+    "yieldCurve": 55,
+    "recProb": 0.8,
+    "leiSignal": "bull",
+    "m2Yoy": 4.0,
+    "cgTrend": "bear"
   }
 ]

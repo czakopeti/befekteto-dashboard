@@ -1,248 +1,188 @@
 <!DOCTYPE html>
-<html lang="hu">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="hu"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="refresh" content="3600">
-<title>Befekteto Dashboard v3 – 2026. March 17.</title>
+<title>Befekteto Dashboard v4 – 2026. March 17.</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-:root{
-  --bg:#03050a;--bg2:#080c14;--bg3:#0d1522;--b:#162030;
-  --t:#c0d0e8;--m:#3a5068;--d:#101828;
+:root{--bg:#03050a;--bg2:#080c14;--bg3:#0d1522;--b:#162030;--t:#c0d0e8;--m:#3a5068;--d:#101828;
   --bull:#00c878;--neu:#f0a500;--bear:#f03050;--purple:#a78bfa;
-  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif
-}
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;padding:18px 22px 48px}
-.w{max-width:1180px;margin:0 auto}
-.hdr{display:flex;justify-content:space-between;gap:14px;padding-bottom:11px;border-bottom:1px solid var(--b);margin-bottom:11px}
-.hdr h1{font-size:15px;font-weight:700} .hdr h1 em{color:var(--bull);font-style:normal}
-.ab{font-family:var(--mono);font-size:8.5px;padding:3px 9px;border-radius:20px;background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.2);display:inline-flex;align-items:center;gap:5px;margin-top:4px}
+body{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;padding:16px 20px 48px}
+.w{max-width:1200px;margin:0 auto}
+.hdr{display:flex;justify-content:space-between;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--b);margin-bottom:10px}
+.hdr h1{font-size:14px;font-weight:700} .hdr h1 em{color:var(--bull);font-style:normal}
+.ab{font-family:var(--mono);font-size:8px;padding:3px 9px;border-radius:20px;background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.2);display:inline-flex;align-items:center;gap:5px;margin-top:4px}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--bull);animation:blink 1.5s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.sb2{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;color:#f0a500;border:1px solid #f0a50040;background:#f0a50010}
+.sb2{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;color:#00c878;border:1px solid #00c87840;background:#00c87810}
 .hm{font-family:var(--mono);font-size:9px;color:var(--m);line-height:1.9;margin-top:3px} .hm b{color:var(--neu)}
-.hero{border-radius:11px;padding:17px 22px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.meta-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.meta-tag{font-family:var(--mono);font-size:8.5px;padding:3px 10px;border-radius:20px;border:1px solid var(--b);background:var(--bg2);color:var(--m)}
+.regime-bull{color:var(--bull);background:rgba(0,200,120,.07);border-color:rgba(0,200,120,.2)}
+.regime-neutral{color:var(--neu);background:rgba(240,165,0,.06);border-color:rgba(240,165,0,.15)}
+.regime-fear{color:var(--bear);background:rgba(240,48,80,.07);border-color:rgba(240,48,80,.18)}
+.season-strong{color:var(--bull);background:rgba(0,200,120,.06);border-color:rgba(0,200,120,.15)}
+.season-weak{color:var(--bear);background:rgba(240,48,80,.06);border-color:rgba(240,48,80,.15)}
+.hero{border-radius:11px;padding:16px 22px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
 .hero.go{background:rgba(0,200,120,.07);border:1.5px solid rgba(0,200,120,.25)}
 .hero.wait{background:rgba(240,165,0,.06);border:1.5px solid rgba(240,165,0,.2)}
 .hero.stop{background:rgba(240,48,80,.07);border:1.5px solid rgba(240,48,80,.2)}
-.hi{font-size:40px;line-height:1}
+.hi{font-size:38px;line-height:1}
 .hv{font-size:17px;font-weight:700;margin-bottom:3px}
 .hero.go .hv{color:var(--bull)} .hero.wait .hv{color:var(--neu)} .hero.stop .hv{color:var(--bear)}
-.he{font-size:12px;color:var(--m);line-height:1.6;max-width:360px} .he strong{color:var(--t)}
+.he{font-size:12px;color:var(--m);line-height:1.6;max-width:380px} .he strong{color:var(--t)}
 .hr{text-align:right} .hs{font-family:var(--mono);font-size:34px;font-weight:700;line-height:1}
 .hero.go .hs{color:var(--bull)} .hero.wait .hs{color:var(--neu)} .hero.stop .hs{color:var(--bear)}
 .hsl{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--m);margin-top:2px}
-.hall{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:5px;color:#f0a500}
+.hall{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:5px;color:#00c878}
 .hkl{font-family:var(--mono);font-size:9px;color:var(--m);margin-top:2px}
-.meta-row{display:flex;gap:7px;margin-bottom:9px;flex-wrap:wrap}
-.meta-tag{font-family:var(--mono);font-size:9px;padding:4px 11px;border-radius:20px;border:1px solid var(--b);background:var(--bg2);color:var(--m)}
-.meta-tag.regime-bull{color:var(--bull);background:rgba(0,200,120,.07);border-color:rgba(0,200,120,.2)}
-.meta-tag.regime-neutral{color:var(--neu);background:rgba(240,165,0,.06);border-color:rgba(240,165,0,.15)}
-.meta-tag.regime-fear{color:var(--bear);background:rgba(240,48,80,.07);border-color:rgba(240,48,80,.18)}
-.meta-tag.season-strong{color:var(--bull);background:rgba(0,200,120,.06);border-color:rgba(0,200,120,.15)}
-.meta-tag.season-weak{color:var(--bear);background:rgba(240,48,80,.06);border-color:rgba(240,48,80,.15)}
-.ew{border-radius:9px;padding:12px 17px;margin-bottom:9px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.ew{border-radius:9px;padding:11px 16px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
 .ew.a{background:rgba(167,139,250,.05);border:1.5px solid rgba(167,139,250,.3);animation:bp 2.5s ease-in-out infinite}
 .ew.i{background:rgba(0,200,120,.03);border:1px solid rgba(0,200,120,.12)}
 @keyframes bp{0%,100%{border-color:rgba(167,139,250,.3)}50%{border-color:rgba(167,139,250,.6)}}
-.ewi{font-size:26px} .ewt{font-size:13px;font-weight:600;margin-bottom:3px}
+.ewi{font-size:24px} .ewt{font-size:12px;font-weight:600;margin-bottom:2px}
 .ew.a .ewt{color:var(--purple)} .ew.i .ewt{color:var(--bull)}
-.ewd{font-size:11px;color:var(--m);line-height:1.6} .ewd strong{color:var(--t)}
-.ewr{text-align:right;flex-shrink:0} .ewp{font-family:var(--mono);font-size:24px;font-weight:700}
+.ewd{font-size:11px;color:var(--m);line-height:1.5} .ewd strong{color:var(--t)}
+.ewr{text-align:right;flex-shrink:0} .ewp{font-family:var(--mono);font-size:22px;font-weight:700}
 .ew.a .ewp{color:var(--purple)} .ew.i .ewp{color:var(--bull)}
 .ewpl{font-family:var(--mono);font-size:8px;color:var(--m);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
-.ig{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
-.ind{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:11px 12px;position:relative;overflow:hidden}
+.sec-hdr{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.18em;color:var(--m);padding:8px 0 6px;border-top:1px solid var(--b);margin-top:6px;display:flex;align-items:center;gap:8px}
+.sec-hdr::after{content:'';flex:1;height:1px;background:var(--b)}
+.sec-badge{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px}
+.sb-now{background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.15)}
+.sb-mid{background:rgba(74,158,255,.08);color:#4a9eff;border:1px solid rgba(74,158,255,.15)}
+.sb-lng{background:rgba(167,139,250,.08);color:var(--purple);border:1px solid rgba(167,139,250,.15)}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:4px}
+.ind{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:10px 12px;position:relative;overflow:hidden}
 .ind::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
-.ind.go::before{background:var(--bull)} .ind.wait::before{background:var(--neu)} .ind.stop::before{background:var(--bear)}
-.it{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.ind.go::before,.ind.bull::before{background:var(--bull)}
+.ind.wait::before,.ind.neutral::before{background:var(--neu)}
+.ind.bear::before,.ind.stop::before{background:var(--bear)}
+.it{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
 .in{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--m)}
 .is{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;white-space:nowrap}
 .s-go{background:rgba(0,200,120,.1);color:var(--bull);border:1px solid rgba(0,200,120,.2)}
 .s-wait{background:rgba(240,165,0,.08);color:var(--neu);border:1px solid rgba(240,165,0,.15)}
 .s-stop{background:rgba(240,48,80,.09);color:var(--bear);border:1px solid rgba(240,48,80,.15)}
 .iv{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1;margin-bottom:2px}
-.ind.go .iv{color:var(--bull)} .ind.wait .iv{color:var(--neu)} .ind.stop .iv{color:var(--bear)}
-.id{font-size:10px;color:var(--m);line-height:1.5} .id b{color:var(--t)}
-.pr{height:2px;background:var(--d);border-radius:2px;margin:5px 0 3px;overflow:hidden}
-.pf{height:100%;border-radius:2px}
-.bt-box{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;background:var(--bg2);border:1px solid var(--b);border-radius:7px;padding:9px 14px;margin-bottom:9px;flex-wrap:wrap}
-.bt-l{color:var(--m)} .bt-s{color:var(--m)} .bt-n{color:var(--m);font-size:9px}
-.stitle{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--m);padding:8px 0 7px;border-top:1px solid var(--b);margin-top:4px;display:flex;align-items:center;gap:8px}
+.ind.go .iv,.ind.bull .iv{color:var(--bull)} .ind.wait .iv,.ind.neutral .iv{color:var(--neu)} .ind.bear .iv,.ind.stop .iv{color:var(--bear)}
+.id{font-size:10px;color:var(--m);line-height:1.4} .id b{color:var(--t)}
+.pr{height:2px;background:var(--d);border-radius:2px;margin:5px 0 3px;overflow:hidden} .pf{height:100%;border-radius:2px}
+.stitle{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--m);padding:8px 0 6px;border-top:1px solid var(--b);margin-top:4px;display:flex;align-items:center;gap:8px}
 .stitle::after{content:'';flex:1;height:1px;background:var(--b)}
-.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;margin-bottom:10px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:10px}
 .sc{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:11px 12px;position:relative;overflow:hidden}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .sc.go::before{background:var(--bull)} .sc.wait::before{background:var(--neu)} .sc.stop::before{background:var(--bear)} .sc.err{opacity:.6}
 .sc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
 .st{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--t)} .sn{font-size:10px;color:var(--m)}
 .ssig{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;white-space:nowrap;align-self:flex-start}
-.sp{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--t);margin-bottom:6px}
-.sg4{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px}
+.sp{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--t);margin-bottom:5px}
+.sg4{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px}
 .si{background:var(--bg3);border-radius:5px;padding:4px 6px}
 .sl2{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:2px}
-.sv{font-family:var(--mono);font-size:11px;font-weight:700}
-.rsi-lo{color:var(--bull)} .rsi-hi{color:var(--bear)}
-.sb-w{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px}
-.sb{height:100%;border-radius:2px}
-.scr{font-family:var(--mono);font-size:9px;color:var(--m)}
-.se{font-family:var(--mono);font-size:9px;color:var(--bear)}
+.sv{font-family:var(--mono);font-size:11px;font-weight:700} .rsi-lo{color:var(--bull)} .rsi-hi{color:var(--bear)}
+.ta-row{font-family:var(--mono);font-size:8.5px;color:var(--m);margin-bottom:5px;padding:3px 0;border-top:1px solid var(--b)}
+.sb-w{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px} .sb{height:100%;border-radius:2px}
+.scr{font-family:var(--mono);font-size:9px;color:var(--m)} .se{font-family:var(--mono);font-size:9px;color:var(--bear)}
 .g2{display:grid;grid-template-columns:3fr 2fr;gap:9px;margin-bottom:9px}
 .panel{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:12px 14px}
 .pt{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--m);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .pt::after{content:'';flex:1;height:1px;background:var(--b)}
-.badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px}
-.bb{background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.16)}
-.bp{background:rgba(167,139,250,.08);color:var(--purple);border:1px solid rgba(167,139,250,.16)}
 .pb{width:100%;border-collapse:collapse;font-size:11px}
 .pb th{padding:6px 8px;font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);border-bottom:1px solid var(--b);text-align:left}
 .pb td{padding:6px 8px;border-bottom:1px solid rgba(22,32,48,.6);vertical-align:top;line-height:1.5}
 .pb tr:last-child td{border-bottom:none}
-.ga{color:var(--bull);font-weight:600} .wa{color:var(--neu);font-weight:600}
-.ba{color:var(--bear);font-weight:600} .ea{color:var(--purple);font-weight:600}
-.eb{background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.18);border-radius:7px;padding:8px 12px;margin-bottom:8px;font-family:var(--mono);font-size:9px;color:var(--m)}
+.ga{color:var(--bull);font-weight:600} .wa{color:var(--neu);font-weight:600} .ba{color:var(--bear);font-weight:600} .ea{color:var(--purple);font-weight:600}
+.bt-box{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;background:var(--bg2);border:1px solid var(--b);border-radius:7px;padding:8px 13px;margin-bottom:8px;flex-wrap:wrap}
+.bt-l{color:var(--m)} .bt-s{color:var(--m)} .bt-n{color:var(--m);font-size:9px}
+.eb{background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.18);border-radius:7px;padding:7px 12px;margin-bottom:8px;font-family:var(--mono);font-size:9px;color:var(--m)}
 .footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--b);font-family:var(--mono);font-size:8.5px;color:var(--m);display:flex;justify-content:space-between;line-height:1.9;gap:20px}
 a{color:#64a0ff}
-@media(max-width:900px){
-  .hero,.g2,.ig{grid-template-columns:1fr}
-  .ew{grid-template-columns:1fr}
-  .ig{grid-template-columns:repeat(2,1fr)}
-}
-</style>
-</head>
-<body>
+@media(max-width:900px){.hero,.g2{grid-template-columns:1fr} .ig{grid-template-columns:repeat(2,1fr)} .ew{grid-template-columns:1fr}}
+</style></head><body>
 <div class="w">
 <div class="hdr">
-  <div>
-    <h1>Befekteto Dashboard <em>v3 · World-Class</em></h1>
-    <div class="ab"><span class="dot"></span> Automatikusan frissitve: 2026. March 17.</div>
-  </div>
-  <div style="text-align:right">
-    <div class="sb2">⬤ 2 forras fallback</div>
-    <div class="hm">Kovetkezo: <b>pentek, March 20.</b> · 11/13 forras</div>
-  </div>
+  <div><h1>Befekteto Dashboard <em>v4 · 3 idohorizont</em></h1>
+    <div class="ab"><span class="dot"></span> Automatikusan frissítve: 2026. March 17.</div></div>
+  <div style="text-align:right"><div class="sb2">⬤ Minden OK</div>
+    <div class="hm">Következő: <b>péntek, March 20.</b> · 12/12 forrás</div></div>
 </div>
-
-<div class="eb">Forras hibak (fallback): EPS, AAII</div>
-
-
+<div class="bt-box"><span class="bt-l">Historikus (signal kovetese):</span><span style="color:#f0a500;font-weight:700">Strategia: +0.0%</span><span class="bt-s">vs</span><span>Buy&Hold: +0.6%</span><span class="bt-n">(4 het)</span></div>
 <div class="meta-row">
-  <div class="meta-tag regime-bull">Bikos (EPS+Breadth dominál)</div>
-  <div class="meta-tag season-strong">Eros szezon (mar) – Nov-Apr avg +7.5%</div>
-  <div class="meta-tag">CBOE Skew: 141.5 OK</div>
-  <div class="meta-tag">Rec.prob: 0.8%</div>
-  <div class="meta-tag">CNN F&G: 23 (extreme fear)</div>
+  <div class="meta-tag regime-fear">Rezsim: EXTREME FEAR</div>
+  <div class="meta-tag season-strong">Eros szezon (már) - Nov-Apr avg +7.5pct</div>
+  <div class="meta-tag">SPX: 6,737 (+0.56%)</div>
+  <div class="meta-tag">VIX term: 0.931 · CNN F&G: 23</div>
+  <div class="meta-tag">LEI: bull · M2: 4.0% · ISM: 50</div>
 </div>
-
-<div class="hero wait">
-  <div class="hi">🟡</div>
-  <div>
-    <div class="hv">VEGYES JELEK – FELEZD MEG A TOKÉT</div>
-    <div class="he">Fektess be <strong>25%</strong>-ot most (Kelly ajánlás), a maradékot ha score 65+ lesz.</div>
-  </div>
-  <div class="hr">
-    <div class="hs">60/100</div>
-    <div class="hsl">Belepesi score</div>
-    <div class="hall">Ajanlott allokacio: 25% SPX / 75% cash</div>
-    <div class="hkl">Kelly-kriterium · Ovatos – kis pozicio</div>
-  </div>
+<div class="hero go">
+  <div class="hi">🟢</div>
+  <div><div class="hv">EXTREME FEAR = KONTRARIAN VETELI JEL</div><div class="he"><strong>Ver folyik az utcan</strong> – CNN F&G: 23. Historikusan az egyik legjobb belepesi pont. Kelly: <strong>61%</strong> SPX.</div></div>
+  <div class="hr"><div class="hs">93/100</div>
+    <div class="hsl">Kompozit belépési score</div>
+    <div class="hall">Ajánlott allokáció: 61% SPX / 39% cash</div>
+    <div class="hkl">Kelly-kritérium · Kontrarian vetel - Extreme Fear</div></div>
 </div>
-
 <div class="ew i">
   <div class="ewi">✅</div>
-  <div>
-    <div class="ewt">Nincs korrekcios figyelmezteto – piac egeszseg</div>
-    <div class="ewd">VIX normalis, EPS pozitiv. Ha pozicioban vagy: <strong>ulj nyugodtan.</strong></div>
-  </div>
-  <div class="ewr">
-    <div class="ewp">23%</div>
-    <div class="ewpl">korrekció esélye</div>
-  </div>
+  <div><div class="ewt">Nincs korrekciós figyelmeztető</div>
+    <div class="ewd">LEI, M2 és hozamgörbe pozitív. Ha pozícióban vagy: <strong>ülj nyugodtan.</strong></div></div>
+  <div class="ewr"><div class="ewp">15%</div><div class="ewpl">korrekció esélye</div></div>
 </div>
-
-<div class="ig"><div class="ind go"><div class="it"><div class="in">EPS Revision</div><div class="is s-go">BULL</div></div><div class="iv">65/100</div><div class="pr"><div class="pf" style="width:65%;background:var(--bull)"></div></div><div class="id">Trend: <b>0/het</b> · rezsim: bull</div></div><div class="ind wait"><div class="it"><div class="in">Forward P/E</div><div class="is s-wait">NEU</div></div><div class="iv">20.0x</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">FY26: <b>FAIR</b> · Fair: 19.5x</div></div><div class="ind wait"><div class="it"><div class="in">VIX</div><div class="is s-wait">NEU</div></div><div class="iv">22.1</div><div class="pr"><div class="pf" style="width:70%;background:var(--neu)"></div></div><div class="id">Heti: <b>-1.4</b> · csokkeno</div></div><div class="ind wait"><div class="it"><div class="in">CBOE Skew (Black Swan)</div><div class="is s-wait">NEU</div></div><div class="iv">141.5</div><div class="pr"><div class="pf" style="width:71%;background:var(--neu)"></div></div><div class="id">Normalis szint</div></div><div class="ind go"><div class="it"><div class="in">Hozamgorbe 10Y-2Y</div><div class="is s-go">BULL</div></div><div class="iv">+55 bp</div><div class="pr"><div class="pf" style="width:100%;background:var(--bull)"></div></div><div class="id"><b>Egeszseg: OK</b></div></div><div class="ind go"><div class="it"><div class="in">Recesszios valoszinuseg</div><div class="is s-go">BULL</div></div><div class="iv">0.8%</div><div class="pr"><div class="pf" style="width:98%;background:var(--bull)"></div></div><div class="id">NY Fed modell · <b>Alacsony</b></div></div><div class="ind stop"><div class="it"><div class="in">Piaci Breadth (>MA50)</div><div class="is s-stop">BEAR</div></div><div class="iv">32%</div><div class="pr"><div class="pf" style="width:32%;background:var(--bear)"></div></div><div class="id"><b>Szukuloe</b></div></div><div class="ind go"><div class="it"><div class="in">HY Credit Spread</div><div class="is s-go">BULL</div></div><div class="iv">3.28%</div><div class="pr"><div class="pf" style="width:67%;background:var(--bull)"></div></div><div class="id"><b>Szuk=OK</b></div></div><div class="ind wait"><div class="it"><div class="in">Put/Call arany</div><div class="is s-wait">NEU</div></div><div class="iv">1.1</div><div class="pr"><div class="pf" style="width:60%;background:var(--neu)"></div></div><div class="id"><b>Semleges</b></div></div><div class="ind wait"><div class="it"><div class="in">AAII Sentiment</div><div class="is s-wait">NEU</div></div><div class="iv">+10</div><div class="pr"><div class="pf" style="width:42%;background:var(--neu)"></div></div><div class="id">Bull:40% Bear:30% · <b>Semleges</b></div></div><div class="ind go"><div class="it"><div class="in">CNN Fear & Greed</div><div class="is s-go">BULL</div></div><div class="iv">23</div><div class="pr"><div class="pf" style="width:23%;background:var(--bull)"></div></div><div class="id"><b>extreme fear</b> · <b style='color:#00c878'>STRONG CONTRARIAN BUY!</b></div></div><div class="ind go"><div class="it"><div class="in">Fed Netto Likviditas</div><div class="is s-go">BULL</div></div><div class="iv">$5808.0B</div><div class="pr"><div class="pf" style="width:56%;background:var(--bull)"></div></div><div class="id"><b>Boseges</b></div></div></div>
-
-<div class="stitle">Sajat reszvenyek – belepesi score es korrekciokockazat</div>
-<div class="sgrid"><div class="sc go"><div class="sc-top"><div><div class="st">AAPL</div><div class="sn">Apple</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$254.86 <span style="color:#00c878;font-size:11px">+0.81%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">85/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-lo">23.6</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+3.7%</div></div><div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:#f0a500">-10.9%</div></div></div><div class="sb-w"><div class="sb" style="width:85%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div>
-<div class="sc go"><div class="sc-top"><div><div class="st">TSLA</div><div class="sn">Tesla</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$397.84 <span style="color:#00c878;font-size:11px">+0.58%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">90/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-lo">38.3</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+1.0%</div></div><div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:#f0a500">-18.8%</div></div></div><div class="sb-w"><div class="sb" style="width:90%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div>
-<div class="sc go"><div class="sc-top"><div><div class="st">NVDA</div><div class="sn">Nvidia</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$183.26 <span style="color:#00c878;font-size:11px">+0.02%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">85/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-lo">38.2</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+3.1%</div></div><div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:#f0a500">-11.5%</div></div></div><div class="sb-w"><div class="sb" style="width:85%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div>
-<div class="sc wait"><div class="sc-top"><div><div class="st">CRWD</div><div class="sn">Crowdstrike</div></div><div class="ssig" style="color:#f0a500;border-color:#f0a50040;background:#f0a50012">VARJ</div></div><div class="sp">$435.23 <span style="color:#00c878;font-size:11px">+2.69%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#f0a500">55/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-hi">78.3</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#f03050">-7.1%</div></div><div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:#f0a500">-21.9%</div></div></div><div class="sb-w"><div class="sb" style="width:55%;background:#f0a500"></div></div><div class="scr">Korr.kockazat: <b style="color:#f0a500">35%</b></div></div></div>
-
+<div class="sec-hdr">MOST – azonnali jelek (1–4 hét) <span class="sec-badge sb-now">TA + hangulat</span></div>
+<div class="ig"><div class="ind wait"><div class="it"><div class="in">VIX Term Structure (VIX/VIX3M)</div><div class="is s-wait">NEU</div></div><div class="iv">0.931</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Flat - figyelem</div></div><div class="ind bull"><div class="it"><div class="in">MACD Hisztogram</div><div class="is s-go">BULL</div></div><div class="iv">-14.02</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Momentum epul</div></div><div class="ind go"><div class="it"><div class="in">RSI + Divergencia (SPX)</div><div class="is s-go">BULL</div></div><div class="iv">33.6</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">RSI:34 - tuladott</div></div><div class="ind neutral"><div class="it"><div class="in">Bollinger Squeeze (SPX)</div><div class="is s-wait">NEU</div></div><div class="iv">5.1%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Szeles (5.1pct)</div></div><div class="ind go"><div class="it"><div class="in">CNN Fear & Greed</div><div class="is s-go">BULL</div></div><div class="iv">23</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">extreme fear · <b style='color:#00c878'>STRONG CONTRARIAN BUY!</b></div></div><div class="ind wait"><div class="it"><div class="in">VIX</div><div class="is s-wait">NEU</div></div><div class="iv">22.6</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Heti: -0.9</div></div></div>
+<div class="sec-hdr">3–6 HÓNAP – gazdasági ciklus <span class="sec-badge sb-mid">leading indicators</span></div>
+<div class="ig"><div class="ind bear"><div class="it"><div class="in">Copper / Gold arany</div><div class="is s-stop">BEAR</div></div><div class="iv">0.001152</div><div class="pr"><div class="pf" style="width:15%;background:var(--bear)"></div></div><div class="id">Csokkeno - lassulas jel</div></div><div class="ind wait"><div class="it"><div class="in">ISM New Orders</div><div class="is s-wait">NEU</div></div><div class="iv">50</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Nincs adat</div></div><div class="ind bull"><div class="it"><div class="in">Golden / Death Cross</div><div class="is s-go">BULL</div></div><div class="iv">MA50 vs MA200</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">MA50>MA200 de lassul</div></div><div class="ind bear"><div class="it"><div class="in">Piaci Breadth (pct > MA50)</div><div class="is s-stop">BEAR</div></div><div class="iv">34%</div><div class="pr"><div class="pf" style="width:15%;background:var(--bear)"></div></div><div class="id">Szukulo</div></div><div class="ind go"><div class="it"><div class="in">HY Credit Spread</div><div class="is s-go">BULL</div></div><div class="iv">3.27%</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Szuk=OK</div></div><div class="ind wait"><div class="it"><div class="in">Forward P/E</div><div class="is s-wait">NEU</div></div><div class="iv">19.9x</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">FAIR</div></div></div>
+<div class="sec-hdr">6–18 HÓNAP – makro előrejelzők <span class="sec-badge sb-lng">LEI · M2 · UMich</span></div>
+<div class="ig"><div class="ind bull"><div class="it"><div class="in">Conference Board LEI</div><div class="is s-go">BULL</div></div><div class="iv">1.72</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Emelkedo - bovules jon (+0.24/3h)</div></div><div class="ind wait"><div class="it"><div class="in">M2 Penzkinálat YoY</div><div class="is s-wait">NEU</div></div><div class="iv">4.0%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">+4.0pct YoY - semleges</div></div><div class="ind wait"><div class="it"><div class="in">Consumer Expectations (UMich)</div><div class="is s-wait">NEU</div></div><div class="iv">70</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Nincs adat</div></div><div class="ind go"><div class="it"><div class="in">Hozamgorbe 10Y-2Y</div><div class="is s-go">BULL</div></div><div class="iv">+55 bp</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">OK</div></div><div class="ind go"><div class="it"><div class="in">Recesszios val. (NY Fed)</div><div class="is s-go">BULL</div></div><div class="iv">0.8%</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Alacsony</div></div><div class="ind go"><div class="it"><div class="in">SPX vs MA200 (trend)</div><div class="is s-go">BULL</div></div><div class="iv">+1.9%</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">MA200: 6,612</div></div></div>
+<div class="stitle">Saját részvényeim – TA + belépési score</div>
+<div class="sgrid"><div class="sc go"><div class="sc-top"><div><div class="st">AAPL</div><div class="sn">Apple</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$254.51<span style="color:#00c878;font-size:11px"> +0.67%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">81/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-lo">22.9</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+3.6%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-11.0%</div></div></div><div class="ta-row">Tuladott · MA200↑</div><div class="sb-w"><div class="sb" style="width:81%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div><div class="sc go"><div class="sc-top"><div><div class="st">MSFT</div><div class="sn">Microsoft</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$400.39<span style="color:#00c878;font-size:11px"> +0.11%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">64/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv ">49.8</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#f03050">-16.7%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-25.8%</div></div></div><div class="ta-row">Semleges</div><div class="sb-w"><div class="sb" style="width:64%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div><div class="sc go"><div class="sc-top"><div><div class="st">NVDA</div><div class="sn">Nvidia</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$182.91<span style="color:#f03050;font-size:11px"> -0.17%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">72/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv rsi-lo">37.9</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+2.9%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-11.6%</div></div></div><div class="ta-row">MA200↑</div><div class="sb-w"><div class="sb" style="width:72%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">25%</b></div></div></div>
 <div class="g2">
   <div class="panel">
-    <div class="pt">Belepesi score + korrekciok historikus
-      <span class="badge bb">>=65=vegyel</span>
-      <span class="badge bp">>=60%=figyelj</span>
-    </div>
+    <div class="pt">Kompozit belépési score + korrekciós kockázat historikus</div>
     <canvas id="ch" height="155"></canvas>
   </div>
   <div class="panel">
-    <div class="pt">Befektetoi playbook + Kelly allokacio</div>
+    <div class="pt">Befektetői playbook</div>
     <table class="pb">
-      <thead><tr><th></th><th>Helyzet</th><th>Teendo</th><th>Allok.</th></tr></thead>
+      <thead><tr><th></th><th>Helyzet</th><th>Teendő</th><th>Allok.</th></tr></thead>
       <tbody>
-        <tr><td>🟢</td><td>Score>=65, korr.&lt;30%</td><td class="ga">FEKTESS BE</td><td class="ga">60-80%</td></tr>
-        <tr><td>🟡</td><td>Score 40-65</td><td class="wa">FELEZD MEG</td><td class="wa">35-55%</td></tr>
-        <tr><td>🔴</td><td>Score&lt;40</td><td class="ba">TARTSD VISSZA</td><td class="ba">0-25%</td></tr>
-        <tr><td>🟣</td><td>Korr.>=60%</td><td class="ea">KILEPES</td><td class="ea">0-15%</td></tr>
-        <tr><td>🔄</td><td>Piac -10%+score>=50</td><td class="ga">VISSZAVASAROL</td><td class="ga">55-75%</td></tr>
+        <tr><td>🟢</td><td>Score≥65</td><td class="ga">FEKTESS BE</td><td class="ga">55-80%</td></tr>
+        <tr><td>🟢</td><td>Extreme Fear (CNN&lt;25)</td><td class="ga">KONTR. VÉTEL</td><td class="ga">35-65%</td></tr>
+        <tr><td>🟡</td><td>Score 40-65</td><td class="wa">FELEZD MEG</td><td class="wa">25-50%</td></tr>
+        <tr><td>🔴</td><td>Score&lt;40</td><td class="ba">TARTSD VISSZA</td><td class="ba">0-20%</td></tr>
+        <tr><td>🟣</td><td>Korr.≥60%</td><td class="ea">KILÉPÉS</td><td class="ea">0-15%</td></tr>
+        <tr><td>🔄</td><td>Piac–10%+score≥50</td><td class="ga">VISSZAVÁSÁROL</td><td class="ga">50-70%</td></tr>
       </tbody>
     </table>
     <div style="margin-top:9px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.16);border-radius:6px;padding:9px 11px;font-family:var(--mono);font-size:8.5px;color:var(--m);line-height:1.8">
-      <b style="color:var(--purple)">Kilepesi trigger (4+ aktiv):</b><br>
-      VIX&gt;25 emelkedo · EPS lefordul · Hozamgorbe invertál<br>
-      Breadth&lt;45% · HY&gt;4.5% · Rec.prob&gt;20% · SKEW&gt;150
+      <b style="color:var(--purple)">Kilépési trigger (4+ aktív):</b><br>
+      VIX term backwardation · LEI csökkeno · Bearish RSI div.<br>
+      ISM&lt;48 · HY spread&gt;4.5% · Rec.prob&gt;20%
     </div>
   </div>
 </div>
-
 <div class="footer">
-  <div>
-    yfinance · FRED API · CBOE Skew · AAII · CNN F&G · S&P Global · GitHub Actions: pentek 20:00<br>
-    Hibak: <a href="error_log.json">error_log.json</a> · v3 · Adaptiv sullyozas · Kelly · 13 forras
-  </div>
-  <div style="text-align:right">
-    Buy &amp; hold timing eszkoz · Nem befektetesi tanacsadas
-  </div>
-</div>
-</div>
-
+  <div>yfinance · FRED API · CNN F&G · GitHub Actions: péntek 20:00<br>
+  v4 · 3 idohorizont · TA · Kelly · Hibák: <a href="error_log.json">error_log.json</a></div>
+  <div style="text-align:right">Buy & hold timing eszköz · Nem befektetési tanácsadás</div>
+</div></div>
 <script>
-Chart.defaults.color = '#3a5068';
-Chart.defaults.font.family = "'JetBrains Mono', monospace";
-Chart.defaults.font.size = 9;
-const G = 'rgba(22,32,48,.9)';
-const hD = ["2026-03-17", "2026-03-17", "2026-03-17"], hS = [58, 60, 60], hC = [23, 23, 23];
-new Chart(document.getElementById('ch'), {
-  type: 'line',
-  data: { labels: hD, datasets: [
-    { label: 'Belepesi score', data: hS, borderColor: '#00c878', borderWidth: 2,
-       pointRadius: 3,
-       pointBackgroundColor: hS.map(s => s>=65 ? '#00c878' : s>=40 ? '#f0a500' : '#f03050'),
-       tension: .3, fill: false },
-    { label: 'Korrekció %', data: hC, borderColor: 'rgba(167,139,250,.7)',
-       borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false, borderDash: [4,3] },
-    { label: 'Küszöb (65)', data: Array(hD.length).fill(65), type: 'line',
-       borderColor: 'rgba(0,200,120,.2)', borderWidth: 1, borderDash: [3,3],
-       pointRadius: 0, fill: false },
-  ]},
-  options: {
-    responsive: true,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { display: true, position: 'top', align: 'end',
-        labels: { boxWidth: 12, boxHeight: 1, padding: 10, color: '#3a5068' } },
-      tooltip: { backgroundColor: '#080c14', borderColor: '#162030', borderWidth: 1 }
-    },
-    scales: {
-      x: { grid: { color: G }, ticks: { maxTicksLimit: 8, maxRotation: 0 } },
-      y: { grid: { color: G }, min: 0, max: 100 }
-    }
-  }
-});
-</script>
-</body>
-</html>
+Chart.defaults.color='#3a5068';Chart.defaults.font.family="'JetBrains Mono',monospace";Chart.defaults.font.size=9;
+const G='rgba(22,32,48,.9)';
+const hD=["2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17"],hS=[58, 60, 60, 93],hC=[23, 23, 23, 15];
+new Chart(document.getElementById('ch'),{type:'line',data:{labels:hD,datasets:[
+  {label:'Score',data:hS,borderColor:'#00c878',borderWidth:2,pointRadius:3,tension:.3,fill:false,
+    pointBackgroundColor:hS.map(s=>s>=65?'#00c878':s>=40?'#f0a500':'#f03050')},
+  {label:'Korr.%',data:hC,borderColor:'rgba(167,139,250,.7)',borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[4,3]},
+  {label:'Küszöb',data:Array(hD.length).fill(65),type:'line',borderColor:'rgba(0,200,120,.2)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false},
+]},options:{responsive:true,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:true,position:'top',align:'end',labels:{boxWidth:12,boxHeight:1,padding:10,color:'#3a5068'}},
+    tooltip:{backgroundColor:'#080c14',borderColor:'#162030',borderWidth:1}},
+  scales:{x:{grid:{color:G},ticks:{maxTicksLimit:8,maxRotation:0}},y:{grid:{color:G},min:0,max:100}}
+}});
+</script></body></html>
