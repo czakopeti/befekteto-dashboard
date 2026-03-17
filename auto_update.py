@@ -767,7 +767,10 @@ def main():
         elif platform.system()=="Darwin": subprocess.run(["open", OUTPUT_HTML])
         else:                              subprocess.run(["xdg-open", OUTPUT_HTML])
     print("  KESZ!\n"+"="*58+"\n")
-    if len(errors) >= 6: sys.exit(1)
+    # Csak akkor exit(1) ha MINDEN forrás sikertelen (pl. nincs internet)
+    # Részleges hibák (2-3 forrás) fallback értékekkel kezelve → dashboard fut
+    if len(errors) >= 11:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
