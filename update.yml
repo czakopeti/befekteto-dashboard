@@ -1,0 +1,71 @@
+name: Befektető Dashboard – Heti Frissítés
+
+on:
+  schedule:
+    # Minden pénteken 18:00 UTC = 20:00 Budapest (nyári idő)
+    - cron: '0 18 * * 5'
+  workflow_dispatch:  # Manuális futtatás is lehetséges a GitHub felületről
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kód letöltése
+        uses: actions/checkout@v4
+
+      - name: Python beállítása
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Csomagok telepítése
+        run: pip install yfinance requests pandas openpyxl
+
+      - name: Dashboard frissítése
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python auto_update.py --no-browser
+        # --no-browser flag: ne próbálja megnyitni a böngészőt szerveren
+
+      - name: Eredmény commitolása
+        run: |
+          git config --local user.email "dashboard@auto.update"
+          git config --local user.name "Auto Update"
+          git add index.html history.json error_log.json
+          git diff --staged --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M') | score=$(python -c 'import json; d=json.load(open(\"history.json\")); print(d[-1][\"entryScore\"])')/100"
+          git push
+
+      - name: Error log mentése artifact-ként (debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-log-${{ github.run_id }}
+          path: error_log.json
+          retention-days: 30
+
+      - name: Email értesítés ha hiba volt
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "⚠️ Dashboard frissítés SIKERTELEN – ${{ github.run_id }}"
+          body: |
+            A befektető dashboard automatikus frissítése sikertelen volt.
+
+            Futtatás ID: ${{ github.run_id }}
+            Dátum: $(date)
+
+            Ellenőrizd: https://github.com/${{ github.repository }}/actions
+
+            Lehetséges okok:
+            - CBOE vagy AAII website megváltozott
+            - S&P Global xlsx URL változott
+            - FRED API limit elérve
+
+            A dashboard az utolsó sikeres frissítés adatait mutatja.
+          to: ${{ secrets.NOTIFY_EMAIL }}
+          from: Dashboard Auto-Updater
