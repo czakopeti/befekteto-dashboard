@@ -44,9 +44,4 @@ jobs:
           path: error_log.json
           retention-days: 30
 
-            Lehetséges okok:
-            - CBOE vagy AAII website megváltozott
-            - S&P Global xlsx URL változott
-            - FRED API limit elérve
-
        
