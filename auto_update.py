@@ -773,4 +773,19 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        import traceback
+        err = {
+            "last_run": datetime.datetime.now().isoformat(),
+            "status": "CRASHED",
+            "errors": [{"source": "FATAL", "error": str(e),
+                       "traceback": traceback.format_exc()[:500]}],
+            "success_count": 0
+        }
+        with open(ERROR_LOG, "w") as f:
+            json.dump(err, f, indent=2)
+        print(f"FATAL ERROR: {e}")
+        traceback.print_exc()
+        sys.exit(1)
