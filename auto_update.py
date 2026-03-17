@@ -25,7 +25,6 @@ MY_STOCKS = [
     ("AAPL",  "Apple"),
     ("MSFT",  "Microsoft"),
     ("NVDA",  "Nvidia"),
-    ("TSLA",  "Tesla"),
 ]
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "Accept": "text/html,*/*"}
@@ -142,10 +141,26 @@ def fetch_eps_score():
     except Exception as e:
         log(f"EPS FactSet hiba: {e}", ok=False)
 
-    # --- 3. FALLBACK: Szamitas az aktualis piaci adatokbol ---
-    # Ha a forward P/E ~20x es a piac ATH kozeleben van -> bullish EPS
-    # Ez csak becslés, de jobb mint a fix 65
-    log("EPS: Mindket forras sikertelen, piaci proxy hasznalva", ok=False)
+    # --- 3. FALLBACK: yfinance SPY/SPX earnings alapjan ---
+    try:
+        # SPY trailing EPS * (1 + vart novekedesi rac) = forward EPS becslés
+        spy = yf.Ticker("SPY")
+        info = spy.fast_info
+        # Ha van trailing EPS adat
+        trailing_pe = getattr(info, 'pe_ratio', None)
+        price = getattr(info, 'last_price', 600)
+        if trailing_pe and trailing_pe > 0:
+            trailing_eps = price / trailing_pe
+            # Forward EPS ~ trailing * 1.12 (tipikus 12% novekedesi var)
+            forward_eps_est = trailing_eps * 1.12
+            # Score szamitas: jo ha a forward EPS emelkedo
+            score = round(min(85, max(45, (forward_eps_est / FY26_EPS_EST) * 70)))
+            log("EPS: yfinance proxy OK")
+            return {"epsScore": score, "epsTrend": 1.0,
+                    "epsRaw": [], "epsSource": "yfinance_proxy"}
+    except Exception as e:
+        log(f"EPS yfinance proxy hiba: {e}", ok=False)
+
     raise ValueError("EPS: minden forras sikertelen")
 
 
@@ -502,11 +517,33 @@ def calc_corr_prob(data):
     if isinstance(liq, (int, float)) and liq < 4000: p += 10
     return min(95, p)
 
-def calc_kelly_allocation(entry_score, corr_prob):
+def calc_kelly_allocation(entry_score, corr_prob, regime="bull"):
     """
-    Frakcionalt Kelly (0.4x) – retail befektetnek optimal.
-    Max 80% hard cap – soha nem megy 100%-ra.
+    Frakcionalt Kelly (0.4x) – max 80%.
+
+    FONTOS: Extreme Fear rezsimben a kontrarian logika miatt
+    a Kelly allokaciot FELFELÉ igazitjuk – ez az a pillanat
+    amikor a vér folyik az utcan, es historikusan a legjobb
+    belépési lehetőség kínálkozik.
+
+    Score-allokacio osszhang:
+      score >= 65  (FEKTESS BE)  → 50-80%
+      score 40-64  (FELEZD MEG)  → 25-50%
+      score < 40   (TARTSD VISSZA) → 0-20%
+      corr >= 60   (KILEPES)     → 0-15%
     """
+    # Extreme Fear: kontrarian premium (vér folyik az utcán = veteli lehetoseg)
+    # CNN Fear & Greed < 25 historikusan a legjobb belépési pontok egyike
+    if regime == "extreme_fear":
+        # Extreme Fear override: minimum 40% allokacio ha score >= 45
+        # (a fear maga bullish jel kontrarian szemlel szerint)
+        if entry_score >= 45 and corr_prob < 50:
+            boosted = min(80, entry_score + 20)  # boost a score-t
+            alloc = round(boosted * 0.55)
+            alloc = max(35, min(80, alloc))
+            return {"kellyAlloc": alloc, "kellyCash": 100 - alloc,
+                    "kellyLabel": f"Kontrarian vetel – Extreme Fear ({alloc}%)"}
+
     win_prob   = min(0.82, entry_score / 100 * 0.95)
     corr_adj   = corr_prob / 100
     b          = 0.6 / 0.9
@@ -514,12 +551,19 @@ def calc_kelly_allocation(entry_score, corr_prob):
     alloc      = round(0.4 * full_kelly * 100)
     alloc      = round(alloc * (1 - corr_adj * 0.65))
     alloc      = max(0, min(80, alloc))
-    cash       = 100 - alloc
-    if alloc >= 70:   label = "Aktiv (80% korlat aktiv)"
-    elif alloc >= 55: label = "Erosebb pozicio"
-    elif alloc >= 40: label = "Mersekelt"
-    elif alloc >= 20: label = "Ovatos"
+
+    # Osszhang a fo jellel: ha score 40-65 (FELEZD MEG), minimum 25%
+    if 40 <= entry_score < 65 and corr_prob < 60:
+        alloc = max(25, alloc)
+
+    cash = 100 - alloc
+
+    if alloc >= 65:   label = "Aktiv pozicio"
+    elif alloc >= 45: label = "Mersekelt – felezd meg"
+    elif alloc >= 25: label = "Ovatos – kis pozicio"
+    elif alloc >= 10: label = "Minimalis – tartsd vissza"
     else:             label = "Defenziv – maradj ki"
+
     return {"kellyAlloc": alloc, "kellyCash": cash, "kellyLabel": label}
 
 def calc_seasonality():
@@ -558,17 +602,24 @@ def fetch_stock(ticker, name):
         fath = (p - ath) / ath * 100
         vma200 = (p - ma200) / ma200 * 100
         sc = 50
-        if p > ma200:  sc += 15
-        if p > ma50:   sc += 10
-        if rsi < 40:   sc += 15
-        elif rsi < 55: sc += 8
-        elif rsi > 75: sc -= 15
-        if fath < -15: sc += 10
+        if p > ma200:   sc += 15
+        if p > ma50:    sc += 10
+        if rsi < 40:    sc += 15   # tuladott = jo belepesi pont
+        elif rsi < 55:  sc += 8
+        elif rsi > 75:  sc -= 15   # tulvett = kockazatos
+        if fath < -15:  sc += 10   # ATH-tol tavol = olcso
         elif fath < -5: sc += 5
-        cr = 20
-        if rsi > 70:   cr += 25
-        if vma200 > 15: cr += 20
-        if p < ma50:   cr += 15
+
+        # Korrekcios kockazat – nem a "fog-e esni" hanem "mennyire sebezheto"
+        # Alap: 15% (minden reszvenynek van kockazata)
+        cr = 15
+        if rsi > 70:         cr += 20  # tulvett
+        if vma200 > 20:      cr += 20  # sokat ment fel MA200 folott
+        elif vma200 > 10:    cr += 10
+        if p < ma50:         cr += 10  # MA50 alatt = gyenge trend
+        if fath > -3:        cr += 10  # ATH kozeleseben = draga
+        # Ha az altalanos piac gyenge (breadth alacsony), minden reszveny kockazatosabb
+        # Ezt a globalis piaci adatokkal kalibraljuk
         sig = "go" if sc >= 60 else "wait" if sc >= 40 else "stop"
         return {"ticker": ticker, "name": name, "price": round(p, 2),
                 "ma50": round(ma50, 2), "ma200": round(ma200, 2),
@@ -624,26 +675,37 @@ def generate_html(data, es, cp, history, stocks, log_data, kelly, season, regime
     sc_col = "#00c878" if log_data["status"] == "OK" else "#f0a500" if log_data["status"] == "PARTIAL" else "#f03050"
     st_txt = "Minden OK" if not errors else f"{len(errors)} forras fallback"
 
-    # Fo jel
+    # Kelly allokacio elore kell a fo jel szoveghez
+    alloc     = kelly["kellyAlloc"]
+    alloc_col = "#00c878" if alloc >= 50 else "#f0a500" if alloc >= 25 else "#f03050"
+
+    # Fo jel – szinkronban a Kelly allokacióval es a rezsimmel
     if cp >= 60:
         sig, si = "stop", "🟣"
         sv = "KORREKCIO KOCKAZAT – KILEPES MERLEGEL"
-        se = f"Korrekcios valoszinuseg: <strong>{cp}%</strong>. Merlegel reszleges kilepest."
+        se = (f"Korrekcios valoszinuseg: <strong>{cp}%</strong>. "
+              f"Merlegel reszleges kilepest. Kelly ajánlás: {alloc}% SPX.")
+    elif regime == "extreme_fear":
+        sig, si = "go", "🟢"
+        sv = "EXTREME FEAR = KONTRARIAN VETELI JEL"
+        se = (f"<strong>Vér folyik az utcán</strong> – CNN Fear&amp;Greed: {data.get('cnnFG','–')}. "
+              f"Historikusan ez az egyik legjobb belépési pont. "
+              f"Kelly ajánlás: <strong>{alloc}%</strong> SPX.")
     elif es >= 65:
         sig, si = "go", "🟢"
         sv = "MOST ERDEMES BEFEKTETNI"
-        se = f"EPS emelkedo, VIX {data.get('vix','–')}, fundamentumok erosek."
+        se = (f"EPS emelkedo, VIX {data.get('vix','–')}, fundamentumok erosek. "
+              f"Kelly ajánlás: <strong>{alloc}%</strong> SPX.")
     elif es >= 40:
         sig, si = "wait", "🟡"
-        sv = "VEGYES JELEK – VARJ"
-        se = "Fektess be felnyit most, felnyit ha score 65+ lesz."
+        sv = "VEGYES JELEK – FELEZD MEG A TOKÉT"
+        se = (f"Fektess be <strong>{alloc}%</strong>-ot most (Kelly ajánlás), "
+              f"a maradékot ha score 65+ lesz.")
     else:
         sig, si = "stop", "🔴"
         sv = "NE FEKTESS BE MOST"
-        se = "Tobb indikator gyenge. Jobb ar jon hamarosan."
-
-    alloc     = kelly["kellyAlloc"]
-    alloc_col = "#00c878" if alloc >= 60 else "#f0a500" if alloc >= 35 else "#f03050"
+        se = (f"Tobb indikator gyenge. Kelly: <strong>{alloc}%</strong>. "
+              f"Jobb ar jon hamarosan.")
 
     regime_map = {
         "bull":           "Bikos (EPS+Breadth dominál)",
@@ -1094,7 +1156,7 @@ def main():
     regime   = detect_regime(data)
     es       = calc_entry_score(data)
     cp       = calc_corr_prob(data)
-    kelly    = calc_kelly_allocation(es, cp)
+    kelly    = calc_kelly_allocation(es, cp, regime)
     season   = calc_seasonality()
     log_data = save_error_log()
     history  = load_history()
@@ -1136,5 +1198,6 @@ if __name__ == "__main__":
         print(f"\nFATAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(1)
+
 
 
