@@ -2,9 +2,8 @@ name: Befektető Dashboard – Heti Frissítés
 
 on:
   schedule:
-    # Minden pénteken 18:00 UTC = 20:00 Budapest (nyári idő)
     - cron: '0 18 * * 5'
-  workflow_dispatch:  # Manuális futtatás is lehetséges a GitHub felületről
+  workflow_dispatch:
 
 jobs:
   update-dashboard:
@@ -20,28 +19,42 @@ jobs:
           python-version: '3.11'
 
       - name: Csomagok telepítése
-        run: pip install yfinance requests pandas openpyxl
+        run: pip install yfinance requests pandas openpyxl --quiet
 
       - name: Dashboard frissítése
+        continue-on-error: true
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python auto_update.py --no-browser
-        # --no-browser flag: ne próbálja megnyitni a böngészőt szerveren
+
+      - name: Fallback fájlok ha script crashelt
+        if: always()
+        run: |
+          if [ ! -f error_log.json ]; then
+            echo '{"last_run":"'$(date -u +%Y-%m-%dT%H:%M:%S)'","status":"CRASHED","errors":[{"source":"script","error":"Script crashed before error_log was created. Check FRED_API_KEY secret!"}],"success_count":0}' > error_log.json
+          fi
+          if [ ! -f index.html ]; then
+            echo '<html><body style="font-family:monospace;background:#03050a;color:#c0d0e8;padding:40px"><h1>Dashboard frissítés sikertelen</h1><p>Futtasd újra manuálisan: Actions → Run workflow</p><p>Leggyakoribb ok: FRED_API_KEY secret nincs beállítva</p></body></html>' > index.html
+          fi
 
       - name: Eredmény commitolása
+        if: always()
         run: |
           git config --local user.email "dashboard@auto.update"
           git config --local user.name "Auto Update"
-          git add index.html history.json error_log.json
-          git diff --staged --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M') | score=$(python -c 'import json; d=json.load(open(\"history.json\")); print(d[-1][\"entryScore\"])')/100"
+          git add -f index.html error_log.json 2>/dev/null || true
+          git add history.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
           git push
 
-      - name: Error log mentése artifact-ként (debug)
+      - name: Error log artifact mentése
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: error-log-${{ github.run_id }}
           path: error_log.json
           retention-days: 30
+          if-no-files-found: warn
+
 
        
