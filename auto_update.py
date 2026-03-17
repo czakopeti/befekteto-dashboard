@@ -1,47 +1,25 @@
 """
-auto_update.py – Befektető Dashboard v3 (World-Class)
-======================================================
-Új v3-ban:
-  + Forward P/E értékelés (FY26_EPS_EST kihasználva)
-  + Recessziós valószínűség (FRED: RECPROUSM156N)
-  + Fed nettó likviditás (FRED: WALCL - TGA - RRP)
-  + CBOE Skew Index (fekete hattyú jelző, yfinance)
-  + CNN Fear & Greed Index
-  + Adaptív súlyozás (piaci rezsim alapján)
-  + Szezonalitás figyelmeztető (Sell in May + szeptember)
-  + Kelly-kritérium allokációs ajánlás
-  + Put/Call teljesen integrálva a score-ba
-  + 13 forrás összesen
+auto_update.py – Befekteto Dashboard v3 (World-Class)
+Futtatas lokalis: python auto_update.py
+Futtatas szerveren: python auto_update.py --no-browser
 """
 
 import json, os, re, sys, datetime, argparse
 import requests, pandas as pd, yfinance as yf
 from pathlib import Path
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# KONFIG – HAVONTA FRISSITENDO
+# Forras: google "FactSet Earnings Insight PDF" -> CY 2026 sor
+# 2026.01:315 | 2026.02:325 | 2026.03:338 | 2026.04:??? 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FY26_EPS_EST  = 338.0
+PE_FAIR_VALUE = 19.5   # 2015-2025 median ~19.5x, evente felulvizsgaland
+
 FRED_API_KEY = os.environ.get("FRED_API_KEY", "YOUR_FRED_API_KEY_HERE")
 OUTPUT_HTML  = "index.html"
 HISTORY_FILE = "history.json"
 ERROR_LOG    = "error_log.json"
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# ⚠️  HAVONTA FRISSÍTENDŐ – minden hónap 1. hétvégéjén
-# Forrás: google "FactSet Earnings Insight PDF" → ingyenes heti PDF
-# Keresési szó a PDF-ben: "bottom-up EPS estimate" vagy "CY 2026"
-#
-# Frissítési napló:
-# 2026.01: 315  │  2026.02: 325  │  2026.03: 338
-# 2026.04: ???  ← következő ellenőrzés: április 1. hétvégén
-#
-# Kontextus: FactSet/LSEG 2026-ra ~15% Y/Y EPS növekedést vár
-# Bottom-up consensus: ~335–340 tartomány (338 konzervatív, jó)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FY26_EPS_EST = 338.0
-
-# Forward P/E historikus "fair" szint
-# 2000-2024 hosszú táv avg: 17.5 | 2015-2025 medián: ~19.5
-# ⚠️  ÉVENTE 1X FELÜLVIZSGÁLANDÓ (kamatkörnyezet tartós változásakor)
-# Ha 2027-2028-ban tartósan 22x+ a forward P/E → emelheted 20.0-20.5-re
-PE_FAIR_VALUE = 19.5
 
 MY_STOCKS = [
     ("AAPL",  "Apple"),
@@ -57,14 +35,16 @@ def log(msg, ok=True):
 
 def safe(fn, fallback, label):
     try:
-        r = fn(); log(f"{label}: OK"); return r
+        r = fn()
+        log(f"{label}: OK")
+        return r
     except Exception as e:
         log(f"{label} HIBA ({str(e)[:80]}) -> fallback", ok=False)
         errors.append({"source": label, "error": str(e)[:120],
                        "time": datetime.datetime.now().isoformat()})
         return fallback
 
-# ── ADATFORRÁSOK ──────────────────────────────────────────────────
+# ── ADATFORRÁSOK ──────────────────────────────────────────────
 
 def fetch_spx():
     h = yf.Ticker("^GSPC").history(period="1y")
@@ -84,13 +64,13 @@ def fetch_spx():
 
 def fetch_vix():
     h = yf.Ticker("^VIX").history(period="30d")
-    c = float(h["Close"].iloc[-1]); p = float(h["Close"].iloc[-2])
+    c = float(h["Close"].iloc[-1])
+    p = float(h["Close"].iloc[-2])
     avg4w = float(h["Close"].tail(20).mean())
     return {"vix": round(c, 1), "vixTrend": round(c - p, 1),
             "vixAvg4w": round(avg4w, 1), "vixRising": c > avg4w}
 
 def fetch_skew():
-    """CBOE SKEW Index – magas = intézményi black swan védekezés."""
     h = yf.Ticker("^SKEW").history(period="10d")
     val = float(h["Close"].iloc[-1])
     return {"skew": round(val, 1), "skewElevated": val > 145}
@@ -110,19 +90,18 @@ def fetch_eps_score():
     last2 = df.tail(2)
     cur  = [float(v) for v in last2.iloc[-1, 1:5] if pd.notna(v) and str(v) != ""]
     prev = [float(v) for v in last2.iloc[-2, 1:5] if pd.notna(v) and str(v) != ""]
-    if not cur: raise ValueError("Ures EPS")
-    up = sum(c > p for c, p in zip(cur, prev))
-    avg = sum(cur) / len(cur)
+    if not cur:
+        raise ValueError("Ures EPS adat")
+    up    = sum(c > p for c, p in zip(cur, prev))
+    avg   = sum(cur) / len(cur)
     delta = sum(c - p for c, p in zip(cur, prev)) / len(cur)
-    base = min(70, max(0, (avg - 3) / 12 * 70))
+    base  = min(70, max(0, (avg - 3) / 12 * 70))
     return {"epsScore": round(base + up / len(cur) * 30),
-            "epsTrend": round(delta, 2), "epsRaw": [round(v, 2) for v in cur]}
+            "epsTrend": round(delta, 2),
+            "epsRaw": [round(v, 2) for v in cur]}
 
 def fetch_valuation(spx_price):
     pe = round(spx_price / FY26_EPS_EST, 1)
-    # PE_FAIR_VALUE = 19.5 (2015-2025 medián)
-    # "Fair" zóna: PE_FAIR_VALUE ± 1.5x → 18–21x között FAIR
-    # A (PE_FAIR_VALUE + 1.5) = 21.0 a "drága" határ – ez a 2020-as évek normája
     val_score = round(max(0, min(30, (PE_FAIR_VALUE + 1.5 - pe) / 6 * 30)))
     label = ("ALULERTEKELT" if pe < 18 else
              "FAIR"         if pe < 21 else
@@ -131,11 +110,12 @@ def fetch_valuation(spx_price):
 
 def fetch_fred_val(series_id):
     if FRED_API_KEY in ("YOUR_FRED_API_KEY_HERE", "", None):
-        raise ValueError("FRED API kulcs hiányzik")
+        raise ValueError("FRED API kulcs nincs beallitva GitHub Secrets-ben!")
     d = requests.get(
         f"https://api.stlouisfed.org/fred/series/observations"
         f"?series_id={series_id}&api_key={FRED_API_KEY}"
-        f"&file_type=json&sort_order=desc&limit=10", timeout=15).json()
+        f"&file_type=json&sort_order=desc&limit=10",
+        timeout=15).json()
     return float(d["observations"][0]["value"])
 
 def fetch_yield_curve():
@@ -145,12 +125,10 @@ def fetch_hy_spread():
     return {"hySpread": round(fetch_fred_val("BAMLH0A0HYM2"), 2)}
 
 def fetch_recession_prob():
-    """NY Fed recessziós valószínűség – legjobb előrejelző."""
     prob = fetch_fred_val("RECPROUSM156N")
     return {"recProb": round(prob, 1)}
 
 def fetch_fed_liquidity():
-    """Fed nettó likviditás: WALCL - TGA - RRP (milliárd USD)."""
     walcl = fetch_fred_val("WALCL")
     tga   = fetch_fred_val("WTREGEN")
     rrp   = fetch_fred_val("RRPONTSYD")
@@ -170,20 +148,25 @@ def fetch_breadth():
     above = total = 0
     for col in data.columns:
         s = data[col].dropna()
-        if len(s) < 50: continue
-        ma50 = s.rolling(50).mean().iloc[-1]; last = s.iloc[-1]
+        if len(s) < 50:
+            continue
+        ma50 = s.rolling(50).mean().iloc[-1]
+        last = s.iloc[-1]
         if pd.notna(ma50) and pd.notna(last):
             total += 1
-            if last > ma50: above += 1
+            if last > ma50:
+                above += 1
     return {"breadth": round(above / total * 100) if total > 0 else 60}
 
 def fetch_put_call():
     r = requests.get("https://www.cboe.com/us/options/market_statistics/daily/",
                      headers=HEADERS, timeout=20)
     m = re.findall(r'Total.*?(\d+\.\d+)', r.text.replace('\n', ''), re.IGNORECASE)
-    if m: return {"putCall": round(float(m[0]), 2)}
+    if m:
+        return {"putCall": round(float(m[0]), 2)}
     vals = re.findall(r'\b0\.[6-9]\d\b|\b1\.[0-4]\d\b', r.text)
-    if vals: return {"putCall": round(float(vals[0]), 2)}
+    if vals:
+        return {"putCall": round(float(vals[0]), 2)}
     raise ValueError("P/C nem talalhato")
 
 def fetch_aaii():
@@ -197,7 +180,8 @@ def fetch_aaii():
         bm  = re.search(r'Bullish.*?(\d+\.?\d*)%', r2.text, re.IGNORECASE)
         brm = re.search(r'Bearish.*?(\d+\.?\d*)%', r2.text, re.IGNORECASE)
     if bm and brm:
-        b = round(float(bm.group(1)), 1); br = round(float(brm.group(1)), 1)
+        b  = round(float(bm.group(1)), 1)
+        br = round(float(brm.group(1)), 1)
         return {"aaiiNet": round(b - br, 1), "aaiiB": b, "aaiiBear": br}
     raise ValueError("AAII nem elerhetoe")
 
@@ -210,346 +194,458 @@ def fetch_cnn_fear_greed():
     rating = d["fear_and_greed"]["rating"]
     return {"cnnFG": score, "cnnFGRating": rating}
 
-# ── ADAPTÍV SÚLYOZÁS ──────────────────────────────────────────────
+# ── REZSIM DETEKTALAS ─────────────────────────────────────────
 
 def detect_regime(data):
     """
     5 rezsim:
-      extreme_fear  – CNN F&G < 30 ÉS VIX > 25 → kontrarian jelek dominálnak
-      recession_watch – recProb > 15 ÉS yieldCurve < 0 → kockázatjelzők dominálnak
-      fear          – általános félelem (VIX > 25 VAGY recProb > 15)
-      neutral       – vegyes jelek
-      bull          – normális bika piac
+      extreme_fear    – CNN < 30 ES VIX > 25
+      recession_watch – recProb > 15 ES yieldCurve < 0
+      fear            – altalanos felek
+      neutral         – vegyes
+      bull            – normal bika
     """
-    vix = data.get("vix", 18); eps = data.get("epsScore", 60)
-    rec = data.get("recProb", 5); yld = data.get("yieldCurve", 20)
+    vix = data.get("vix", 18)
+    eps = data.get("epsScore", 60)
+    rec = data.get("recProb", 5)
+    yld = data.get("yieldCurve", 20)
     cnn = data.get("cnnFG", 50)
 
-    # Extreme Fear: pánik + magas volatilitás → erős kontrarian vételi jelző
     if isinstance(cnn, (int, float)) and cnn < 30 and vix > 25:
         return "extreme_fear"
 
-    # Recession Watch: invertált görbe + emelkedő recessziós kockázat
-    if isinstance(rec, (int, float)) and rec > 15 and isinstance(yld, int) and yld < 0:
+    if (isinstance(rec, (int, float)) and rec > 15 and
+            isinstance(yld, int) and yld < 0):
         return "recession_watch"
 
     fear = 0
-    if vix > 25:       fear += 2
-    if vix > 35:       fear += 2
+    if vix > 25:  fear += 2
+    if vix > 35:  fear += 2
     if isinstance(rec, (int, float)) and rec > 15: fear += 2
     if isinstance(yld, int) and yld < -10:         fear += 2
-    if eps < 45:       fear += 1
+    if eps < 45:  fear += 1
 
     return "fear" if fear >= 5 else "neutral" if fear >= 2 else "bull"
 
+# ── SCORE SZAMITAS ────────────────────────────────────────────
+
 def calc_entry_score(data):
-    eps  = data.get("epsScore", 60); vix  = data.get("vix", 18)
-    yld  = data.get("yieldCurve", 10); br  = data.get("breadth", 60)
-    aaii = data.get("aaiiNet", 0); hy   = data.get("hySpread", 3.5)
-    pc   = data.get("putCall", 0.85); pe  = data.get("forwardPE", 20)
-    rec  = data.get("recProb", 5); liq  = data.get("fedNetLiq", 5000)
+    eps  = data.get("epsScore", 60)
+    vix  = data.get("vix", 18)
+    yld  = data.get("yieldCurve", 10)
+    br   = data.get("breadth", 60)
+    aaii = data.get("aaiiNet", 0)
+    hy   = data.get("hySpread", 3.5)
+    pc   = data.get("putCall", 0.85)
+    pe   = data.get("forwardPE", 20)
+    rec  = data.get("recProb", 5)
+    liq  = data.get("fedNetLiq", 5000)
     cnn  = data.get("cnnFG", 50)
     regime = detect_regime(data)
 
-    w = {"eps":1.0,"vix":1.0,"yld":1.0,"br":1.0,"aaii":1.0,"hy":1.0,"pc":1.0,"val":1.0}
+    w = {"eps":1.0,"vix":1.0,"yld":1.0,"br":1.0,
+         "aaii":1.0,"hy":1.0,"pc":1.0,"val":1.0}
 
     if regime == "extreme_fear":
-        # CNN Extreme Fear + magas VIX → legerősebb kontrarian vételi szignál
-        # Historikusan ilyenkor a legjobb belépni
-        w["aaii"] = 2.5; w["pc"]  = 2.5; w["eps"] = 0.5
-        w["br"]   = 0.5; w["yld"] = 1.0; w["hy"]  = 1.0
+        w["aaii"] = 2.5; w["pc"]  = 2.5
+        w["eps"]  = 0.5; w["br"]  = 0.5
     elif regime == "recession_watch":
-        # Invertált görbe + recessziós kockázat → makro szignálok fontosak
-        w["yld"]  = 2.5; w["hy"]  = 2.5; w["eps"] = 0.7
-        w["br"]   = 0.7; w["aaii"]= 1.2; w["val"] = 0.5
+        w["yld"]  = 2.5; w["hy"]  = 2.5
+        w["eps"]  = 0.7; w["br"]  = 0.7
     elif regime == "fear":
-        w["aaii"] = 2.0; w["pc"]  = 2.0; w["yld"] = 1.8
-        w["hy"]   = 1.8; w["eps"] = 0.6; w["br"]  = 0.6
+        w["aaii"] = 2.0; w["pc"]  = 2.0
+        w["yld"]  = 1.8; w["hy"]  = 1.8
+        w["eps"]  = 0.6; w["br"]  = 0.6
     elif regime == "neutral":
         w["yld"]  = 1.4; w["hy"]  = 1.4; w["val"] = 1.2
     else:  # bull
         w["eps"]  = 1.6; w["br"]  = 1.4; w["val"] = 1.3
 
     s = 0
-    s += min(22, max(0, (eps-30)/50*22)) * w["eps"]
-    s += (16 if vix<16 else 11 if vix<22 else 5 if vix<28 else 0) * w["vix"]
-    s += (12 if yld>25 else 8 if yld>0 else 4 if yld>-15 else 0) * w["yld"]
-    s += (12 if br>70  else 8 if br>55  else 4 if br>40   else 0) * w["br"]
-    s += (10 if aaii<-20 else 7 if aaii<0 else 4 if aaii<15 else 0) * w["aaii"]
-    s += (8  if hy<3.0 else 5 if hy<3.8 else 2 if hy<5.0 else 0) * w["hy"]
-    s += (8  if pc>1.15 else 5 if pc>0.95 else 2 if pc>0.8 else 0) * w["pc"]
-    s += (8  if pe<16  else 5 if pe<19   else 2 if pe<22  else 0) * w["val"]
-    if rec > 20:  s -= 15
-    elif rec > 10: s -= 7
+    s += min(22, max(0, (eps - 30) / 50 * 22)) * w["eps"]
+    s += (16 if vix < 16 else 11 if vix < 22 else 5 if vix < 28 else 0) * w["vix"]
+    s += (12 if yld > 25 else 8 if yld > 0 else 4 if yld > -15 else 0) * w["yld"]
+    s += (12 if br > 70  else 8 if br > 55  else 4 if br > 40   else 0) * w["br"]
+    s += (10 if aaii < -20 else 7 if aaii < 0 else 4 if aaii < 15 else 0) * w["aaii"]
+    s += (8  if hy < 3.0 else 5 if hy < 3.8 else 2 if hy < 5.0 else 0) * w["hy"]
+    s += (8  if pc > 1.15 else 5 if pc > 0.95 else 2 if pc > 0.8 else 0) * w["pc"]
+    s += (8  if pe < 18  else 5 if pe < 21   else 2 if pe < 23  else 0) * w["val"]
 
-    # CNN Fear & Greed – megnövelt súly (kontrarian hatás erős Extreme Fear-ben)
-    # Extreme Fear (<25): +15 pont  |  Fear (<40): +10  |  Neutral: +4  |  Greed: 0
+    if isinstance(rec, (int, float)):
+        if rec > 20:   s -= 15
+        elif rec > 10: s -= 7
+
     if isinstance(cnn, (int, float)):
         cnn_raw = (15 if cnn < 25 else 10 if cnn < 40 else 4 if cnn < 55 else 0)
-        # Extreme Fear rezsimben duplázódik a hatás
         s += cnn_raw * (2.0 if regime == "extreme_fear" else 1.0)
-    if isinstance(liq, (int, float)):
-        s += (4 if liq>5500 else 2 if liq>4500 else 0)
 
-    max_p = 22*w["eps"]+16+12*w["yld"]+12*w["br"]+10*w["aaii"]+8*w["hy"]+8*w["pc"]+8*w["val"]+6+4
+    if isinstance(liq, (int, float)):
+        s += (4 if liq > 5500 else 2 if liq > 4500 else 0)
+
+    max_p = (22 * w["eps"] + 16 + 12 * w["yld"] + 12 * w["br"] +
+             10 * w["aaii"] + 8 * w["hy"] + 8 * w["pc"] + 8 * w["val"] + 15 + 4)
     return min(100, max(0, round(s / max_p * 100)))
 
 def calc_corr_prob(data):
-    vix=data.get("vix",18); vixT=data.get("vixTrend",0)
-    eps=data.get("epsScore",60); epsT=data.get("epsTrend",0)
-    yld=data.get("yieldCurve",10); br=data.get("breadth",60)
-    hy=data.get("hySpread",3.5); spxA=data.get("spxAboveMA",2)
-    rec=data.get("recProb",5); skew=data.get("skew",130); liq=data.get("fedNetLiq",5000)
-    p=0
-    if vix>25 and vixT>0: p+=20
-    elif vix>20: p+=8
-    if epsT<-2: p+=18
-    elif epsT<0: p+=7
-    if yld<-15: p+=18
-    elif yld<5: p+=6
-    if br<45: p+=15
-    elif br<55: p+=5
-    if hy>4.5: p+=15
-    elif hy>3.8: p+=5
-    if spxA>8: p+=12
-    elif spxA>5: p+=4
-    if eps<45 and vix>22: p+=10
+    vix  = data.get("vix", 18);    vixT = data.get("vixTrend", 0)
+    eps  = data.get("epsScore", 60); epsT = data.get("epsTrend", 0)
+    yld  = data.get("yieldCurve", 10); br = data.get("breadth", 60)
+    hy   = data.get("hySpread", 3.5); spxA = data.get("spxAboveMA", 2)
+    skew = data.get("skew", 130);  liq  = data.get("fedNetLiq", 5000)
+    rec  = data.get("recProb", 5)
+
+    # Rezsim detektalas a fuggvenyen belul (nem kulso valtozo!)
+    current_regime = detect_regime(data)
+
+    p = 0
+    if vix > 25 and vixT > 0: p += 20
+    elif vix > 20:             p += 8
+    if epsT < -2:              p += 18
+    elif epsT < 0:             p += 7
+    if isinstance(yld, int):
+        if yld < -15:  p += 18
+        elif yld < 5:  p += 6
+    if isinstance(br, int):
+        if br < 45:    p += 15
+        elif br < 55:  p += 5
+    if isinstance(hy, (int, float)):
+        if hy > 4.5:   p += 15
+        elif hy > 3.8: p += 5
+    if spxA > 8:       p += 12
+    elif spxA > 5:     p += 4
+    if eps < 45 and vix > 22: p += 10
     if isinstance(rec, (int, float)):
-        if rec > 20:   p += 25   # Komoly recessziós kockázat
-        elif rec > 12: p += 12   # Sárga figyelmeztetés (volt: >15)
-_regime = detect_regime(data)
-if _regime == "recession_watch": p += 20  # extra kockázat
-    if isinstance(skew,(int,float)):
-        if skew>150: p+=10
-        elif skew>145: p+=5
-    if isinstance(liq,(int,float)) and liq<4000: p+=10
+        if rec > 20:   p += 25
+        elif rec > 12: p += 12
+    if current_regime == "recession_watch": p += 20
+    if isinstance(skew, (int, float)):
+        if skew > 150: p += 10
+        elif skew > 145: p += 5
+    if isinstance(liq, (int, float)) and liq < 4000: p += 10
     return min(95, p)
 
 def calc_kelly_allocation(entry_score, corr_prob):
     """
-    Frakcionalt Kelly (0.4x) – retail befektetőnek optimális.
-    0.5x már kissé volatilis, 0.25x túl konzervatív → 0.4x a sweet spot.
-    Maximum 80% hard cap – soha ne menjen 100%-ra.
-
-    f* = p - (1-p)/b
-    p  = nyerési valószínűség (entry_score alapján, max 82%)
-    b  = átlagos nyeremény/veszteség arány (hist. +0.6% / -0.9% = 0.67)
+    Frakcionalt Kelly (0.4x) – retail befektetnek optimal.
+    Max 80% hard cap – soha nem megy 100%-ra.
     """
-    win_prob    = min(0.82, entry_score / 100 * 0.95)
-    corr_adj    = corr_prob / 100
-    b           = 0.6 / 0.9         # ~0.67 historikus SPX arány
-    full_kelly  = win_prob - (1 - win_prob) / b
-
-    # 0.4x frakcionált Kelly – retail optimum (0.5x már túl volatilis)
-    alloc = round(0.4 * full_kelly * 100)
-
-    # Korrekciós kockázat csökkenti
-    alloc = round(alloc * (1 - corr_adj * 0.65))
-
-    # HARD CAP: max 80%, soha nem 100%
-    alloc = max(0, min(80, alloc))
-    cash  = 100 - alloc
-
+    win_prob   = min(0.82, entry_score / 100 * 0.95)
+    corr_adj   = corr_prob / 100
+    b          = 0.6 / 0.9
+    full_kelly = win_prob - (1 - win_prob) / b
+    alloc      = round(0.4 * full_kelly * 100)
+    alloc      = round(alloc * (1 - corr_adj * 0.65))
+    alloc      = max(0, min(80, alloc))
+    cash       = 100 - alloc
     if alloc >= 70:   label = "Aktiv (80% korlat aktiv)"
     elif alloc >= 55: label = "Erosebb pozicio"
     elif alloc >= 40: label = "Mersekelt"
-    elif alloc >= 20: label = "Ovatos – kis pozicio"
+    elif alloc >= 20: label = "Ovatos"
     else:             label = "Defenziv – maradj ki"
-
     return {"kellyAlloc": alloc, "kellyCash": cash, "kellyLabel": label}
 
 def calc_seasonality():
-    today = datetime.date.today(); month = today.month
-    weak    = [5, 6, 7, 8, 9]; strong = [11, 12, 1, 2, 3, 4]
-    mn = {1:"jan",2:"feb",3:"mar",4:"apr",5:"maj",6:"jun",
-          7:"jul",8:"aug",9:"szept",10:"okt",11:"nov",12:"dec"}
+    today = datetime.date.today()
+    month = today.month
+    mn    = {1:"jan",2:"feb",3:"mar",4:"apr",5:"maj",6:"jun",
+             7:"jul",8:"aug",9:"szept",10:"okt",11:"nov",12:"dec"}
     if month == 9:
-        return {"seasonLabel": f"Szeptember – historikusan leggyengebb honap",
-                "seasonStrength": "weak", "seasonAdj": -8, "month": month, "isStrongSeason": False}
-    elif month in weak:
+        return {"seasonLabel": "Szeptember – historikusan leggyengebb honap",
+                "seasonStrength": "weak", "month": month, "isStrongSeason": False}
+    elif month in [5, 6, 7, 8]:
         return {"seasonLabel": f"Gyenge szezon ({mn[month]}) – Sell in May zona",
-                "seasonStrength": "weak", "seasonAdj": -5, "month": month, "isStrongSeason": False}
-    elif month in strong:
+                "seasonStrength": "weak", "month": month, "isStrongSeason": False}
+    elif month in [11, 12, 1, 2, 3, 4]:
         return {"seasonLabel": f"Eros szezon ({mn[month]}) – Nov-Apr avg +7.5%",
-                "seasonStrength": "strong", "seasonAdj": +5, "month": month, "isStrongSeason": True}
-    return {"seasonLabel": f"Semleges ({mn[month]})", "seasonStrength": "neutral",
-            "seasonAdj": 0, "month": month, "isStrongSeason": False}
+                "seasonStrength": "strong", "month": month, "isStrongSeason": True}
+    return {"seasonLabel": f"Semleges ({mn[month]})",
+            "seasonStrength": "neutral", "month": month, "isStrongSeason": False}
+
+# ── EGYEDI RESZVENY ───────────────────────────────────────────
 
 def fetch_stock(ticker, name):
     try:
         h = yf.Ticker(ticker).history(period="1y")
-        if len(h) < 50: return None
-        p=float(h["Close"].iloc[-1]); ma50=float(h["Close"].rolling(50).mean().iloc[-1])
-        ma200=float(h["Close"].rolling(200).mean().iloc[-1]); ath=float(h["Close"].max())
-        d=h["Close"].diff(); g=d.clip(lower=0).rolling(14).mean(); l=(-d.clip(upper=0)).rolling(14).mean()
-        rsi=float(100-(100/(1+g.iloc[-1]/l.iloc[-1])))
-        chg=(p-float(h["Close"].iloc[-2]))/float(h["Close"].iloc[-2])*100
-        fath=(p-ath)/ath*100; vma200=(p-ma200)/ma200*100
-        sc=50
-        if p>ma200: sc+=15
-        if p>ma50:  sc+=10
-        if rsi<40:  sc+=15
-        elif rsi<55: sc+=8
-        elif rsi>75: sc-=15
-        if fath<-15: sc+=10
-        elif fath<-5: sc+=5
-        cr=20
-        if rsi>70:    cr+=25
-        if vma200>15: cr+=20
-        if p<ma50:    cr+=15
-        sig="go" if sc>=60 else "wait" if sc>=40 else "stop"
-        return {"ticker":ticker,"name":name,"price":round(p,2),"ma50":round(ma50,2),
-                "ma200":round(ma200,2),"rsi":round(rsi,1),"chgDay":round(chg,2),
-                "fromAth":round(fath,1),"vsMA200":round(vma200,1),
-                "score":min(100,max(0,round(sc))),"corrRisk":min(95,round(cr)),"signal":sig}
+        if len(h) < 50:
+            return None
+        p    = float(h["Close"].iloc[-1])
+        ma50 = float(h["Close"].rolling(50).mean().iloc[-1])
+        ma200= float(h["Close"].rolling(200).mean().iloc[-1])
+        ath  = float(h["Close"].max())
+        d    = h["Close"].diff()
+        g    = d.clip(lower=0).rolling(14).mean()
+        l    = (-d.clip(upper=0)).rolling(14).mean()
+        rsi  = float(100 - (100 / (1 + g.iloc[-1] / l.iloc[-1])))
+        chg  = (p - float(h["Close"].iloc[-2])) / float(h["Close"].iloc[-2]) * 100
+        fath = (p - ath) / ath * 100
+        vma200 = (p - ma200) / ma200 * 100
+        sc = 50
+        if p > ma200:  sc += 15
+        if p > ma50:   sc += 10
+        if rsi < 40:   sc += 15
+        elif rsi < 55: sc += 8
+        elif rsi > 75: sc -= 15
+        if fath < -15: sc += 10
+        elif fath < -5: sc += 5
+        cr = 20
+        if rsi > 70:   cr += 25
+        if vma200 > 15: cr += 20
+        if p < ma50:   cr += 15
+        sig = "go" if sc >= 60 else "wait" if sc >= 40 else "stop"
+        return {"ticker": ticker, "name": name, "price": round(p, 2),
+                "ma50": round(ma50, 2), "ma200": round(ma200, 2),
+                "rsi": round(rsi, 1), "chgDay": round(chg, 2),
+                "fromAth": round(fath, 1), "vsMA200": round(vma200, 1),
+                "score": min(100, max(0, round(sc))),
+                "corrRisk": min(95, round(cr)), "signal": sig}
     except Exception as e:
-        return {"ticker":ticker,"name":name,"error":str(e)[:80]}
+        return {"ticker": ticker, "name": name, "error": str(e)[:80]}
+
+# ── HISTORY ───────────────────────────────────────────────────
 
 def load_history():
     if Path(HISTORY_FILE).exists():
-        with open(HISTORY_FILE,"r",encoding="utf-8") as f: return json.load(f)
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
     return []
 
 def save_history(hist, data, es, cp, regime, kelly):
-    snap={"date":datetime.date.today().isoformat(),"spx":data.get("spx"),
-          "entryScore":es,"corrProb":cp,"regime":regime,"kellyAlloc":kelly.get("kellyAlloc"),
-          **{k:data.get(k) for k in ["vix","epsScore","yieldCurve","breadth","hySpread",
-                                      "aaiiNet","forwardPE","recProb","fedNetLiq","cnnFG"]}}
-    hist.append(snap); hist=hist[-52:]
-    with open(HISTORY_FILE,"w",encoding="utf-8") as f: json.dump(hist,f,indent=2,ensure_ascii=False)
+    snap = {
+        "date": datetime.date.today().isoformat(),
+        "spx": data.get("spx"), "entryScore": es,
+        "corrProb": cp, "regime": regime,
+        "kellyAlloc": kelly.get("kellyAlloc"),
+        **{k: data.get(k) for k in ["vix","epsScore","yieldCurve",
+           "breadth","hySpread","aaiiNet","forwardPE","recProb",
+           "fedNetLiq","cnnFG"]},
+    }
+    hist.append(snap)
+    hist = hist[-52:]
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(hist, f, indent=2, ensure_ascii=False)
     return hist
 
 def save_error_log():
-    d={"last_run":datetime.datetime.now().isoformat(),
-       "status":"OK" if not errors else "PARTIAL" if len(errors)<5 else "FAILED",
-       "errors":errors,"success_count":13-len(errors)}
-    with open(ERROR_LOG,"w",encoding="utf-8") as f: json.dump(d,f,indent=2,ensure_ascii=False)
+    d = {
+        "last_run": datetime.datetime.now().isoformat(),
+        "status": "OK" if not errors else "PARTIAL" if len(errors) < 5 else "FAILED",
+        "errors": errors,
+        "success_count": 13 - len(errors)
+    }
+    with open(ERROR_LOG, "w", encoding="utf-8") as f:
+        json.dump(d, f, indent=2, ensure_ascii=False)
     return d
 
+# ── HTML GENERAALS ────────────────────────────────────────────
+
 def generate_html(data, es, cp, history, stocks, log_data, kelly, season, regime):
-    today = datetime.date.today().strftime("%Y. %B %d.")
-    nfd=(4-datetime.date.today().weekday())%7 or 7
-    next_fri=(datetime.date.today()+datetime.timedelta(days=nfd)).strftime("%B %d.")
-    sc_col="#00c878" if log_data["status"]=="OK" else "#f0a500" if log_data["status"]=="PARTIAL" else "#f03050"
-    st_txt=f"Minden OK" if not errors else f"{len(errors)} forras fallback"
+    today    = datetime.date.today().strftime("%Y. %B %d.")
+    nfd      = (4 - datetime.date.today().weekday()) % 7 or 7
+    next_fri = (datetime.date.today() + datetime.timedelta(days=nfd)).strftime("%B %d.")
 
-    if cp>=60:   sig,si,sv,se="stop","🟣","KORREKCIO KOCKAZAT – KILEPES MERLEGEL.","Korr.val.: <strong>"+str(cp)+"%</strong>. Ha pozicioban vagy, merlegel reszleges kilepest."
-    elif es>=65: sig,si,sv,se="go","🟢","MOST ERDEMES BEFEKTETNI",f"EPS emelkedo, VIX {data.get('vix','–')}, fundamentumok erosek."
-    elif es>=40: sig,si,sv,se="wait","🟡","VEGYES JELEK – VARJ","Fektess be felnyit most, felnyit ha score 65+ lesz."
-    else:        sig,si,sv,se="stop","🔴","NE FEKTESS BE MOST","Tobb indikatator gyenge. Jobb ar jon."
+    sc_col = "#00c878" if log_data["status"] == "OK" else "#f0a500" if log_data["status"] == "PARTIAL" else "#f03050"
+    st_txt = "Minden OK" if not errors else f"{len(errors)} forras fallback"
 
-    alloc=kelly["kellyAlloc"]; alloc_col="#00c878" if alloc>=70 else "#f0a500" if alloc>=40 else "#f03050"
-    regime_labels={
-        "bull":          "Bikás (EPS+Breadth dominál)",
-        "neutral":       "Semleges (kiegyensúlyozott súlyok)",
-        "fear":          "Félelmi (kontrarian jelek dominálnak)",
-        "extreme_fear":  "EXTREME FEAR – erős kontrarian vételi jel!",
-        "recession_watch":"Recesszió figyelő – makro kockázat emelkedett",
+    # Fo jel
+    if cp >= 60:
+        sig, si = "stop", "🟣"
+        sv = "KORREKCIO KOCKAZAT – KILEPES MERLEGEL"
+        se = f"Korrekcios valoszinuseg: <strong>{cp}%</strong>. Merlegel reszleges kilepest."
+    elif es >= 65:
+        sig, si = "go", "🟢"
+        sv = "MOST ERDEMES BEFEKTETNI"
+        se = f"EPS emelkedo, VIX {data.get('vix','–')}, fundamentumok erosek."
+    elif es >= 40:
+        sig, si = "wait", "🟡"
+        sv = "VEGYES JELEK – VARJ"
+        se = "Fektess be felnyit most, felnyit ha score 65+ lesz."
+    else:
+        sig, si = "stop", "🔴"
+        sv = "NE FEKTESS BE MOST"
+        se = "Tobb indikator gyenge. Jobb ar jon hamarosan."
+
+    alloc     = kelly["kellyAlloc"]
+    alloc_col = "#00c878" if alloc >= 60 else "#f0a500" if alloc >= 35 else "#f03050"
+
+    regime_map = {
+        "bull":           "Bikos (EPS+Breadth dominál)",
+        "neutral":        "Semleges (kiegyensulyozott)",
+        "fear":           "Felelmi (kontrarian jelek dominálnak)",
+        "extreme_fear":   "EXTREME FEAR – eroskontrarian veteli jel!",
+        "recession_watch":"Recesszio Figyelő – makro kockazat emelkedett",
     }
-    regime_label=regime_labels.get(regime, regime)
-    regime_css={"bull":"regime-bull","neutral":"regime-neutral","fear":"regime-fear",
-                "extreme_fear":"regime-fear","recession_watch":"regime-neutral"}.get(regime,"regime-neutral")
-    season_cls="season-strong" if season["seasonStrength"]=="strong" else "season-weak" if season["seasonStrength"]=="weak" else "season-neutral"
+    regime_label = regime_map.get(regime, regime)
+    regime_css   = "regime-bull" if regime == "bull" else "regime-fear" if "fear" in regime else "regime-neutral"
+    season_css   = "season-strong" if season["seasonStrength"] == "strong" else "season-weak" if season["seasonStrength"] == "weak" else ""
 
     # Backtest
-    bt_html=""
-    if len(history)>=4:
-        s0=history[0].get("spx",0)
-        if s0 and s0>0:
-            inv=False; sv2=100.0; bh=100.0
-            for i in range(1,len(history)):
-                ph=history[i-1]; ch=history[i]
-                r=(ch.get("spx",0)-ph.get("spx",1))/ph.get("spx",1) if ph.get("spx",1) else 0
-                if ph.get("corrProb",0)>=60: inv=False
-                elif ph.get("entryScore",0)>=65: inv=True
-                sv2*=(1+r*(1 if inv else 0)); bh*=(1+r)
-            bts=round(sv2-100,1); btb=round(bh-100,1)
-            btc="#00c878" if bts>=btb else "#f0a500"
-            bt_html=f'<div class="bt-box"><span class="bt-l">Historikus (signal kovetese):</span><span style="color:{btc};font-weight:700">Strategia: {bts:+.1f}%</span><span class="bt-s">vs</span><span>Buy&Hold: {btb:+.1f}%</span><span class="bt-n">({len(history)} het)</span></div>'
+    bt_html = ""
+    if len(history) >= 4:
+        s0 = history[0].get("spx", 0)
+        if s0 and s0 > 0:
+            inv = False; sv2 = 100.0; bh = 100.0
+            for i in range(1, len(history)):
+                ph = history[i-1]; ch = history[i]
+                sp = ph.get("spx", 1)
+                r  = (ch.get("spx", sp) - sp) / sp if sp else 0
+                if ph.get("corrProb", 0) >= 60:   inv = False
+                elif ph.get("entryScore", 0) >= 65: inv = True
+                sv2 *= (1 + r * (1 if inv else 0))
+                bh  *= (1 + r)
+            bts = round(sv2 - 100, 1); btb = round(bh - 100, 1)
+            btc = "#00c878" if bts >= btb else "#f0a500"
+            bt_html = (f'<div class="bt-box">'
+                       f'<span class="bt-l">Historikus (signal kovetese):</span>'
+                       f'<span style="color:{btc};font-weight:700">Strategia: {bts:+.1f}%</span>'
+                       f'<span class="bt-s">vs</span>'
+                       f'<span>Buy&Hold: {btb:+.1f}%</span>'
+                       f'<span class="bt-n">({len(history)} het adat)</span></div>')
 
-    eps=data.get("epsScore","–"); epsT=data.get("epsTrend",0)
-    vix=data.get("vix","–"); vixT=data.get("vixTrend",0)
-    yld=data.get("yieldCurve","–"); br=data.get("breadth","–")
-    hy=data.get("hySpread","–"); anetv=data.get("aaiiNet",0)
-    aaiiB=data.get("aaiiB","–"); aaiiBe=data.get("aaiiBear","–")
-    pe=data.get("forwardPE","–"); vall=data.get("valLabel","–")
-    rec=data.get("recProb","–"); liq=data.get("fedNetLiq","–")
-    skew=data.get("skew","–"); cnn=data.get("cnnFG","–"); cnnR=data.get("cnnFGRating","–")
-    pc=data.get("putCall","–")
+    eps   = data.get("epsScore", "–");   epsT  = data.get("epsTrend", 0)
+    vix   = data.get("vix", "–");        vixT  = data.get("vixTrend", 0)
+    yld   = data.get("yieldCurve", "–"); br    = data.get("breadth", "–")
+    hy    = data.get("hySpread", "–");   anetv = data.get("aaiiNet", 0)
+    aaiiB = data.get("aaiiB", "–");      aaiiBe= data.get("aaiiBear", "–")
+    pe    = data.get("forwardPE", "–");  vall  = data.get("valLabel", "–")
+    rec   = data.get("recProb", "–");    liq   = data.get("fedNetLiq", "–")
+    skew  = data.get("skew", "–");       cnn   = data.get("cnnFG", "–")
+    cnnR  = data.get("cnnFGRating", "–"); pc   = data.get("putCall", "–")
 
-    def cls3(v,good,mid):
-        if not isinstance(v,(int,float)): return "wait"
-        return "go" if v<=good else "wait" if v<=mid else "stop"
-    def cls3r(v,bad,mid):
-        if not isinstance(v,(int,float)): return "wait"
-        return "stop" if v<=bad else "wait" if v<=mid else "go"
+    def ic(v, g, w):
+        if not isinstance(v, (int, float)): return "wait"
+        return "go" if v <= g else "wait" if v <= w else "stop"
+    def icr(v, b, w):
+        if not isinstance(v, (int, float)): return "wait"
+        return "stop" if v <= b else "wait" if v <= w else "go"
 
-    ie ="go" if isinstance(eps,(int,float)) and eps>=65 else "wait" if isinstance(eps,(int,float)) and eps>=40 else "stop"
-    iv2="go" if isinstance(vix,(int,float)) and vix<18 else "wait" if isinstance(vix,(int,float)) and vix<25 else "stop"
-    iy ="go" if isinstance(yld,int) and yld>15 else "wait" if isinstance(yld,int) and yld>-10 else "stop"
-    ibr="go" if isinstance(br,int) and br>65 else "wait" if isinstance(br,int) and br>45 else "stop"
-    ihy="go" if isinstance(hy,(int,float)) and hy<3.5 else "wait" if isinstance(hy,(int,float)) and hy<5 else "stop"
-    ia ="go" if anetv<-20 else "stop" if anetv>30 else "wait"
-    ipe="go" if isinstance(pe,(int,float)) and pe<17 else "wait" if isinstance(pe,(int,float)) and pe<22 else "stop"
-    irec="go" if isinstance(rec,(int,float)) and rec<5 else "wait" if isinstance(rec,(int,float)) and rec<15 else "stop"
-    iliq="go" if isinstance(liq,(int,float)) and liq>5500 else "wait" if isinstance(liq,(int,float)) and liq>4000 else "stop"
-    isk ="go" if isinstance(skew,(int,float)) and skew<140 else "wait" if isinstance(skew,(int,float)) and skew<150 else "stop"
-    icnn="go" if isinstance(cnn,(int,float)) and cnn<30 else "wait" if isinstance(cnn,(int,float)) and cnn<55 else "stop"
-    ipc ="go" if isinstance(pc,(int,float)) and pc>1.1 else "wait" if isinstance(pc,(int,float)) and pc>0.8 else "stop"
+    ie   = "go" if isinstance(eps,(int,float)) and eps>=65 else "wait" if isinstance(eps,(int,float)) and eps>=40 else "stop"
+    iv   = "go" if isinstance(vix,(int,float)) and vix<18 else "wait" if isinstance(vix,(int,float)) and vix<25 else "stop"
+    iy   = "go" if isinstance(yld,int) and yld>15 else "wait" if isinstance(yld,int) and yld>-10 else "stop"
+    ibr  = "go" if isinstance(br,int) and br>65 else "wait" if isinstance(br,int) and br>45 else "stop"
+    ihy  = "go" if isinstance(hy,(int,float)) and hy<3.5 else "wait" if isinstance(hy,(int,float)) and hy<5 else "stop"
+    ia   = "go" if anetv<-20 else "stop" if anetv>30 else "wait"
+    ipe  = "go" if isinstance(pe,(int,float)) and pe<18 else "wait" if isinstance(pe,(int,float)) and pe<22 else "stop"
+    irec = "go" if isinstance(rec,(int,float)) and rec<5 else "wait" if isinstance(rec,(int,float)) and rec<15 else "stop"
+    iliq = "go" if isinstance(liq,(int,float)) and liq>5500 else "wait" if isinstance(liq,(int,float)) and liq>4000 else "stop"
+    isk  = "go" if isinstance(skew,(int,float)) and skew<140 else "wait" if isinstance(skew,(int,float)) and skew<150 else "stop"
+    icnn = "go" if isinstance(cnn,(int,float)) and cnn<30 else "wait" if isinstance(cnn,(int,float)) and cnn<55 else "stop"
+    ipc  = "go" if isinstance(pc,(int,float)) and pc>1.1 else "wait" if isinstance(pc,(int,float)) and pc>0.8 else "stop"
 
     def badge(c):
         return {"go":("s-go","BULL"),"wait":("s-wait","NEU"),"stop":("s-stop","BEAR")}[c]
 
-    def ind(name,cls,val,desc,pct):
-        bm,bl=badge(cls); col="var(--bull)" if cls=="go" else "var(--neu)" if cls=="wait" else "var(--bear)"
-        return f'<div class="ind {cls}"><div class="it"><div class="in">{name}</div><div class="is {bm}">{bl}</div></div><div class="iv">{val}</div><div class="pr"><div class="pf" style="width:{min(100,max(0,pct)):.0f}%;background:{col}"></div></div><div class="id">{desc}</div></div>'
+    def ind(name, cls, val, desc, pct):
+        bm, bl = badge(cls)
+        col = "var(--bull)" if cls=="go" else "var(--neu)" if cls=="wait" else "var(--bear)"
+        pct_safe = min(100, max(0, pct)) if isinstance(pct, (int, float)) else 50
+        return (f'<div class="ind {cls}">'
+                f'<div class="it"><div class="in">{name}</div>'
+                f'<div class="is {bm}">{bl}</div></div>'
+                f'<div class="iv">{val}</div>'
+                f'<div class="pr"><div class="pf" style="width:{pct_safe:.0f}%;background:{col}"></div></div>'
+                f'<div class="id">{desc}</div></div>')
 
-    inds="".join([
-        ind("EPS Revision",ie,f"{eps}/100",f"Trend: <b>{'+' if epsT>0 else ''}{epsT}/het</b> · {regime} rezsim",eps if isinstance(eps,(int,float)) else 50),
-        ind("Forward P/E",ipe,f"{pe}x",f"FY26: <b>{vall}</b> · Avg:17.5x",max(0,min(100,(25-(pe if isinstance(pe,(int,float)) else 20))/10*100))),
-        ind("VIX",iv2,str(vix),f"Heti: <b>{'+' if vixT>0 else ''}{vixT}</b> · {'emelkedo' if vixT>0 else 'csokkeno'}",max(0,min(100,100-(float(vix)-10)/40*100)) if isinstance(vix,(int,float)) else 50),
-        ind("CBOE Skew (Black Swan)",isk,str(skew),'<b>Intezmenyi vedekezés!</b>' if data.get("skewElevated") else "Normalis · Nincs BS-felek",max(0,min(100,(170-(skew if isinstance(skew,(int,float)) else 140))/40*100))),
-        ind("Hozamgorbe 10Y-2Y",iy,f"{('+' if isinstance(yld,int) and yld>0 else '')}{yld} bp","Egeszseg: <b>"+(">15bp OK" if iy=="go" else "<0 figyelj" if iy=="wait" else "INVERTALT!")+"</b>",max(0,min(100,(int(yld)+50)/100*100)) if isinstance(yld,int) else 50),
-        ind("Recesszios val.",irec,f"{rec}%","NY Fed modell · <b>"+(rec<5 if isinstance(rec,(int,float)) else None) and "Alacsony" or ("Kozepes" if isinstance(rec,(int,float)) and rec<15 else "MAGAS!")+"</b>" if False else f"<b>{'Alacsony' if irec=='go' else 'Kozepes' if irec=='wait' else 'MAGAS!'}</b>",max(0,min(100,100-float(rec)*3)) if isinstance(rec,(int,float)) else 70),
-        ind("Piaci Breadth (>MA50)",ibr,f"{br}%","<b>"+(("Szeles rally" if ibr=="go" else "Vegyes" if ibr=="wait" else "Szukuloe")+"</b>"),br if isinstance(br,int) else 50),
-        ind("HY Credit Spread",ihy,f"{hy}%","<b>"+("Szuk=OK" if ihy=="go" else "Emelkedo" if ihy=="wait" else "KRIZIS!")+"</b>",max(0,min(100,(8-float(hy))/7*100)) if isinstance(hy,(int,float)) else 50),
-        ind("Put/Call arany",ipc,str(pc),"<b>"+("Kontrarian BUY!" if ipc=="go" else "Semleges" if ipc=="wait" else "Euforia=figyelj")+"</b>",max(0,min(100,(float(pc)-0.5)/1.0*100)) if isinstance(pc,(int,float)) else 50),
-        ind("AAII Sentiment",ia,f"{'+' if anetv>0 else ''}{anetv}",f"Bull:{aaiiB}% Bear:{aaiiBe}% · <b>"+("KONTR.BUY!" if anetv<-20 else "KONTR.SELL!" if anetv>30 else "Semleges")+"</b>",max(0,min(100,(-anetv+60)/120*100))),
-        ind("CNN Fear & Greed",icnn,str(cnn),
-            f"<b>{cnnR}</b>" +
-            (" · <b style='color:#00c878'>STRONG CONTRARIAN BUY!</b>" if isinstance(cnn,(int,float)) and cnn<25 else
-             " · Semleges" if isinstance(cnn,(int,float)) and cnn<55 else
-             " · <b style='color:#f03050'>Euforia – figyelj!</b>"),
-            cnn if isinstance(cnn,(int,float)) else 50),
-        ind("Fed Netto Likviditas",iliq,f"${liq}B" if isinstance(liq,(int,float)) else str(liq),"<b>"+("Boseges" if iliq=="go" else "Szukul" if iliq=="wait" else "QT nyomas!")+"</b> · Fed merleg-TGA-RRP",max(0,min(100,(float(liq)-3000)/5000*100)) if isinstance(liq,(int,float)) else 50),
+    eps_pct  = eps if isinstance(eps,(int,float)) else 50
+    vix_pct  = max(0,min(100,100-(float(vix)-10)/40*100)) if isinstance(vix,(int,float)) else 50
+    yld_pct  = max(0,min(100,(int(yld)+50)/100*100)) if isinstance(yld,int) else 50
+    br_pct   = br if isinstance(br,int) else 50
+    hy_pct   = max(0,min(100,(8-float(hy))/7*100)) if isinstance(hy,(int,float)) else 50
+    aaii_pct = max(0,min(100,(-anetv+60)/120*100))
+    pe_pct   = max(0,min(100,(25-(float(pe) if isinstance(pe,(int,float)) else 20))/10*100))
+    rec_pct  = max(0,min(100,100-float(rec)*3)) if isinstance(rec,(int,float)) else 70
+    liq_pct  = max(0,min(100,(float(liq)-3000)/5000*100)) if isinstance(liq,(int,float)) else 50
+    skew_pct = max(0,min(100,(170-(float(skew) if isinstance(skew,(int,float)) else 140))/40*100))
+    cnn_pct  = cnn if isinstance(cnn,(int,float)) else 50
+    pc_pct   = max(0,min(100,(float(pc)-0.5)/1.0*100)) if isinstance(pc,(int,float)) else 50
+
+    cnn_desc = (f"<b>{cnnR}</b>"
+                + (" · <b style='color:#00c878'>STRONG CONTRARIAN BUY!</b>"
+                   if isinstance(cnn,(int,float)) and cnn < 25
+                   else " · Semleges" if isinstance(cnn,(int,float)) and cnn < 55
+                   else " · <b style='color:#f03050'>Euforia – figyelj!</b>"))
+
+    inds = "".join([
+        ind("EPS Revision", ie, f"{eps}/100",
+            f"Trend: <b>{'+' if epsT>0 else ''}{epsT}/het</b> · rezsim: {regime}", eps_pct),
+        ind("Forward P/E", ipe, f"{pe}x",
+            f"FY26: <b>{vall}</b> · Fair: {PE_FAIR_VALUE}x", pe_pct),
+        ind("VIX", iv, str(vix),
+            f"Heti: <b>{'+' if vixT>0 else ''}{vixT}</b> · {'emelkedo' if vixT>0 else 'csokkeno'}", vix_pct),
+        ind("CBOE Skew (Black Swan)", isk, str(skew),
+            "<b>Intezmenyi vedekezés aktiv!</b>" if data.get("skewElevated") else "Normalis szint", skew_pct),
+        ind("Hozamgorbe 10Y-2Y", iy, f"{('+' if isinstance(yld,int) and yld>0 else '')}{yld} bp",
+            "<b>" + ("Egeszseg: OK" if iy=="go" else "Lapos: figyelj" if iy=="wait" else "INVERTALT!") + "</b>", yld_pct),
+        ind("Recesszios valoszinuseg", irec, f"{rec}%",
+            "NY Fed modell · <b>" + ("Alacsony" if irec=="go" else "Kozepes" if irec=="wait" else "MAGAS!") + "</b>", rec_pct),
+        ind("Piaci Breadth (>MA50)", ibr, f"{br}%",
+            "<b>" + ("Szeles rally" if ibr=="go" else "Vegyes" if ibr=="wait" else "Szukuloe") + "</b>", br_pct),
+        ind("HY Credit Spread", ihy, f"{hy}%",
+            "<b>" + ("Szuk=OK" if ihy=="go" else "Emelkedo" if ihy=="wait" else "KRIZIS!") + "</b>", hy_pct),
+        ind("Put/Call arany", ipc, str(pc),
+            "<b>" + ("Kontrarian BUY!" if ipc=="go" else "Semleges" if ipc=="wait" else "Euforia=figyelj") + "</b>", pc_pct),
+        ind("AAII Sentiment", ia, f"{'+' if anetv>0 else ''}{anetv}",
+            f"Bull:{aaiiB}% Bear:{aaiiBe}% · <b>"
+            + ("KONTR.BUY!" if anetv<-20 else "KONTR.SELL!" if anetv>30 else "Semleges") + "</b>", aaii_pct),
+        ind("CNN Fear & Greed", icnn, str(cnn), cnn_desc, cnn_pct),
+        ind("Fed Netto Likviditas", iliq,
+            f"${liq}B" if isinstance(liq,(int,float)) else str(liq),
+            "<b>" + ("Boseges" if iliq=="go" else "Szukul" if iliq=="wait" else "QT nyomas!") + "</b>", liq_pct),
     ])
 
     def stock_card(s):
         if "error" in s:
-            return f'<div class="sc err"><b class="st">{s["ticker"]}</b><div class="se">{s["error"]}</div></div>'
-        vc={"go":"#00c878","wait":"#f0a500","stop":"#f03050"}[s["signal"]]
-        sl={"go":"VESZEL","wait":"VARJ","stop":"NE MOST"}[s["signal"]]
-        rc="rsi-lo" if s["rsi"]<40 else "rsi-hi" if s["rsi"]>70 else ""
-        cc="#a78bfa" if s["corrRisk"]>=50 else "#f0a500" if s["corrRisk"]>=30 else "#00c878"
-        return f'<div class="sc {s["signal"]}"><div class="sc-top"><div><div class="st">{s["ticker"]}</div><div class="sn">{s["name"]}</div></div><div class="ssig" style="color:{vc};border-color:{vc}40;background:{vc}12">{sl}</div></div><div class="sp">${s["price"]:,.2f} <span style="color:{"#00c878" if s["chgDay"]>=0 else "#f03050"};font-size:11px">{s["chgDay"]:+.2f}%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:{vc}">{s["score"]}/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv {rc}">{s["rsi"]}</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:{"#00c878" if s["vsMA200"]>0 else "#f03050"}">{s["vsMA200"]:+.1f}%</div></div><div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:{"#f0a500" if s["fromAth"]<-5 else "#c0d0e8"}">{s["fromAth"]:.1f}%</div></div></div><div class="sb-w"><div class="sb" style="width:{s["score"]}%;background:{vc}"></div></div><div class="scr">Korr.kockazat: <b style="color:{cc}">{s["corrRisk"]}%</b></div></div>'
+            return (f'<div class="sc err">'
+                    f'<b class="st">{s["ticker"]}</b>'
+                    f'<div class="se">{s["error"]}</div></div>')
+        vc  = {"go":"#00c878","wait":"#f0a500","stop":"#f03050"}[s["signal"]]
+        sl  = {"go":"VESZEL","wait":"VARJ","stop":"NE MOST"}[s["signal"]]
+        rc  = "rsi-lo" if s["rsi"]<40 else "rsi-hi" if s["rsi"]>70 else ""
+        cc  = "#a78bfa" if s["corrRisk"]>=50 else "#f0a500" if s["corrRisk"]>=30 else "#00c878"
+        chg_col = "#00c878" if s["chgDay"] >= 0 else "#f03050"
+        vma_col = "#00c878" if s["vsMA200"] > 0 else "#f03050"
+        ath_col = "#f0a500" if s["fromAth"] < -5 else "#c0d0e8"
+        return (f'<div class="sc {s["signal"]}">'
+                f'<div class="sc-top"><div><div class="st">{s["ticker"]}</div>'
+                f'<div class="sn">{s["name"]}</div></div>'
+                f'<div class="ssig" style="color:{vc};border-color:{vc}40;background:{vc}12">{sl}</div></div>'
+                f'<div class="sp">${s["price"]:,.2f} '
+                f'<span style="color:{chg_col};font-size:11px">{s["chgDay"]:+.2f}%</span></div>'
+                f'<div class="sg4">'
+                f'<div class="si"><div class="sl2">Score</div><div class="sv" style="color:{vc}">{s["score"]}/100</div></div>'
+                f'<div class="si"><div class="sl2">RSI</div><div class="sv {rc}">{s["rsi"]}</div></div>'
+                f'<div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:{vma_col}">{s["vsMA200"]:+.1f}%</div></div>'
+                f'<div class="si"><div class="sl2">ATH-tol</div><div class="sv" style="color:{ath_col}">{s["fromAth"]:.1f}%</div></div>'
+                f'</div>'
+                f'<div class="sb-w"><div class="sb" style="width:{s["score"]}%;background:{vc}"></div></div>'
+                f'<div class="scr">Korr.kockazat: <b style="color:{cc}">{s["corrRisk"]}%</b></div>'
+                f'</div>')
 
-    stk="".join(stock_card(s) for s in stocks)
-    errh=f'<div class="eb">Forras hibak: {", ".join(e["source"] for e in errors)}</div>' if errors else ""
-    hd=json.dumps([h["date"] for h in history[-24:]])
-    hs=json.dumps([h.get("entryScore",50) for h in history[-24:]])
-    hc=json.dumps([h.get("corrProb",20) for h in history[-24:]])
-    ca=cp>=40
+    stk   = "\n".join(stock_card(s) for s in stocks)
+    errh  = (f'<div class="eb">Forras hibak (fallback): '
+             + ", ".join(e["source"] for e in errors)
+             + '</div>') if errors else ""
 
-    html=f"""<!DOCTYPE html><html lang="hu"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+    hd = json.dumps([h["date"] for h in history[-24:]])
+    hs = json.dumps([h.get("entryScore", 50) for h in history[-24:]])
+    hc = json.dumps([h.get("corrProb", 20)   for h in history[-24:]])
+    ca = cp >= 40
+
+    html = f"""<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="refresh" content="3600">
 <title>Befekteto Dashboard v3 – {today}</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-:root{{--bg:#03050a;--bg2:#080c14;--bg3:#0d1522;--b:#162030;--t:#c0d0e8;--m:#3a5068;--d:#101828;
+:root{{
+  --bg:#03050a;--bg2:#080c14;--bg3:#0d1522;--b:#162030;
+  --t:#c0d0e8;--m:#3a5068;--d:#101828;
   --bull:#00c878;--neu:#f0a500;--bear:#f03050;--purple:#a78bfa;
-  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif}}
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif
+}}
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;padding:18px 22px 48px}}
 .w{{max-width:1180px;margin:0 auto}}
@@ -620,9 +716,12 @@ body{{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px
 .sg4{{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px}}
 .si{{background:var(--bg3);border-radius:5px;padding:4px 6px}}
 .sl2{{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:2px}}
-.sv{{font-family:var(--mono);font-size:11px;font-weight:700}} .rsi-lo{{color:var(--bull)}} .rsi-hi{{color:var(--bear)}}
-.sb-w{{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px}} .sb{{height:100%;border-radius:2px}}
-.scr{{font-family:var(--mono);font-size:9px;color:var(--m)}} .se{{font-family:var(--mono);font-size:9px;color:var(--bear)}}
+.sv{{font-family:var(--mono);font-size:11px;font-weight:700}}
+.rsi-lo{{color:var(--bull)}} .rsi-hi{{color:var(--bear)}}
+.sb-w{{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px}}
+.sb{{height:100%;border-radius:2px}}
+.scr{{font-family:var(--mono);font-size:9px;color:var(--m)}}
+.se{{font-family:var(--mono);font-size:9px;color:var(--bear)}}
 .g2{{display:grid;grid-template-columns:3fr 2fr;gap:9px;margin-bottom:9px}}
 .panel{{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:12px 14px}}
 .pt{{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--m);margin-bottom:10px;display:flex;align-items:center;gap:6px}}
@@ -634,144 +733,213 @@ body{{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px
 .pb th{{padding:6px 8px;font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);border-bottom:1px solid var(--b);text-align:left}}
 .pb td{{padding:6px 8px;border-bottom:1px solid rgba(22,32,48,.6);vertical-align:top;line-height:1.5}}
 .pb tr:last-child td{{border-bottom:none}}
-.ga{{color:var(--bull);font-weight:600}} .wa{{color:var(--neu);font-weight:600}} .ba{{color:var(--bear);font-weight:600}} .ea{{color:var(--purple);font-weight:600}}
+.ga{{color:var(--bull);font-weight:600}} .wa{{color:var(--neu);font-weight:600}}
+.ba{{color:var(--bear);font-weight:600}} .ea{{color:var(--purple);font-weight:600}}
 .eb{{background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.18);border-radius:7px;padding:8px 12px;margin-bottom:8px;font-family:var(--mono);font-size:9px;color:var(--m)}}
 .footer{{margin-top:14px;padding-top:10px;border-top:1px solid var(--b);font-family:var(--mono);font-size:8.5px;color:var(--m);display:flex;justify-content:space-between;line-height:1.9;gap:20px}}
 a{{color:#64a0ff}}
-@media(max-width:900px){{.hero,.g2,.ig{{grid-template-columns:1fr}} .ew{{grid-template-columns:1fr}} .ig{{grid-template-columns:repeat(2,1fr)}}}}
-</style></head><body>
+@media(max-width:900px){{
+  .hero,.g2,.ig{{grid-template-columns:1fr}}
+  .ew{{grid-template-columns:1fr}}
+  .ig{{grid-template-columns:repeat(2,1fr)}}
+}}
+</style>
+</head>
+<body>
 <div class="w">
 <div class="hdr">
-  <div><h1>Befekteto Dashboard <em>v3 · World-Class</em></h1>
-    <div class="ab"><span class="dot"></span> Automatikusan frissítve: {today}</div></div>
-  <div style="text-align:right"><div class="sb2">⬤ {st_txt}</div>
-    <div class="hm">Következő: <b>péntek, {next_fri}</b> · {log_data['success_count']}/13 forrás</div></div>
+  <div>
+    <h1>Befekteto Dashboard <em>v3 · World-Class</em></h1>
+    <div class="ab"><span class="dot"></span> Automatikusan frissitve: {today}</div>
+  </div>
+  <div style="text-align:right">
+    <div class="sb2">⬤ {st_txt}</div>
+    <div class="hm">Kovetkezo: <b>pentek, {next_fri}</b> · {log_data['success_count']}/13 forras</div>
+  </div>
 </div>
-{errh}{bt_html}
+
+{errh}
+{bt_html}
+
 <div class="meta-row">
   <div class="meta-tag {regime_css}">{regime_label}</div>
-  <div class="meta-tag {season_cls}">{season['seasonLabel']}</div>
+  <div class="meta-tag {season_css}">{season['seasonLabel']}</div>
   <div class="meta-tag">CBOE Skew: {skew} {'EMELKEDETT' if data.get('skewElevated') else 'OK'}</div>
   <div class="meta-tag">Rec.prob: {rec}%</div>
   <div class="meta-tag">CNN F&G: {cnn} ({cnnR})</div>
 </div>
+
 <div class="hero {sig}">
   <div class="hi">{si}</div>
-  <div><div class="hv">{sv}</div><div class="he">{se}</div></div>
+  <div>
+    <div class="hv">{sv}</div>
+    <div class="he">{se}</div>
+  </div>
   <div class="hr">
     <div class="hs">{es}/100</div>
-    <div class="hsl">Belépési score ({regime_label[:18]})</div>
-    <div class="hall">Ajánlott allokáció: {alloc}% SPX / {100-alloc}% cash</div>
-    <div class="hkl">Kelly-kritérium · {kelly['kellyLabel']}</div>
+    <div class="hsl">Belepesi score</div>
+    <div class="hall">Ajanlott allokacio: {alloc}% SPX / {100-alloc}% cash</div>
+    <div class="hkl">Kelly-kriterium · {kelly['kellyLabel']}</div>
   </div>
 </div>
+
 <div class="ew {'a' if ca else 'i'}">
   <div class="ewi">{'⚠️' if ca else '✅'}</div>
-  <div><div class="ewt">{'KORREKCIOS FIGYELMEZTETO – '+str(cp)+'% valoszinuseg' if ca else 'Nincs korrekcios figyelmezteto – piac egeszseges'}</div>
-    <div class="ewd">{'<strong>Ha pozicioban vagy:</strong> merlegel reszleges kilepest. Visszavasarlas: SPX -10% + VIX csokkeni kezd + score >=50.' if ca else 'VIX normalis, EPS pozitiv, recesszios kockazat alacsony. <strong>Ulj nyugodtan.</strong>'}</div></div>
-  <div class="ewr"><div class="ewp">{cp}%</div><div class="ewpl">korrekció esélye</div></div>
+  <div>
+    <div class="ewt">{'KORREKCIO FIGYELMEZTETO – ' + str(cp) + '% valoszinuseg' if ca else 'Nincs korrekcios figyelmezteto – piac egeszseg'}</div>
+    <div class="ewd">{'Ha pozicioban vagy: <strong>merlegel reszleges kilepest.</strong> Visszavasarlas: SPX -10% + VIX csokkeni kezd + score >= 50.' if ca else 'VIX normalis, EPS pozitiv. Ha pozicioban vagy: <strong>ulj nyugodtan.</strong>'}</div>
+  </div>
+  <div class="ewr">
+    <div class="ewp">{cp}%</div>
+    <div class="ewpl">korrekció esélye</div>
+  </div>
 </div>
+
 <div class="ig">{inds}</div>
-<div class="stitle">Saját részvényeim</div>
+
+<div class="stitle">Sajat reszvenyek – belepesi score es korrekciokockazat</div>
 <div class="sgrid">{stk}</div>
+
 <div class="g2">
   <div class="panel">
-    <div class="pt">Belépési score + korrekció historikus <span class="badge bb">>=65=vegyél</span><span class="badge bp">>=60%=figyelj</span></div>
+    <div class="pt">Belepesi score + korrekciok historikus
+      <span class="badge bb">>=65=vegyel</span>
+      <span class="badge bp">>=60%=figyelj</span>
+    </div>
     <canvas id="ch" height="155"></canvas>
   </div>
   <div class="panel">
-    <div class="pt">Playbook + Kelly allokáció</div>
+    <div class="pt">Befektetoi playbook + Kelly allokacio</div>
     <table class="pb">
       <thead><tr><th></th><th>Helyzet</th><th>Teendo</th><th>Allok.</th></tr></thead>
       <tbody>
-        <tr><td>🟢</td><td>Score≥65, korr.&lt;30%</td><td class="ga">FEKTESS BE</td><td class="ga">70-100%</td></tr>
-        <tr><td>🟡</td><td>Score 40-65</td><td class="wa">FELEZD MEG</td><td class="wa">40-60%</td></tr>
-        <tr><td>🔴</td><td>Score&lt;40</td><td class="ba">TARTSD VISSZA</td><td class="ba">0-30%</td></tr>
-        <tr><td>🟣</td><td>Korr.≥60%</td><td class="ea">KILEPES</td><td class="ea">0-20%</td></tr>
-        <tr><td>🔄</td><td>Piac -10%+score≥50</td><td class="ga">VISSZAVASAROL</td><td class="ga">60-80%</td></tr>
+        <tr><td>🟢</td><td>Score>=65, korr.&lt;30%</td><td class="ga">FEKTESS BE</td><td class="ga">60-80%</td></tr>
+        <tr><td>🟡</td><td>Score 40-65</td><td class="wa">FELEZD MEG</td><td class="wa">35-55%</td></tr>
+        <tr><td>🔴</td><td>Score&lt;40</td><td class="ba">TARTSD VISSZA</td><td class="ba">0-25%</td></tr>
+        <tr><td>🟣</td><td>Korr.>=60%</td><td class="ea">KILEPES</td><td class="ea">0-15%</td></tr>
+        <tr><td>🔄</td><td>Piac -10%+score>=50</td><td class="ga">VISSZAVASAROL</td><td class="ga">55-75%</td></tr>
       </tbody>
     </table>
     <div style="margin-top:9px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.16);border-radius:6px;padding:9px 11px;font-family:var(--mono);font-size:8.5px;color:var(--m);line-height:1.8">
-      <b style="color:var(--purple)">Kilépési trigger (4+ aktiv):</b><br>
-      VIX>25 emelkedo · EPS lefordul · Hozamgorbe invertál<br>
-      Breadth&lt;45% · HY>4.5% · Rec.prob>20% · SKEW>150
+      <b style="color:var(--purple)">Kilepesi trigger (4+ aktiv):</b><br>
+      VIX&gt;25 emelkedo · EPS lefordul · Hozamgorbe invertál<br>
+      Breadth&lt;45% · HY&gt;4.5% · Rec.prob&gt;20% · SKEW&gt;150
     </div>
   </div>
 </div>
+
 <div class="footer">
-  <div>yfinance · FRED API · CBOE Skew · AAII · CNN F&G · S&P Global · GitHub Actions: pentek 20:00<br>
-  Hibak: <a href="error_log.json">error_log.json</a> · v3 · Adaptiv sullyozas · Kelly-kriterium · 13 forras</div>
-  <div style="text-align:right">Buy & hold timing eszkoz · Nem befektetesi tanacsadas</div>
-</div></div>
+  <div>
+    yfinance · FRED API · CBOE Skew · AAII · CNN F&G · S&P Global · GitHub Actions: pentek 20:00<br>
+    Hibak: <a href="error_log.json">error_log.json</a> · v3 · Adaptiv sullyozas · Kelly · 13 forras
+  </div>
+  <div style="text-align:right">
+    Buy &amp; hold timing eszkoz · Nem befektetesi tanacsadas
+  </div>
+</div>
+</div>
+
 <script>
-Chart.defaults.color='#3a5068';Chart.defaults.font.family="'JetBrains Mono',monospace";Chart.defaults.font.size=9;
-const G='rgba(22,32,48,.9)';
-new Chart(document.getElementById('ch'),{{type:'line',data:{{labels:{hd},datasets:[
-  {{label:'Belépési score',data:{hs},borderColor:'#00c878',borderWidth:2,pointRadius:3,pointBackgroundColor:{hs}.map(s=>s>=65?'#00c878':s>=40?'#f0a500':'#f03050'),tension:.3,fill:false}},
-  {{label:'Korrekció %',data:{hc},borderColor:'rgba(167,139,250,.7)',borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[4,3]}},
-  {{label:'Küszöb (65)',data:Array({hd}.length).fill(65),type:'line',borderColor:'rgba(0,200,120,.2)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false}},
-]}},options:{{responsive:true,interaction:{{mode:'index',intersect:false}},
-  plugins:{{legend:{{display:true,position:'top',align:'end',labels:{{boxWidth:12,boxHeight:1,padding:10,color:'#3a5068'}}}},
-    tooltip:{{backgroundColor:'#080c14',borderColor:'#162030',borderWidth:1}}}},
-  scales:{{x:{{grid:{{color:G}},ticks:{{maxTicksLimit:8,maxRotation:0}}}},y:{{grid:{{color:G}},min:0,max:100}}}}
-}}}});
+Chart.defaults.color = '#3a5068';
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.font.size = 9;
+const G = 'rgba(22,32,48,.9)';
+const hD = {hd}, hS = {hs}, hC = {hc};
+new Chart(document.getElementById('ch'), {{
+  type: 'line',
+  data: {{ labels: hD, datasets: [
+    {{ label: 'Belepesi score', data: hS, borderColor: '#00c878', borderWidth: 2,
+       pointRadius: 3,
+       pointBackgroundColor: hS.map(s => s>=65 ? '#00c878' : s>=40 ? '#f0a500' : '#f03050'),
+       tension: .3, fill: false }},
+    {{ label: 'Korrekció %', data: hC, borderColor: 'rgba(167,139,250,.7)',
+       borderWidth: 1.5, pointRadius: 0, tension: .3, fill: false, borderDash: [4,3] }},
+    {{ label: 'Küszöb (65)', data: Array(hD.length).fill(65), type: 'line',
+       borderColor: 'rgba(0,200,120,.2)', borderWidth: 1, borderDash: [3,3],
+       pointRadius: 0, fill: false }},
+  ]}},
+  options: {{
+    responsive: true,
+    interaction: {{ mode: 'index', intersect: false }},
+    plugins: {{
+      legend: {{ display: true, position: 'top', align: 'end',
+        labels: {{ boxWidth: 12, boxHeight: 1, padding: 10, color: '#3a5068' }} }},
+      tooltip: {{ backgroundColor: '#080c14', borderColor: '#162030', borderWidth: 1 }}
+    }},
+    scales: {{
+      x: {{ grid: {{ color: G }}, ticks: {{ maxTicksLimit: 8, maxRotation: 0 }} }},
+      y: {{ grid: {{ color: G }}, min: 0, max: 100 }}
+    }}
+  }}
+}});
 </script>
-</body></html>"""
+</body>
+</html>"""
+
     with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"  OK  Dashboard -> {OUTPUT_HTML}")
+
+# ── MAIN ──────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
-    print("\n"+"="*58+"\n  BEFEKTETO DASHBOARD v3 – World-Class\n"+"="*58+"\n")
+
+    print("\n" + "="*58)
+    print("  BEFEKTETO DASHBOARD v3 – World-Class Frissites")
+    print("="*58 + "\n")
 
     data = {}
-    print("  SPX...");               data.update(safe(fetch_spx, {"spx":6500,"spxMA200":6400,"spxAboveMA":1.5,"spxFromHigh":-1,"spxChg":0,"realizedVol":15}, "SPX"))
-    print("  VIX...");               data.update(safe(fetch_vix, {"vix":16,"vixTrend":0,"vixRising":False,"vixAvg4w":16}, "VIX"))
-    print("  CBOE Skew...");         data.update(safe(fetch_skew, {"skew":130,"skewElevated":False}, "Skew"))
-    print("  EPS revision...");      data.update(safe(fetch_eps_score, {"epsScore":65,"epsTrend":0,"epsRaw":[]}, "EPS"))
-    print("  Forward P/E...");       data.update(safe(lambda: fetch_valuation(data.get("spx",6500)), {"forwardPE":20,"valScore":10,"valLabel":"FAIR"}, "Valuation"))
-    print("  Hozamgorbe (FRED)...");  data.update(safe(fetch_yield_curve, {"yieldCurve":20}, "Hozamgorbe"))
-    print("  HY Spread (FRED)...");  data.update(safe(fetch_hy_spread, {"hySpread":3.5}, "HY Spread"))
-    print("  Recesszio (FRED)...");  data.update(safe(fetch_recession_prob, {"recProb":5.0}, "Recession"))
-    print("  Fed Liq (FRED)...");    data.update(safe(fetch_fed_liquidity, {"fedNetLiq":5000,"fedBalance":8000}, "Fed Liq"))
-    print("  Breadth (~30mp)...");   data.update(safe(fetch_breadth, {"breadth":65}, "Breadth"))
-    print("  Put/Call (CBOE)...");   data.update(safe(fetch_put_call, {"putCall":0.85}, "Put/Call"))
-    print("  AAII...");              data.update(safe(fetch_aaii, {"aaiiNet":10,"aaiiB":40,"aaiiBear":30}, "AAII"))
-    print("  CNN Fear & Greed..."); data.update(safe(fetch_cnn_fear_greed, {"cnnFG":50,"cnnFGRating":"Neutral"}, "CNN F&G"))
+    print("  SPX...");                 data.update(safe(fetch_spx, {"spx":6700,"spxMA200":6490,"spxAboveMA":1.5,"spxFromHigh":-1,"spxChg":0,"realizedVol":15}, "SPX"))
+    print("  VIX...");                 data.update(safe(fetch_vix, {"vix":16,"vixTrend":0,"vixRising":False,"vixAvg4w":16}, "VIX"))
+    print("  CBOE Skew...");           data.update(safe(fetch_skew, {"skew":130,"skewElevated":False}, "Skew"))
+    print("  EPS revision...");        data.update(safe(fetch_eps_score, {"epsScore":65,"epsTrend":0,"epsRaw":[]}, "EPS"))
+    print("  Forward P/E...");         data.update(safe(lambda: fetch_valuation(data.get("spx", 6700)), {"forwardPE":20,"valScore":10,"valLabel":"FAIR"}, "Valuation"))
+    print("  Hozamgorbe (FRED)...");   data.update(safe(fetch_yield_curve, {"yieldCurve":20}, "Hozamgorbe"))
+    print("  HY Spread (FRED)...");    data.update(safe(fetch_hy_spread, {"hySpread":3.5}, "HY Spread"))
+    print("  Recesszio (FRED)...");    data.update(safe(fetch_recession_prob, {"recProb":5.0}, "Recession"))
+    print("  Fed Liq (FRED)...");      data.update(safe(fetch_fed_liquidity, {"fedNetLiq":5000,"fedBalance":8000}, "Fed Liq"))
+    print("  Breadth (~30mp)...");     data.update(safe(fetch_breadth, {"breadth":65}, "Breadth"))
+    print("  Put/Call (CBOE)...");     data.update(safe(fetch_put_call, {"putCall":0.85}, "Put/Call"))
+    print("  AAII...");                data.update(safe(fetch_aaii, {"aaiiNet":10,"aaiiB":40,"aaiiBear":30}, "AAII"))
+    print("  CNN Fear & Greed...");    data.update(safe(fetch_cnn_fear_greed, {"cnnFG":50,"cnnFGRating":"Neutral"}, "CNN F&G"))
 
     print("\n  Reszvenyek...")
-    stocks = [s for t, n in MY_STOCKS
-              if (s := safe(lambda t=t, n=n: fetch_stock(t, n),
-                            {"ticker":t,"name":n,"error":"Hiba"}, t)) is not None]
+    stocks = []
+    for t, n in MY_STOCKS:
+        s = safe(lambda t=t, n=n: fetch_stock(t, n), {"ticker":t,"name":n,"error":"Hiba"}, t)
+        if s is not None:
+            stocks.append(s)
 
-    regime  = detect_regime(data)
-    es      = calc_entry_score(data)
-    cp      = calc_corr_prob(data)
-    kelly   = calc_kelly_allocation(es, cp)
-    season  = calc_seasonality()
+    regime   = detect_regime(data)
+    es       = calc_entry_score(data)
+    cp       = calc_corr_prob(data)
+    kelly    = calc_kelly_allocation(es, cp)
+    season   = calc_seasonality()
     log_data = save_error_log()
-    history = load_history()
-    history = save_history(history, data, es, cp, regime, kelly)
+    history  = load_history()
+    history  = save_history(history, data, es, cp, regime, kelly)
     generate_html(data, es, cp, history, stocks, log_data, kelly, season, regime)
 
     print(f"\n  Score: {es}/100  Korrekcio: {cp}%")
     print(f"  Rezsim: {regime}  Kelly: {kelly['kellyAlloc']}% SPX")
-    print(f"  Szezon: {season['seasonLabel'][:45]}")
     print(f"  Hibak: {len(errors)}/13 forras\n")
 
     if not args.no_browser:
         import subprocess, platform
-        if platform.system()=="Windows":  os.startfile(OUTPUT_HTML)
-        elif platform.system()=="Darwin": subprocess.run(["open", OUTPUT_HTML])
-        else:                              subprocess.run(["xdg-open", OUTPUT_HTML])
-    print("  KESZ!\n"+"="*58+"\n")
-    # Csak akkor exit(1) ha MINDEN forrás sikertelen (pl. nincs internet)
-    # Részleges hibák (2-3 forrás) fallback értékekkel kezelve → dashboard fut
+        if platform.system() == "Windows":
+            os.startfile(OUTPUT_HTML)
+        elif platform.system() == "Darwin":
+            subprocess.run(["open", OUTPUT_HTML])
+        else:
+            subprocess.run(["xdg-open", OUTPUT_HTML])
+
+    print("  KESZ!\n" + "="*58 + "\n")
     if len(errors) >= 11:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     try:
@@ -782,11 +950,12 @@ if __name__ == "__main__":
             "last_run": datetime.datetime.now().isoformat(),
             "status": "CRASHED",
             "errors": [{"source": "FATAL", "error": str(e),
-                       "traceback": traceback.format_exc()[:500]}],
+                        "traceback": traceback.format_exc()[:800]}],
             "success_count": 0
         }
-        with open(ERROR_LOG, "w") as f:
-            json.dump(err, f, indent=2)
-        print(f"FATAL ERROR: {e}")
+        with open(ERROR_LOG, "w", encoding="utf-8") as f:
+            json.dump(err, f, indent=2, ensure_ascii=False)
+        print(f"\nFATAL ERROR: {e}")
         traceback.print_exc()
         sys.exit(1)
+
