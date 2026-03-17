@@ -410,67 +410,339 @@ def calc_seasonality():
 
 # ── EGYEDI RESZVÉNY TA ───────────────────────────────────────
 
-def fetch_stock(ticker, name):
+# ── STOCKTWITS SENTIMENT ─────────────────────────────────────
+
+def fetch_stocktwits(ticker):
+    """
+    StockTwits ingyenes publikus API.
+    Visszaadja az utolsó 30 uzenet bull/bear aranyat.
+    Ha nincs elegendo sentiment adat, a ratio alapjan becsli.
+    """
     try:
-        h=yf.Ticker(ticker).history(period="1y")
-        if len(h)<60: return None
-        c=h["Close"]; p=float(c.iloc[-1])
-        ma50=float(c.rolling(50).mean().iloc[-1])
-        ma200=float(c.rolling(200).mean().iloc[-1])
-        ath=float(c.max()); prev=float(c.iloc[-2])
-        d=c.diff(); g=d.clip(lower=0).rolling(14).mean()
-        l=(-d.clip(upper=0)).rolling(14).mean()
-        rsi=float(100-(100/(1+g.iloc[-1]/l.iloc[-1])))
-        e12=c.ewm(span=12).mean(); e26=c.ewm(span=26).mean()
-        macd=e12-e26; sig=macd.ewm(span=9).mean()
-        hist=float((macd-sig).iloc[-1]); hist_p=float((macd-sig).iloc[-2])
-        macd_bull=hist>hist_p and hist>0
-        bb_m=float(c.rolling(20).mean().iloc[-1])
-        bb_s=float(c.rolling(20).std().iloc[-1])
-        bb_pos=(p-(bb_m-2*bb_s))/(4*bb_s)*100 if bb_s>0 else 50
-        r5=float((100-(100/(1+g/l))).iloc[-5])
-        p_up=p>float(c.iloc[-5]); r_up=rsi>r5
-        bull_div=not p_up and r_up and rsi<40
-        bear_div=p_up and not r_up and rsi>60
-        chg=(p-prev)/prev*100; fath=(p-ath)/ath*100; vma200=(p-ma200)/ma200*100
-        sc=50
-        if p>ma200: sc+=12
-        if p>ma50: sc+=8
-        if macd_bull: sc+=10
-        if rsi<35: sc+=15
-        elif rsi<50: sc+=6
-        elif rsi>75: sc-=12
-        if bull_div: sc+=12
-        if bear_div: sc-=12
-        if fath<-15: sc+=8
-        elif fath<-5: sc+=4
-        if bb_pos<20: sc+=5
-        cr=15
-        if rsi>72: cr+=18
-        if bear_div: cr+=15
-        if vma200>20: cr+=18
-        elif vma200>10: cr+=8
-        if p<ma50: cr+=10
-        if fath>-3: cr+=8
-        sig_s="go" if sc>=62 else "wait" if sc>=42 else "stop"
-        ta=[]
-        if bull_div: ta.append("Bullish div.")
-        if bear_div: ta.append("Bearish div.")
-        if macd_bull: ta.append("MACD↑")
-        if rsi<35: ta.append("Tuladott")
-        if rsi>75: ta.append("Tulvett")
-        if p>ma200: ta.append("MA200↑")
-        if not ta: ta.append("Semleges")
-        return {"ticker":ticker,"name":name,"price":round(p,2),
-                "chgDay":round(chg,2),"ma50":round(ma50,2),"ma200":round(ma200,2),
-                "rsi":round(rsi,1),"macdBull":macd_bull,"bbPos":round(bb_pos,0),
-                "fromAth":round(fath,1),"vsMA200":round(vma200,1),
-                "score":min(100,max(0,round(sc))),
-                "corrRisk":min(95,round(cr)),"signal":sig_s,
-                "taSummary":" · ".join(ta[:3]),
-                "bullDiv":bull_div,"bearDiv":bear_div}
+        url = f"https://api.stocktwits.com/api/2/streams/symbol/{ticker}.json"
+        r   = requests.get(url, headers=HEADERS, timeout=12)
+        if r.status_code != 200:
+            raise ValueError(f"HTTP {r.status_code}")
+        d    = r.json()
+        msgs = d.get("messages", [])
+        if not msgs:
+            raise ValueError("Ures valasz")
+
+        bull = sum(1 for m in msgs
+                   if m.get("entities",{}).get("sentiment",{}).get("basic") == "Bullish")
+        bear = sum(1 for m in msgs
+                   if m.get("entities",{}).get("sentiment",{}).get("basic") == "Bearish")
+        total = bull + bear
+
+        if total < 3:
+            # Ha keves a sentiment tag, nezd a watchlist_count vs reply trendet
+            raise ValueError(f"Keves sentiment adat ({total} darab)")
+
+        bull_pct  = round(bull / total * 100)
+        bear_pct  = round(bear / total * 100)
+        bull_bear = round(bull / bear, 2) if bear > 0 else 5.0
+        # Kontrarian logika: ha mindenki bearish = jo vetel
+        # ha mindenki bullish = figyelj
+        if bull_pct > 75:
+            st_sig  = "bear"   # tulzott optimizmus = figyelj
+            st_desc = f"Tul bullish ({bull_pct}%) – kontr. sell jel"
+        elif bull_pct < 35:
+            st_sig  = "bull"   # tulzott pesszimizmus = jo vetel
+            st_desc = f"Bearish hangulat ({bear_pct}% bear) – kontr. BUY jel!"
+        else:
+            st_sig  = "wait"
+            st_desc = f"Vegyes ({bull_pct}% bull / {bear_pct}% bear)"
+
+        return {
+            "stBull":     bull_pct,
+            "stBear":     bear_pct,
+            "stRatio":    bull_bear,
+            "stSignal":   st_sig,
+            "stDesc":     st_desc,
+            "stCount":    len(msgs),
+        }
     except Exception as e:
-        return {"ticker":ticker,"name":name,"error":str(e)[:80]}
+        return {
+            "stBull": 50, "stBear": 50, "stRatio": 1.0,
+            "stSignal": "wait", "stDesc": f"Nincs adat ({str(e)[:40]})",
+            "stCount": 0,
+        }
+
+
+# ── HAVI SMA40 + TRIX (AF indikátor) ─────────────────────────
+
+def calc_monthly_sma_trix(ticker):
+    """
+    Havi SMA40 + TRIX(18,6) indikátor – a chartod logikaja.
+
+    SMA40 (havi) = 40 honapos mozgoatlag.
+    Szabaly: ha az arfolyam az SMA40 ALATT van es elfelele indul
+    (TRIX pozitivba fordul) → eroserős vetelı jel.
+
+    TRIX(n) = Triple Exponential Moving Average 1-periodus ROC-ja:
+      ema1 = EMA(close, n)
+      ema2 = EMA(ema1, n)
+      ema3 = EMA(ema2, n)
+      trix = (ema3 - ema3_prev) / ema3_prev * 100
+
+    Az also abra az (AF 18 6) = TRIX(18) es TRIX(6) kulonbsege
+    (hasonlo a MACD-hoz, de triple-smoothed).
+    """
+    try:
+        # Havi adatok – min 60 honap kell a megbizhatosaghoz
+        h = yf.Ticker(ticker).history(period="20y", interval="1mo")
+        if len(h) < 50:
+            # Kevesebb adattal is probalkozunk
+            h = yf.Ticker(ticker).history(period="10y", interval="1mo")
+        if len(h) < 30:
+            raise ValueError("Keves havi adat")
+
+        c = h["Close"].dropna()
+
+        # Havi SMA40
+        sma40 = c.rolling(40).mean()
+        sma40_cur  = float(sma40.iloc[-1]) if pd.notna(sma40.iloc[-1]) else None
+        price_cur  = float(c.iloc[-1])
+        price_prev = float(c.iloc[-2])
+
+        # Arfolyam pozicioja az SMA40-hez kepest
+        if sma40_cur:
+            below_sma40    = price_cur < sma40_cur
+            pct_from_sma40 = round((price_cur - sma40_cur) / sma40_cur * 100, 1)
+            # Korabbi honap is SMA40 alatt volt?
+            sma40_prev = float(sma40.iloc[-2]) if pd.notna(sma40.iloc[-2]) else sma40_cur
+            was_below  = price_prev < sma40_prev
+        else:
+            below_sma40 = False; pct_from_sma40 = 0; was_below = False
+
+        # TRIX szamitas
+        def trix(series, n):
+            e1 = series.ewm(span=n, adjust=False).mean()
+            e2 = e1.ewm(span=n, adjust=False).mean()
+            e3 = e2.ewm(span=n, adjust=False).mean()
+            return ((e3 - e3.shift(1)) / e3.shift(1) * 100).fillna(0)
+
+        trix18 = trix(c, 18)
+        trix6  = trix(c, 6)
+
+        # AF oszlopok = TRIX(18) es TRIX(6) kulonbsege (sarga/lila)
+        af_cur  = float(trix18.iloc[-1] - trix6.iloc[-1])
+        af_prev = float(trix18.iloc[-2] - trix6.iloc[-2])
+        af_prev2= float(trix18.iloc[-3] - trix6.iloc[-3])
+
+        trix18_cur  = float(trix18.iloc[-1])
+        trix18_prev = float(trix18.iloc[-2])
+        trix6_cur   = float(trix6.iloc[-1])
+
+        # Kulcs jelzesek
+        # 1. SMA40 BUY jel: arfolyam SMA40 alatt volt es felfelé indul
+        sma40_buy = (below_sma40 and was_below and
+                     price_cur > price_prev and
+                     trix18_cur > trix18_prev)
+
+        # 2. SMA40 at van torve felfelre (crossover)
+        sma40_cross_up = (not below_sma40 and was_below)
+
+        # 3. AF oszlop: sargabol lilabal fordul (a chartod kulcsmozzanata)
+        af_turning_bull = af_cur > af_prev and af_prev < af_prev2  # merto pont
+        af_turning_bear = af_cur < af_prev and af_prev > af_prev2
+
+        # Fo jel
+        if sma40_cross_up:
+            monthly_sig  = "bull"
+            monthly_desc = "SMA40 CROSSOVER FELFELÉ – erős hosszú távú buy jel!"
+        elif sma40_buy and af_turning_bull:
+            monthly_sig  = "bull"
+            monthly_desc = f"SMA40 alatt, felfelé fordul + AF pozitivba ({pct_from_sma40:+.1f}%)"
+        elif below_sma40 and trix18_cur < 0 and not af_turning_bull:
+            monthly_sig  = "bear"
+            monthly_desc = f"SMA40 alatt, trendje lefelé ({pct_from_sma40:+.1f}%)"
+        elif not below_sma40 and trix18_cur > 0:
+            monthly_sig  = "wait"
+            monthly_desc = f"SMA40 felett ({pct_from_sma40:+.1f}%) – tartsd, de ne vesz"
+        else:
+            monthly_sig  = "wait"
+            monthly_desc = f"SMA40-hoz kepest: {pct_from_sma40:+.1f}%"
+
+        return {
+            "sma40":        round(sma40_cur) if sma40_cur else None,
+            "belowSma40":   below_sma40,
+            "pctFromSma40": pct_from_sma40,
+            "sma40Buy":     sma40_buy,
+            "sma40Cross":   sma40_cross_up,
+            "trix18":       round(trix18_cur, 4),
+            "trix6":        round(trix6_cur, 4),
+            "afCur":        round(af_cur, 4),
+            "afTurningBull":af_turning_bull,
+            "afTurningBear":af_turning_bear,
+            "monthlySignal":monthly_sig,
+            "monthlyDesc":  monthly_desc,
+        }
+    except Exception as e:
+        return {
+            "sma40": None, "belowSma40": False, "pctFromSma40": 0,
+            "sma40Buy": False, "sma40Cross": False,
+            "trix18": 0, "trix6": 0, "afCur": 0,
+            "afTurningBull": False, "afTurningBear": False,
+            "monthlySignal": "wait",
+            "monthlyDesc": f"Nincs havi adat ({str(e)[:40]})",
+        }
+
+
+# ── EGYEDI RÉSZVÉNY TA (kibővítve) ───────────────────────────
+
+def fetch_stock(ticker, name):
+    """
+    Teljes reszveny elemzes:
+    - Napi TA: RSI, MACD, Bollinger, RSI-divergencia
+    - Havi: SMA40, TRIX(18,6) = AF indikator
+    - Hangulat: StockTwits bull/bear arany (kontrarian)
+    """
+    try:
+        # ── Napi TA ──
+        h    = yf.Ticker(ticker).history(period="1y")
+        if len(h) < 60: return None
+        c    = h["Close"]; p = float(c.iloc[-1])
+        ma50 = float(c.rolling(50).mean().iloc[-1])
+        ma200= float(c.rolling(200).mean().iloc[-1])
+        ath  = float(c.max()); prev = float(c.iloc[-2])
+
+        # RSI
+        d = c.diff(); g = d.clip(lower=0).rolling(14).mean()
+        l = (-d.clip(upper=0)).rolling(14).mean()
+        rsi = float(100 - (100 / (1 + g.iloc[-1] / l.iloc[-1])))
+
+        # MACD
+        e12 = c.ewm(span=12).mean(); e26 = c.ewm(span=26).mean()
+        macd_l = e12 - e26; sig_l = macd_l.ewm(span=9).mean()
+        hist   = float((macd_l - sig_l).iloc[-1])
+        hist_p = float((macd_l - sig_l).iloc[-2])
+        macd_bull = hist > hist_p and hist > 0
+
+        # Bollinger pozicio (0-100%, 0=also BB, 100=felso BB)
+        bb_m   = float(c.rolling(20).mean().iloc[-1])
+        bb_s   = float(c.rolling(20).std().iloc[-1])
+        bb_pos = (p - (bb_m - 2*bb_s)) / (4*bb_s) * 100 if bb_s > 0 else 50
+
+        # RSI divergencia
+        rsi5   = float((100-(100/(1+g/l))).iloc[-5])
+        p_up   = p > float(c.iloc[-5]); r_up = rsi > rsi5
+        bull_div = not p_up and r_up and rsi < 40
+        bear_div = p_up and not r_up and rsi > 60
+
+        chg    = (p - prev) / prev * 100
+        fath   = (p - ath) / ath * 100
+        vma200 = (p - ma200) / ma200 * 100
+
+        # ── Havi SMA40 + TRIX ──
+        monthly = calc_monthly_sma_trix(ticker)
+
+        # ── StockTwits sentiment ──
+        st = fetch_stocktwits(ticker)
+
+        # ── Belépési score (napi + havi kombinalt) ──
+        sc = 50
+        # Napi
+        if p > ma200:    sc += 10
+        if p > ma50:     sc += 7
+        if macd_bull:    sc += 8
+        if rsi < 35:     sc += 13
+        elif rsi < 50:   sc += 5
+        elif rsi > 75:   sc -= 10
+        if bull_div:     sc += 12
+        if bear_div:     sc -= 12
+        if fath < -15:   sc += 7
+        elif fath < -5:  sc += 3
+        if bb_pos < 20:  sc += 5
+        # Havi SMA40/TRIX – ez a legsullyosabb jel
+        if monthly["sma40Cross"]:      sc += 18  # SMA40 crossover = legerosebb
+        elif monthly["sma40Buy"]:      sc += 14  # SMA40 alatt fordul = eros
+        elif monthly["monthlySignal"] == "wait" and not monthly["belowSma40"]:
+            sc += 5   # SMA40 felett, trend OK
+        elif monthly["monthlySignal"] == "bear":
+            sc -= 10  # SMA40 alatt, lefelé tart
+        if monthly["afTurningBull"]:   sc += 8   # AF oszlop fordul
+        if monthly["afTurningBear"]:   sc -= 8
+        # StockTwits kontrarian
+        if st["stSignal"] == "bull":   sc += 6   # bearish hangulat = jo vetel
+        elif st["stSignal"] == "bear": sc -= 5   # tulzott optimizmus = figyelj
+
+        # ── Korrekciós kockázat ──
+        cr = 15
+        if rsi > 72:                  cr += 18
+        if bear_div:                  cr += 15
+        if vma200 > 20:               cr += 18
+        elif vma200 > 10:             cr += 8
+        if p < ma50:                  cr += 10
+        if fath > -3:                 cr += 8
+        if monthly["monthlySignal"] == "bear": cr += 12
+        if monthly["afTurningBear"]:  cr += 8
+        if st["stSignal"] == "bear":  cr += 5   # mindenki bullish = kockazatosabb
+
+        sig_s = "go" if sc >= 62 else "wait" if sc >= 42 else "stop"
+
+        # ── TA összefoglalo badge-ek ──
+        ta = []
+        if monthly["sma40Cross"]:  ta.append("SMA40 CROSS↑")
+        elif monthly["sma40Buy"]:  ta.append("SMA40 BUY↑")
+        if monthly["afTurningBull"]: ta.append("AF↑")
+        elif monthly["afTurningBear"]: ta.append("AF↓")
+        if bull_div: ta.append("Bull div.")
+        if bear_div: ta.append("Bear div.")
+        if macd_bull: ta.append("MACD↑")
+        if rsi < 35: ta.append("Tuladott")
+        if rsi > 75: ta.append("Tulvett")
+        if not ta: ta.append("Semleges")
+
+        # StockTwits badge
+        st_badge = ""
+        if st["stSignal"] == "bull":
+            st_badge = f"ST {st['stBear']}% bear→BUY"
+        elif st["stSignal"] == "bear":
+            st_badge = f"ST {st['stBull']}% bull→figyelj"
+        else:
+            st_badge = f"ST {st['stBull']}%↑/{st['stBear']}%↓"
+
+        return {
+            # Alapadatok
+            "ticker":        ticker,
+            "name":          name,
+            "price":         round(p, 2),
+            "chgDay":        round(chg, 2),
+            "ma50":          round(ma50, 2),
+            "ma200":         round(ma200, 2),
+            "fromAth":       round(fath, 1),
+            "vsMA200":       round(vma200, 1),
+            # Napi TA
+            "rsi":           round(rsi, 1),
+            "macdBull":      macd_bull,
+            "bbPos":         round(bb_pos, 0),
+            "bullDiv":       bull_div,
+            "bearDiv":       bear_div,
+            # Havi SMA40 + TRIX
+            "sma40":         monthly["sma40"],
+            "belowSma40":    monthly["belowSma40"],
+            "pctFromSma40":  monthly["pctFromSma40"],
+            "sma40Buy":      monthly["sma40Buy"],
+            "sma40Cross":    monthly["sma40Cross"],
+            "afCur":         monthly["afCur"],
+            "afTurningBull": monthly["afTurningBull"],
+            "afTurningBear": monthly["afTurningBear"],
+            "monthlySignal": monthly["monthlySignal"],
+            "monthlyDesc":   monthly["monthlyDesc"],
+            # StockTwits
+            "stBull":        st["stBull"],
+            "stBear":        st["stBear"],
+            "stSignal":      st["stSignal"],
+            "stBadge":       st_badge,
+            # Kompozit score
+            "score":         min(100, max(0, round(sc))),
+            "corrRisk":      min(95, round(cr)),
+            "signal":        sig_s,
+            "taSummary":     " · ".join(ta[:4]),
+        }
+    except Exception as e:
+        return {"ticker": ticker, "name": name, "error": str(e)[:80]}
 
 # ── HISTORY ──────────────────────────────────────────────────
 
@@ -644,27 +916,76 @@ def generate_html(base, now, mid, lng, es, cp, history, stocks,
     def stock_card(s):
         if "error" in s:
             return f'<div class="sc err"><b class="st">{s["ticker"]}</b><div class="se">{s["error"]}</div></div>'
-        vc={"go":"#00c878","wait":"#f0a500","stop":"#f03050"}[s["signal"]]
-        sl={"go":"VESZEL","wait":"VARJ","stop":"NE MOST"}[s["signal"]]
-        rc="rsi-lo" if s["rsi"]<38 else "rsi-hi" if s["rsi"]>72 else ""
-        cc="#a78bfa" if s["corrRisk"]>=50 else "#f0a500" if s["corrRisk"]>=30 else "#00c878"
-        div=""
-        if s.get("bullDiv"): div='<span style="color:#00c878;font-size:8px"> ▲DIV</span>'
-        elif s.get("bearDiv"): div='<span style="color:#f03050;font-size:8px"> ▼DIV</span>'
-        return (f'<div class="sc {s["signal"]}"><div class="sc-top">'
-                f'<div><div class="st">{s["ticker"]}{div}</div><div class="sn">{s["name"]}</div></div>'
-                f'<div class="ssig" style="color:{vc};border-color:{vc}40;background:{vc}12">{sl}</div></div>'
-                f'<div class="sp">${s["price"]:,.2f}'
-                f'<span style="color:{"#00c878" if s["chgDay"]>=0 else "#f03050"};font-size:11px"> {s["chgDay"]:+.2f}%</span></div>'
-                f'<div class="sg4">'
-                f'<div class="si"><div class="sl2">Score</div><div class="sv" style="color:{vc}">{s["score"]}/100</div></div>'
-                f'<div class="si"><div class="sl2">RSI</div><div class="sv {rc}">{s["rsi"]}</div></div>'
-                f'<div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:{"#00c878" if s["vsMA200"]>0 else "#f03050"}">{s["vsMA200"]:+.1f}%</div></div>'
-                f'<div class="si"><div class="sl2">ATH-tól</div><div class="sv">{s["fromAth"]:.1f}%</div></div>'
+        vc  = {"go":"#00c878","wait":"#f0a500","stop":"#f03050"}[s["signal"]]
+        sl  = {"go":"VESZEL","wait":"VARJ","stop":"NE MOST"}[s["signal"]]
+        rc  = "rsi-lo" if s["rsi"]<38 else "rsi-hi" if s["rsi"]>72 else ""
+        cc  = "#a78bfa" if s["corrRisk"]>=50 else "#f0a500" if s["corrRisk"]>=30 else "#00c878"
+        chg_c = "#00c878" if s["chgDay"]>=0 else "#f03050"
+        vma_c = "#00c878" if s["vsMA200"]>0 else "#f03050"
+
+        # Divergencia badge
+        div = ""
+        if s.get("bullDiv"):    div = '<span style="color:#00c878;font-size:8px"> ▲DIV</span>'
+        elif s.get("bearDiv"):  div = '<span style="color:#f03050;font-size:8px"> ▼DIV</span>'
+
+        # Havi SMA40 jel badge
+        sma40_badge = ""
+        if s.get("sma40Cross"):
+            sma40_badge = '<div class="sma40-cross">🚀 SMA40 CROSSOVER – EROS LONG TAVÚ BUY</div>'
+        elif s.get("sma40Buy"):
+            sma40_badge = '<div class="sma40-buy">📈 SMA40 BUY JEL – fordul felfelé</div>'
+        elif s.get("monthlySignal") == "bear":
+            sma40_badge = f'<div class="sma40-bear">⚠️ SMA40 alatt, trendje le ({s.get("pctFromSma40",0):+.1f}%)</div>'
+        else:
+            pct = s.get("pctFromSma40", 0)
+            col = "#00c878" if pct > 0 else "#3a5068"
+            sma40_badge = f'<div class="sma40-neutral" style="color:{col}">SMA40: {pct:+.1f}% ({s.get("monthlySignal","?")})</div>'
+
+        # AF (TRIX) badge
+        af = s.get("afCur", 0)
+        af_col = "#00c878" if s.get("afTurningBull") else "#f03050" if s.get("afTurningBear") else "#3a5068"
+        af_txt = ("AF↑ fordul" if s.get("afTurningBull") else
+                  "AF↓ fordul" if s.get("afTurningBear") else
+                  f"AF: {af:+.4f}")
+
+        # StockTwits badge
+        st_col = ("#00c878" if s.get("stSignal")=="bull" else
+                  "#f03050" if s.get("stSignal")=="bear" else "#3a5068")
+
+        return (f'<div class="sc {s["signal"]}">'
+                # Header
+                f'<div class="sc-top">'
+                f'<div><div class="st">{s["ticker"]}{div}</div>'
+                f'<div class="sn">{s["name"]}</div></div>'
+                f'<div class="ssig" style="color:{vc};border-color:{vc}40;background:{vc}12">{sl}</div>'
                 f'</div>'
+                # Ár
+                f'<div class="sp">${s["price"]:,.2f}'
+                f'<span style="color:{chg_c};font-size:11px"> {s["chgDay"]:+.2f}%</span></div>'
+                # 4 adat mező
+                f'<div class="sg4">'
+                f'<div class="si"><div class="sl2">Score</div>'
+                f'<div class="sv" style="color:{vc}">{s["score"]}/100</div></div>'
+                f'<div class="si"><div class="sl2">RSI</div>'
+                f'<div class="sv {rc}">{s["rsi"]}</div></div>'
+                f'<div class="si"><div class="sl2">vs MA200</div>'
+                f'<div class="sv" style="color:{vma_c}">{s["vsMA200"]:+.1f}%</div></div>'
+                f'<div class="si"><div class="sl2">ATH-tól</div>'
+                f'<div class="sv">{s["fromAth"]:.1f}%</div></div>'
+                f'</div>'
+                # SMA40 havi jel – a fo hely
+                f'{sma40_badge}'
+                # AF + StockTwits sor
+                f'<div class="af-st-row">'
+                f'<span style="color:{af_col};font-family:var(--mono);font-size:8.5px">{af_txt}</span>'
+                f'<span style="color:{st_col};font-family:var(--mono);font-size:8.5px;margin-left:8px">{s.get("stBadge","–")}</span>'
+                f'</div>'
+                # TA összefoglaló
                 f'<div class="ta-row">{s.get("taSummary","–")}</div>'
+                # Score bar + korr. kockázat
                 f'<div class="sb-w"><div class="sb" style="width:{s["score"]}%;background:{vc}"></div></div>'
-                f'<div class="scr">Korr.kockazat: <b style="color:{cc}">{s["corrRisk"]}%</b></div></div>')
+                f'<div class="scr">Korr.kockazat: <b style="color:{cc}">{s["corrRisk"]}%</b></div>'
+                f'</div>')
 
     stk="".join(stock_card(s) for s in stocks)
     hd=json.dumps([h["date"] for h in history[-24:]])
@@ -761,6 +1082,19 @@ body{{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px
 .ta-row{{font-family:var(--mono);font-size:8.5px;color:var(--m);margin-bottom:5px;padding:3px 0;border-top:1px solid var(--b)}}
 .sb-w{{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px}} .sb{{height:100%;border-radius:2px}}
 .scr{{font-family:var(--mono);font-size:9px;color:var(--m)}} .se{{font-family:var(--mono);font-size:9px;color:var(--bear)}}
+.sma40-cross{{font-family:var(--mono);font-size:8.5px;font-weight:700;color:var(--bull);
+  background:rgba(0,200,120,.1);border:1px solid rgba(0,200,120,.3);
+  border-radius:4px;padding:3px 7px;margin:4px 0;text-align:center}}
+.sma40-buy{{font-family:var(--mono);font-size:8.5px;color:var(--bull);
+  background:rgba(0,200,120,.07);border:1px solid rgba(0,200,120,.2);
+  border-radius:4px;padding:3px 7px;margin:4px 0}}
+.sma40-bear{{font-family:var(--mono);font-size:8.5px;color:var(--bear);
+  background:rgba(240,48,80,.07);border:1px solid rgba(240,48,80,.15);
+  border-radius:4px;padding:3px 7px;margin:4px 0}}
+.sma40-neutral{{font-family:var(--mono);font-size:8.5px;
+  padding:3px 0;margin:2px 0}}
+.af-st-row{{display:flex;align-items:center;margin:3px 0 4px;
+  padding:3px 0;border-top:1px solid var(--b);flex-wrap:wrap;gap:4px}}
 .g2{{display:grid;grid-template-columns:3fr 2fr;gap:9px;margin-bottom:9px}}
 .panel{{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:12px 14px}}
 .pt{{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--m);margin-bottom:10px;display:flex;align-items:center;gap:6px}}
@@ -945,6 +1279,7 @@ if __name__=="__main__":
         with open(ERROR_LOG,"w",encoding="utf-8") as f:
             json.dump(err,f,indent=2,ensure_ascii=False)
         print(f"\nFATAL: {e}"); traceback.print_exc(); sys.exit(1)
+
 
 
 
