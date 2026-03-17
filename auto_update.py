@@ -23,8 +23,9 @@ ERROR_LOG    = "error_log.json"
 
 MY_STOCKS = [
     ("AAPL",  "Apple"),
-    ("MSFT",  "Microsoft"),
+    ("TSLA",  "Tesla"),
     ("NVDA",  "Nvidia"),
+    ("CRWD",  "Crowdstrike"),
 ]
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", "Accept": "text/html,*/*"}
