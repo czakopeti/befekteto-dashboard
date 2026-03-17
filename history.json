@@ -1,0 +1,20 @@
+[
+  {
+    "date": "2026-03-17",
+    "spx": 6699,
+    "entryScore": 58,
+    "corrProb": 23,
+    "regime": "bull",
+    "kellyAlloc": 0,
+    "vix": 22.7,
+    "epsScore": 65,
+    "yieldCurve": 55,
+    "breadth": 32,
+    "hySpread": 3.28,
+    "aaiiNet": 10,
+    "forwardPE": 19.8,
+    "recProb": 0.8,
+    "fedNetLiq": 5808.0,
+    "cnnFG": 22
+  }
+]
