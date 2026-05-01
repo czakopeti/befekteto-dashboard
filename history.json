@@ -188,5 +188,22 @@
     "leiSignal": "bull",
     "m2Yoy": 4,
     "cgTrend": "bull"
+  },
+  {
+    "date": "2026-05-01",
+    "spx": 7237,
+    "entryScore": 63,
+    "corrProb": 22,
+    "regime": "bull",
+    "kellyAlloc": 25,
+    "vix": 17.0,
+    "hySpread": 3.5,
+    "breadth": 50,
+    "cnnFG": 66,
+    "yieldCurve": 52,
+    "recProb": 5.0,
+    "leiSignal": "bull",
+    "m2Yoy": 4.2,
+    "cgTrend": "bull"
   }
 ]
