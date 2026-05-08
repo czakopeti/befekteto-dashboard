@@ -1,201 +1,347 @@
 <!DOCTYPE html>
 <html lang="hu"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="refresh" content="3600">
-<title>Befekteto Dashboard v4 – 2026. May 01.</title>
+<title>Befektetoi Dashboard v5 – 2026. May 08.</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-:root{--bg:#03050a;--bg2:#080c14;--bg3:#0d1522;--b:#162030;--t:#c0d0e8;--m:#3a5068;--d:#101828;
-  --bull:#00c878;--neu:#f0a500;--bear:#f03050;--purple:#a78bfa;
-  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--t);font-family:var(--sans);font-size:13px;padding:16px 20px 48px}
-.w{max-width:1200px;margin:0 auto}
-.hdr{display:flex;justify-content:space-between;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--b);margin-bottom:10px}
-.hdr h1{font-size:14px;font-weight:700} .hdr h1 em{color:var(--bull);font-style:normal}
-.ab{font-family:var(--mono);font-size:8px;padding:3px 9px;border-radius:20px;background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.2);display:inline-flex;align-items:center;gap:5px;margin-top:4px}
-.dot{width:5px;height:5px;border-radius:50%;background:var(--bull);animation:blink 1.5s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.sb2{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;color:#f0a500;border:1px solid #f0a50040;background:#f0a50010}
-.hm{font-family:var(--mono);font-size:9px;color:var(--m);line-height:1.9;margin-top:3px} .hm b{color:var(--neu)}
-.meta-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
-.meta-tag{font-family:var(--mono);font-size:8.5px;padding:3px 10px;border-radius:20px;border:1px solid var(--b);background:var(--bg2);color:var(--m)}
-.regime-bull{color:var(--bull);background:rgba(0,200,120,.07);border-color:rgba(0,200,120,.2)}
-.regime-neutral{color:var(--neu);background:rgba(240,165,0,.06);border-color:rgba(240,165,0,.15)}
-.regime-fear{color:var(--bear);background:rgba(240,48,80,.07);border-color:rgba(240,48,80,.18)}
-.season-strong{color:var(--bull);background:rgba(0,200,120,.06);border-color:rgba(0,200,120,.15)}
-.season-weak{color:var(--bear);background:rgba(240,48,80,.06);border-color:rgba(240,48,80,.15)}
-.hero{border-radius:11px;padding:16px 22px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
-.hero.go{background:rgba(0,200,120,.07);border:1.5px solid rgba(0,200,120,.25)}
-.hero.wait{background:rgba(240,165,0,.06);border:1.5px solid rgba(240,165,0,.2)}
-.hero.stop{background:rgba(240,48,80,.07);border:1.5px solid rgba(240,48,80,.2)}
-.hi{font-size:38px;line-height:1}
-.hv{font-size:17px;font-weight:700;margin-bottom:3px}
-.hero.go .hv{color:var(--bull)} .hero.wait .hv{color:var(--neu)} .hero.stop .hv{color:var(--bear)}
-.he{font-size:12px;color:var(--m);line-height:1.6;max-width:380px} .he strong{color:var(--t)}
-.hr{text-align:right} .hs{font-family:var(--mono);font-size:34px;font-weight:700;line-height:1}
-.hero.go .hs{color:var(--bull)} .hero.wait .hs{color:var(--neu)} .hero.stop .hs{color:var(--bear)}
-.hsl{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--m);margin-top:2px}
-.hall{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:5px;color:#f03050}
-.hkl{font-family:var(--mono);font-size:9px;color:var(--m);margin-top:2px}
-.ew{border-radius:9px;padding:11px 16px;margin-bottom:8px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
-.ew.a{background:rgba(167,139,250,.05);border:1.5px solid rgba(167,139,250,.3);animation:bp 2.5s ease-in-out infinite}
-.ew.i{background:rgba(0,200,120,.03);border:1px solid rgba(0,200,120,.12)}
-@keyframes bp{0%,100%{border-color:rgba(167,139,250,.3)}50%{border-color:rgba(167,139,250,.6)}}
-.ewi{font-size:24px} .ewt{font-size:12px;font-weight:600;margin-bottom:2px}
-.ew.a .ewt{color:var(--purple)} .ew.i .ewt{color:var(--bull)}
-.ewd{font-size:11px;color:var(--m);line-height:1.5} .ewd strong{color:var(--t)}
-.ewr{text-align:right;flex-shrink:0} .ewp{font-family:var(--mono);font-size:22px;font-weight:700}
-.ew.a .ewp{color:var(--purple)} .ew.i .ewp{color:var(--bull)}
-.ewpl{font-family:var(--mono);font-size:8px;color:var(--m);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
-.sec-hdr{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.18em;color:var(--m);padding:8px 0 6px;border-top:1px solid var(--b);margin-top:6px;display:flex;align-items:center;gap:8px}
-.sec-hdr::after{content:'';flex:1;height:1px;background:var(--b)}
-.sec-badge{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px}
-.sb-now{background:rgba(0,200,120,.08);color:var(--bull);border:1px solid rgba(0,200,120,.15)}
-.sb-mid{background:rgba(74,158,255,.08);color:#4a9eff;border:1px solid rgba(74,158,255,.15)}
-.sb-lng{background:rgba(167,139,250,.08);color:var(--purple);border:1px solid rgba(167,139,250,.15)}
-.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:4px}
-.ind{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:10px 12px;position:relative;overflow:hidden}
-.ind::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
-.ind.go::before,.ind.bull::before{background:var(--bull)}
-.ind.wait::before,.ind.neutral::before{background:var(--neu)}
-.ind.bear::before,.ind.stop::before{background:var(--bear)}
-.it{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.in{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--m)}
-.is{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;white-space:nowrap}
-.s-go{background:rgba(0,200,120,.1);color:var(--bull);border:1px solid rgba(0,200,120,.2)}
-.s-wait{background:rgba(240,165,0,.08);color:var(--neu);border:1px solid rgba(240,165,0,.15)}
-.s-stop{background:rgba(240,48,80,.09);color:var(--bear);border:1px solid rgba(240,48,80,.15)}
-.iv{font-family:var(--mono);font-size:18px;font-weight:700;line-height:1;margin-bottom:2px}
-.ind.go .iv,.ind.bull .iv{color:var(--bull)} .ind.wait .iv,.ind.neutral .iv{color:var(--neu)} .ind.bear .iv,.ind.stop .iv{color:var(--bear)}
-.id{font-size:10px;color:var(--m);line-height:1.4} .id b{color:var(--t)}
-.pr{height:2px;background:var(--d);border-radius:2px;margin:5px 0 3px;overflow:hidden} .pf{height:100%;border-radius:2px}
-.stitle{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--m);padding:8px 0 6px;border-top:1px solid var(--b);margin-top:4px;display:flex;align-items:center;gap:8px}
-.stitle::after{content:'';flex:1;height:1px;background:var(--b)}
-.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:10px}
-.sc{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:11px 12px;position:relative;overflow:hidden}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.sc.go::before{background:var(--bull)} .sc.wait::before{background:var(--neu)} .sc.stop::before{background:var(--bear)} .sc.err{opacity:.6}
-.sc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
-.st{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--t)} .sn{font-size:10px;color:var(--m)}
-.ssig{font-family:var(--mono);font-size:8px;padding:2px 8px;border-radius:3px;white-space:nowrap;align-self:flex-start}
-.sp{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--t);margin-bottom:5px}
-.sg4{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px}
-.si{background:var(--bg3);border-radius:5px;padding:4px 6px}
-.sl2{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);margin-bottom:2px}
-.sv{font-family:var(--mono);font-size:11px;font-weight:700} .rsi-lo{color:var(--bull)} .rsi-hi{color:var(--bear)}
-.ta-row{font-family:var(--mono);font-size:8.5px;color:var(--m);margin-bottom:5px;padding:3px 0;border-top:1px solid var(--b)}
-.sb-w{height:3px;background:var(--d);border-radius:2px;overflow:hidden;margin-bottom:5px} .sb{height:100%;border-radius:2px}
-.scr{font-family:var(--mono);font-size:9px;color:var(--m)} .se{font-family:var(--mono);font-size:9px;color:var(--bear)}
-.sma40-cross{font-family:var(--mono);font-size:8.5px;font-weight:700;color:var(--bull);
-  background:rgba(0,200,120,.1);border:1px solid rgba(0,200,120,.3);
-  border-radius:4px;padding:3px 7px;margin:4px 0;text-align:center}
-.sma40-buy{font-family:var(--mono);font-size:8.5px;color:var(--bull);
-  background:rgba(0,200,120,.07);border:1px solid rgba(0,200,120,.2);
-  border-radius:4px;padding:3px 7px;margin:4px 0}
-.sma40-bear{font-family:var(--mono);font-size:8.5px;color:var(--bear);
-  background:rgba(240,48,80,.07);border:1px solid rgba(240,48,80,.15);
-  border-radius:4px;padding:3px 7px;margin:4px 0}
-.sma40-neutral{font-family:var(--mono);font-size:8.5px;
-  padding:3px 0;margin:2px 0}
-.af-st-row{display:flex;align-items:center;margin:3px 0 4px;
-  padding:3px 0;border-top:1px solid var(--b);flex-wrap:wrap;gap:4px}
-.g2{display:grid;grid-template-columns:3fr 2fr;gap:9px;margin-bottom:9px}
-.panel{background:var(--bg2);border:1px solid var(--b);border-radius:9px;padding:12px 14px}
-.pt{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--m);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.pt::after{content:'';flex:1;height:1px;background:var(--b)}
-.pb{width:100%;border-collapse:collapse;font-size:11px}
-.pb th{padding:6px 8px;font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--m);border-bottom:1px solid var(--b);text-align:left}
-.pb td{padding:6px 8px;border-bottom:1px solid rgba(22,32,48,.6);vertical-align:top;line-height:1.5}
-.pb tr:last-child td{border-bottom:none}
-.ga{color:var(--bull);font-weight:600} .wa{color:var(--neu);font-weight:600} .ba{color:var(--bear);font-weight:600} .ea{color:var(--purple);font-weight:600}
-.bt-box{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;background:var(--bg2);border:1px solid var(--b);border-radius:7px;padding:8px 13px;margin-bottom:8px;flex-wrap:wrap}
-.bt-l{color:var(--m)} .bt-s{color:var(--m)} .bt-n{color:var(--m);font-size:9px}
-.eb{background:rgba(240,165,0,.05);border:1px solid rgba(240,165,0,.18);border-radius:7px;padding:7px 12px;margin-bottom:8px;font-family:var(--mono);font-size:9px;color:var(--m)}
-.footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--b);font-family:var(--mono);font-size:8.5px;color:var(--m);display:flex;justify-content:space-between;line-height:1.9;gap:20px}
-a{color:#64a0ff}
-@media(max-width:900px){.hero,.g2{grid-template-columns:1fr} .ig{grid-template-columns:repeat(2,1fr)} .ew{grid-template-columns:1fr}}
-</style></head><body>
-<div class="w">
-<div class="hdr">
-  <div><h1>Befekteto Dashboard <em>v4 · 3 idohorizont</em></h1>
-    <div class="ab"><span class="dot"></span> Automatikusan frissítve: 2026. May 01.</div></div>
-  <div style="text-align:right"><div class="sb2">⬤ 1 forras fallback</div>
-    <div class="hm">Következő: <b>péntek, May 08.</b> · 11/12 forrás</div></div>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#0b1525;--bg2:#0e1b30;--card:#121f38;--c2:#172542;
+  --brd:#1d2f4a;--brd2:#243860;
+  --text:#dce8f5;--sub:#8aabcc;--mut:#4e6f8f;
+  --bull:#00d488;--bear:#f04060;--neu:#f0a500;--info:#4da6ff;--vio:#a78bfa;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;padding:14px;min-height:100vh}
+
+/* STATUS BAR */
+.sbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sp{font-family:var(--mono);font-size:9.5px;padding:3px 10px;border-radius:99px;border:1px solid}
+.sp-ok{color:var(--bull);border-color:#00d48830;background:#00d48810}
+.sp-warn{color:var(--neu);border-color:#f0a50030;background:#f0a50010}
+.sp-info{color:var(--sub);border-color:var(--brd);background:var(--card)}
+.sbar-r{margin-left:auto;font-size:10px;color:var(--mut);font-family:var(--mono)}
+
+/* FŐ SCORE */
+.main{background:linear-gradient(135deg,var(--card) 0%,var(--c2) 100%);border:1px solid var(--brd2);border-radius:14px;padding:18px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+.m-left .m-signal{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px}
+.m-left .m-desc{font-size:11px;color:var(--sub);line-height:1.5}
+.m-center{text-align:center}
+.m-num{font-family:var(--mono);font-size:58px;font-weight:700;line-height:1;color:#f0a500}
+.m-lbl{font-size:9.5px;color:var(--mut);margin-top:3px;font-family:var(--mono)}
+.m-prog{height:5px;background:var(--brd2);border-radius:3px;overflow:hidden;margin-top:8px}
+.m-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#f0a500,#f0a500aa)}
+.m-right{text-align:right}
+.m-alloc-lbl{font-size:10px;color:var(--mut);margin-bottom:4px}
+.m-alloc-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text)}
+.m-corr{margin-top:8px;padding:5px 10px;background:#f0406010;border:1px solid #f0406025;border-radius:7px;font-size:10px;color:#f08090;font-family:var(--mono)}
+.m-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:flex-start}
+.m-tag{font-size:9px;font-family:var(--mono);padding:2px 8px;border-radius:99px;border:1px solid}
+
+/* SECTION */
+.sec{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:15px;margin-bottom:12px}
+.sec-title{font-size:10px;font-family:var(--mono);color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-badge{font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid;font-weight:400}
+
+/* PLAYBOOK */
+.pb-row{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;background:var(--c2);border:1px solid var(--brd);margin-bottom:6px;transition:.15s}
+.pb-active{box-shadow:0 0 0 1px #f0a50040}
+.pb-score{font-family:var(--mono);font-size:12px;font-weight:700}
+.pb-lbl{font-size:11px;font-weight:600;margin-bottom:2px}
+.pb-alloc-r{font-size:10px;color:var(--mut);font-family:var(--mono)}
+.pb-now-tag{font-size:9px;font-family:var(--mono);color:#f0a500;background:#f0a50015;padding:1px 6px;border-radius:4px;margin-left:6px;border:1px solid #f0a50030}
+.pb-act{font-size:10px;font-family:var(--mono);font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap}
+
+/* EXTREME FEAR MODIFIER */
+.ef-box{background:#a78bfa0e;border:1px solid #a78bfa25;border-radius:9px;padding:10px 13px;margin-bottom:10px;font-size:10px;color:var(--sub);display:flex;gap:8px;align-items:flex-start}
+.ef-icon{font-size:16px;flex-shrink:0}
+.ef-txt strong{color:#a78bfa}
+
+/* TRIGGEREK */
+.trig-wrap{padding:10px 12px;background:var(--c2);border-radius:9px;border:1px solid var(--brd);margin-top:8px}
+.trig-title{font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:7px;letter-spacing:1px}
+.trig-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.trig{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:7px;border:1px solid}
+.trig.on{border-color:#f0406040;background:#f0406010}
+.trig.off{border-color:var(--brd);background:transparent}
+.trig-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.trig-dot.on{background:#f04060;box-shadow:0 0 5px #f04060}
+.trig-dot.off{background:var(--mut)}
+.trig-txt{font-size:9.5px;font-family:var(--mono)}
+.trig-txt.on{color:#f08090}
+.trig-txt.off{color:var(--mut)}
+.trig-status{font-size:10px;color:var(--mut);margin-top:7px;font-family:var(--mono)}
+
+/* INDIKÁTOROK */
+.ind{display:grid;grid-template-columns:1fr 80px 60px;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;background:var(--c2);border:1px solid var(--brd);margin-bottom:6px}
+.ind-left{}
+.ind-name{font-size:11px;color:var(--text);font-weight:500;margin-bottom:2px;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.ind-val{font-size:13px;font-family:var(--mono);font-weight:700}
+.ind-sub{font-size:9px;color:var(--mut);margin-top:2px}
+.imp-pill{font-size:8px;padding:1px 5px;border-radius:3px;font-weight:500}
+.ind-weight{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.wt-label{font-size:8px;color:var(--mut);font-family:var(--mono)}
+.wt-bar{width:60px;height:4px;background:var(--brd2);border-radius:2px;overflow:hidden}
+.wt-fill{height:100%;border-radius:2px}
+.sig-badge{font-size:9px;font-family:var(--mono);font-weight:700;padding:3px 8px;border-radius:5px;text-align:center}
+.ind-horizon{font-size:10px;font-family:var(--mono);padding:3px 9px;border-radius:6px;background:#4da6ff12;border:1px solid #4da6ff25;color:var(--info)}
+
+/* HUF */
+.huf-box{padding:10px 14px;background:var(--c2);border:1px solid var(--brd);border-radius:9px}
+.huf-rate{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text)}
+.huf-unit{font-size:12px;color:var(--mut);font-weight:400}
+.huf-trend{font-size:11px;margin-top:3px;font-family:var(--mono)}
+
+/* SZEKTORROTÁCIÓ */
+.sec-row{display:grid;grid-template-columns:70px 1fr 45px;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--brd)}
+.sec-row:last-child{border-bottom:none}
+.sec-name{font-size:10px;color:var(--sub);font-family:var(--mono)}
+.sec-bar-wrap{height:6px;background:var(--brd2);border-radius:3px;overflow:hidden}
+.sec-bar{height:100%;border-radius:3px}
+.sec-val{font-family:var(--mono);font-size:10px;text-align:right;font-weight:700}
+
+/* SMART MONEY */
+.sm-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;background:var(--c2);border:1px solid var(--brd);margin-bottom:6px}
+.sm-left{}
+.sm-name{font-size:10px;color:var(--sub);font-weight:600;margin-bottom:2px}
+.sm-val{font-size:14px;font-family:var(--mono);font-weight:700;margin-bottom:2px}
+.sm-desc{font-size:9.5px;color:var(--mut);line-height:1.4}
+.sm-badge{font-size:9px;font-family:var(--mono);font-weight:700;padding:4px 10px;border-radius:5px;white-space:nowrap}
+
+/* RIASZTÁSOK */
+.al-card{display:grid;grid-template-columns:60px 1fr auto;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;background:var(--c2);border:1px solid;margin-bottom:6px}
+.al-left{text-align:center}
+.al-ticker{font-family:var(--mono);font-size:13px;font-weight:700}
+.al-type{font-size:8px;font-family:var(--mono);padding:2px 5px;border-radius:3px;margin-top:3px;display:inline-block}
+.al-desc{font-size:10px;color:var(--sub)}
+.al-val{font-family:var(--mono);font-size:13px;font-weight:700;text-align:right}
+.al-date{font-size:9px;color:var(--mut);text-align:right;margin-top:2px}
+.al-empty{font-size:10px;color:var(--mut);font-family:var(--mono);padding:12px;text-align:center;background:var(--c2);border-radius:7px}
+
+/* WATCHLIST */
+.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
+.wl-card{background:var(--c2);border:1px solid var(--brd);border-radius:9px;padding:10px;border-top:2px solid var(--bull)}
+.wl-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.wl-tk{font-family:var(--mono);font-size:13px;font-weight:700}
+.wl-sc{font-family:var(--mono);font-size:12px;font-weight:700}
+.wl-nm{font-size:9px;color:var(--mut);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-row{display:flex;justify-content:space-between;font-size:9.5px;font-family:var(--mono);margin-bottom:2px;color:var(--mut)}
+.wl-bar{height:3px;background:var(--brd);border-radius:2px;margin-top:6px;overflow:hidden}
+.wl-fill{height:100%;border-radius:2px}
+.wl-empty{font-size:10px;color:var(--mut);font-family:var(--mono);padding:14px;text-align:center;background:var(--c2);border-radius:7px}
+.wl-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.wl-pill{font-size:9px;font-family:var(--mono);padding:2px 8px;border-radius:99px;border:1px solid var(--brd);background:var(--c2);color:var(--mut)}
+.wl-pill-disc{color:var(--neu);border-color:#f0a50030;background:#f0a50010}
+.wl-es-bull{font-size:8.5px;font-family:var(--mono);color:#00d488;background:#00d48812;padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block}
+.wl-es-bear{font-size:8.5px;font-family:var(--mono);color:#f04060;background:#f0406012;padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block}
+
+/* 5 KATEGÓRIA */
+.c5-wrap{display:flex;align-items:center;gap:4px;margin-top:5px;flex-wrap:wrap}
+.c5-box{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);font-weight:700;cursor:default;transition:.15s}
+.c5-box:hover{transform:scale(1.15)}
+.c5-lbl{font-size:9px;font-family:var(--mono);margin-left:4px}
+.c5-avg{font-size:8.5px;color:var(--mut);margin-left:6px}
+
+/* SCORE TOOLTIP */
+.wl-score-info{font-size:9px;color:var(--mut);padding:6px 10px;background:var(--c2);border-radius:6px;margin-bottom:10px;border-left:2px solid #00d48840;line-height:1.5}
+
+/* CHART */
+.chart-box{padding:14px;background:var(--c2);border-radius:9px;margin-bottom:8px}
+
+/* BACKTEST */
+.bt-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 12px;background:var(--c2);border-radius:8px;font-size:11px;font-family:var(--mono)}
+.bt-l{color:var(--mut)}
+.bt-s{color:var(--mut)}
+.bt-n{color:var(--mut)}
+
+/* FOOTER */
+.footer{font-size:9px;color:var(--mut);font-family:var(--mono);display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:10px;border-top:1px solid var(--brd)}
+</style></head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="sbar">
+  <span class="sp sp-ok">⬤ Minden forrás OK · 14/14 forrás</span>
+  <span class="sp sp-info">Frissítve: 2026. May 08.</span>
+  <span class="sp sp-info">Rezsim: Bikapiaci</span>
+  <span class='sp' style='color:#f0a500;border-color:#f0a50030;background:#f0a50010'>Gyenge szezon (máj) – Sell in May</span>
+  <div class="sbar-r">Következő: péntek, May 15. · 20:00</div>
 </div>
-<div class="eb">Forras hibak (fallback): HY Spread</div><div class="bt-box"><span class="bt-l">Historikus (signal kovetese):</span><span style="color:#f0a500;font-weight:700">Strategia: +7.4%</span><span class="bt-s">vs</span><span>Buy&Hold: +8.0%</span><span class="bt-n">(12 het)</span></div>
-<div class="meta-row">
-  <div class="meta-tag regime-bull">Rezsim: Bikos</div>
-  <div class="meta-tag season-weak">Gyenge szezon (máj) - Sell in May</div>
-  <div class="meta-tag">SPX: 7,237 (+0.39%)</div>
-  <div class="meta-tag">VIX term: 0.84 · CNN F&G: 66</div>
-  <div class="meta-tag">LEI: bull · M2: 4.2% · ISM: 50</div>
-</div>
-<div class="hero wait">
-  <div class="hi">🟡</div>
-  <div><div class="hv">VEGYES JELEK – FELEZD MEG</div><div class="he">Fektess be <strong>25%</strong>-ot most, a maradekot ha score 65+ lesz.</div></div>
-  <div class="hr"><div class="hs">63/100</div>
-    <div class="hsl">Kompozit belépési score</div>
-    <div class="hall">Ajánlott allokáció: 25% SPX / 75% cash</div>
-    <div class="hkl">Kelly-kritérium · Ovatos - kis pozicio</div></div>
-</div>
-<div class="ew i">
-  <div class="ewi">✅</div>
-  <div><div class="ewt">Nincs korrekciós figyelmeztető</div>
-    <div class="ewd">LEI, M2 és hozamgörbe pozitív. Ha pozícióban vagy: <strong>ülj nyugodtan.</strong></div></div>
-  <div class="ewr"><div class="ewp">22%</div><div class="ewpl">korrekció esélye</div></div>
-</div>
-<div class="sec-hdr">MOST – azonnali jelek (1–4 hét) <span class="sec-badge sb-now">TA + hangulat</span></div>
-<div class="ig"><div class="ind bull"><div class="it"><div class="in">VIX Term Structure (VIX/VIX3M)</div><div class="is s-go">BULL</div></div><div class="iv">0.84</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Contango - nyugodt</div></div><div class="ind bear"><div class="it"><div class="in">MACD Hisztogram</div><div class="is s-stop">BEAR</div></div><div class="iv">15.39</div><div class="pr"><div class="pf" style="width:15%;background:var(--bear)"></div></div><div class="id">Gyengul</div></div><div class="ind stop"><div class="it"><div class="in">RSI + Divergencia (SPX)</div><div class="is s-stop">BEAR</div></div><div class="iv">78.8</div><div class="pr"><div class="pf" style="width:15%;background:var(--bear)"></div></div><div class="id">Bearish divergencia!</div></div><div class="ind neutral"><div class="it"><div class="in">Bollinger Squeeze (SPX)</div><div class="is s-wait">NEU</div></div><div class="iv">10.8%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Szeles (10.8pct)</div></div><div class="ind wait"><div class="it"><div class="in">CNN Fear & Greed</div><div class="is s-wait">NEU</div></div><div class="iv">66</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">greed</div></div><div class="ind go"><div class="it"><div class="in">VIX</div><div class="is s-go">BULL</div></div><div class="iv">17.0</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Heti: +0.1</div></div></div>
-<div class="sec-hdr">3–6 HÓNAP – gazdasági ciklus <span class="sec-badge sb-mid">leading indicators</span></div>
-<div class="ig"><div class="ind bull"><div class="it"><div class="in">Copper / Gold arany</div><div class="is s-go">BULL</div></div><div class="iv">0.001288</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Emelkedo - bovules jel</div></div><div class="ind wait"><div class="it"><div class="in">ISM New Orders</div><div class="is s-wait">NEU</div></div><div class="iv">50</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Nincs adat</div></div><div class="ind bull"><div class="it"><div class="in">Golden / Death Cross</div><div class="is s-go">BULL</div></div><div class="iv">MA50 vs MA200</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Golden Cross - bullish trend</div></div><div class="ind wait"><div class="it"><div class="in">Piaci Breadth (pct > MA50)</div><div class="is s-wait">NEU</div></div><div class="iv">50%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Vegyes</div></div><div class="ind wait"><div class="it"><div class="in">HY Credit Spread</div><div class="is s-wait">NEU</div></div><div class="iv">3.5%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Emelkedo</div></div><div class="ind wait"><div class="it"><div class="in">Forward P/E</div><div class="is s-wait">NEU</div></div><div class="iv">21.4x</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">TULERTEKELT</div></div></div>
-<div class="sec-hdr">6–18 HÓNAP – makro előrejelzők <span class="sec-badge sb-lng">LEI · M2 · UMich</span></div>
-<div class="ig"><div class="ind bull"><div class="it"><div class="in">Conference Board LEI</div><div class="is s-go">BULL</div></div><div class="iv">1.72</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">Emelkedo - bovules jon (+0.24/3h)</div></div><div class="ind wait"><div class="it"><div class="in">M2 Penzkinálat YoY</div><div class="is s-wait">NEU</div></div><div class="iv">4.2%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">+4.2pct YoY - semleges</div></div><div class="ind bear"><div class="it"><div class="in">Consumer Expectations (UMich)</div><div class="is s-stop">BEAR</div></div><div class="iv">53.3</div><div class="pr"><div class="pf" style="width:15%;background:var(--bear)"></div></div><div class="id">53.3 - csokkeno</div></div><div class="ind go"><div class="it"><div class="in">Hozamgorbe 10Y-2Y</div><div class="is s-go">BULL</div></div><div class="iv">+52 bp</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">OK</div></div><div class="ind wait"><div class="it"><div class="in">Recesszios val. (NY Fed)</div><div class="is s-wait">NEU</div></div><div class="iv">5.0%</div><div class="pr"><div class="pf" style="width:50%;background:var(--neu)"></div></div><div class="id">Kozepes</div></div><div class="ind go"><div class="it"><div class="in">SPX vs MA200 (trend)</div><div class="is s-go">BULL</div></div><div class="iv">+7.6%</div><div class="pr"><div class="pf" style="width:85%;background:var(--bull)"></div></div><div class="id">MA200: 6,728</div></div></div>
-<div class="stitle">Saját részvényeim – TA + belépési score</div>
-<div class="sgrid"><div class="sc go"><div class="sc-top"><div><div class="st">AAPL</div><div class="sn">Apple</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$280.51<span style="color:#00c878;font-size:11px"> +3.38%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">80/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv ">69.5</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+10.0%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-1.9%</div></div></div><div class="sma40-neutral" style="color:#00c878">SMA40: +30.8% (wait)</div><div class="af-st-row"><span style="color:#3a5068;font-family:var(--mono);font-size:8.5px">AF: -0.1235</span><span style="color:#3a5068;font-family:var(--mono);font-size:8.5px;margin-left:8px">ST 50%↑/50%↓</span></div><div class="ta-row">MACD↑</div><div class="sb-w"><div class="sb" style="width:80%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#f0a500">31%</b></div></div><div class="sc go"><div class="sc-top"><div><div class="st">MSFT</div><div class="sn">Microsoft</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$414.98<span style="color:#00c878;font-size:11px"> +1.77%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">69/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv ">63.0</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#f03050">-11.1%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-23.1%</div></div></div><div class="sma40-neutral" style="color:#00c878">SMA40: +3.6% (wait)</div><div class="af-st-row"><span style="color:#3a5068;font-family:var(--mono);font-size:8.5px">AF: +2.3484</span><span style="color:#3a5068;font-family:var(--mono);font-size:8.5px;margin-left:8px">ST 50%↑/50%↓</span></div><div class="ta-row">Semleges</div><div class="sb-w"><div class="sb" style="width:69%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">15%</b></div></div><div class="sc go"><div class="sc-top"><div><div class="st">NVDA</div><div class="sn">Nvidia</div></div><div class="ssig" style="color:#00c878;border-color:#00c87840;background:#00c87812">VESZEL</div></div><div class="sp">$198.41<span style="color:#f03050;font-size:11px"> -0.58%</span></div><div class="sg4"><div class="si"><div class="sl2">Score</div><div class="sv" style="color:#00c878">67/100</div></div><div class="si"><div class="sl2">RSI</div><div class="sv ">58.0</div></div><div class="si"><div class="sl2">vs MA200</div><div class="sv" style="color:#00c878">+7.9%</div></div><div class="si"><div class="sl2">ATH-tól</div><div class="sv">-8.4%</div></div></div><div class="sma40-neutral" style="color:#00c878">SMA40: +74.5% (wait)</div><div class="af-st-row"><span style="color:#f03050;font-family:var(--mono);font-size:8.5px">AF↓ fordul</span><span style="color:#3a5068;font-family:var(--mono);font-size:8.5px;margin-left:8px">ST 50%↑/50%↓</span></div><div class="ta-row">AF↓</div><div class="sb-w"><div class="sb" style="width:67%;background:#00c878"></div></div><div class="scr">Korr.kockazat: <b style="color:#00c878">23%</b></div></div></div>
-<div class="g2">
-  <div class="panel">
-    <div class="pt">Kompozit belépési score + korrekciós kockázat historikus</div>
-    <canvas id="ch" height="155"></canvas>
-  </div>
-  <div class="panel">
-    <div class="pt">Befektetői playbook</div>
-    <table class="pb">
-      <thead><tr><th></th><th>Helyzet</th><th>Teendő</th><th>Allok.</th></tr></thead>
-      <tbody>
-        <tr><td>🟢</td><td>Score≥65</td><td class="ga">FEKTESS BE</td><td class="ga">55-80%</td></tr>
-        <tr><td>🟢</td><td>Extreme Fear (CNN&lt;25)</td><td class="ga">KONTR. VÉTEL</td><td class="ga">35-65%</td></tr>
-        <tr><td>🟡</td><td>Score 40-65</td><td class="wa">FELEZD MEG</td><td class="wa">25-50%</td></tr>
-        <tr><td>🔴</td><td>Score&lt;40</td><td class="ba">TARTSD VISSZA</td><td class="ba">0-20%</td></tr>
-        <tr><td>🟣</td><td>Korr.≥60%</td><td class="ea">KILÉPÉS</td><td class="ea">0-15%</td></tr>
-        <tr><td>🔄</td><td>Piac–10%+score≥50</td><td class="ga">VISSZAVÁSÁROL</td><td class="ga">50-70%</td></tr>
-      </tbody>
-    </table>
-    <div style="margin-top:9px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.16);border-radius:6px;padding:9px 11px;font-family:var(--mono);font-size:8.5px;color:var(--m);line-height:1.8">
-      <b style="color:var(--purple)">Kilépési trigger (4+ aktív):</b><br>
-      VIX term backwardation · LEI csökkeno · Bearish RSI div.<br>
-      ISM&lt;48 · HY spread&gt;4.5% · Rec.prob&gt;20%
+
+<!-- FŐ SCORE -->
+<div class="main">
+  <div class="m-left">
+    <div class="m-signal">VÁRAKOZÁS – Csak tartás</div>
+    <div class="m-desc">Meglévő pozíciókat tartsd, új vásárlás <strong>nem</strong> javasolt. Cash gyűjtés a következő 65+ score-ra.</div>
+    <div class="m-tags">
+      
+      <span class="m-tag" style="color:var(--sub);border-color:var(--brd)">SPX: 7,337 (-0.38%)</span>
+      <span class="m-tag" style="color:var(--sub);border-color:var(--brd)">VIX: 17.1</span>
     </div>
   </div>
+  <div class="m-center">
+    <div class="m-num">45</div>
+    <div class="m-lbl">KOMPOZIT BELÉPÉSI SCORE / 100</div>
+    <div class="m-prog"><div class="m-prog-fill" style="width:45%"></div></div>
+    <div style="font-size:9px;margin-top:5px;color:#f04060;font-family:var(--mono)">Effektív score: 45 (vétó aktív)</div>
+  </div>
+  <div class="m-right">
+    <div class="m-alloc-lbl">Half-Kelly allokáció</div>
+    <div class="m-alloc-num">8%</div>
+    <div style="font-size:10px;color:var(--mut);font-family:var(--mono);margin-top:2px">
+      Full Kelly: <span style="text-decoration:line-through;color:var(--mut)">16%</span>
+      → Half: <strong style="color:var(--text)">8%</strong>
+    </div>
+    <div style="font-size:10px;color:var(--mut);font-family:var(--mono)">92% cash tartalék</div>
+    <div style="font-size:9px;color:var(--mut);margin-top:3px">Várakozás – csak tartás</div>
+    <div class="m-corr">Korrekció esélye: <strong style="color:#f04060">28%</strong></div>
+    <div style="font-size:9px;margin-top:5px;padding:4px 8px;background:#f0406015;border:1px solid #f0406030;border-radius:5px;color:#f08090;font-family:var(--mono)">⚡ Vétó: 💧 Net Liq szűkül (-113751B$) → max 65</div>
+  </div>
 </div>
+
+<!-- PLAYBOOK -->
+<div class="sec">
+  <div class="sec-title">
+    <span>Befektetői Playbook</span>
+    <span class="sec-badge" style="color:#f0a500;border-color:#f0a50040">Aktív: WAIT</span>
+  </div>
+  <div class="pb-row " style="border-left:4px solid #00d48840;"><div class="pb-score" style="color:#00d488">85–100</div><div class="pb-body"><div class="pb-lbl" style="color:#00d488">MUST BUY </div><div class="pb-alloc-r">Allokáció: <strong>70–85%</strong></div></div><div class="pb-act" style="color:#00d488;background:#00d48815;border:1px solid #00d48830">—</div></div><div class="pb-row " style="border-left:4px solid #4da6ff40;"><div class="pb-score" style="color:#4da6ff">65–84</div><div class="pb-body"><div class="pb-lbl" style="color:#4da6ff">ÓVATOS VÉTEL </div><div class="pb-alloc-r">Allokáció: <strong>35–55%</strong></div></div><div class="pb-act" style="color:#4da6ff;background:#4da6ff15;border:1px solid #4da6ff30">—</div></div><div class="pb-row pb-active" style="border-left:4px solid #f0a50040;background:#f0a50010;border-color:#f0a50040"><div class="pb-score" style="color:#f0a500">40–64</div><div class="pb-body"><div class="pb-lbl" style="color:#f0a500">VÁRAKOZÁS <span class="pb-now-tag">← MOST · 45</span></div><div class="pb-alloc-r">Allokáció: <strong>10–25%</strong></div></div><div class="pb-act" style="color:#f0a500;background:#f0a50015;border:1px solid #f0a50030">CSELEKEDJ</div></div><div class="pb-row " style="border-left:4px solid #f0406040;"><div class="pb-score" style="color:#f04060">&lt; 40</div><div class="pb-body"><div class="pb-lbl" style="color:#f04060">VÉDEKEZÉS </div><div class="pb-alloc-r">Allokáció: <strong>0–10%</strong></div></div><div class="pb-act" style="color:#f04060;background:#f0406015;border:1px solid #f0406030">—</div></div>
+  
+  <div class="trig-wrap">
+    <div class="trig-title">KILÉPÉSI TRIGGEREK – 4+ AKTÍV ESETÉN AZONNALI POZÍCIÓ CSÖKKENTÉS</div>
+    <div class="trig-grid"><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">VIX term backwardation</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">LEI csökkenő</div></div><div class="trig on"><div class="trig-dot on"></div><div class="trig-txt on">Bearish RSI div.</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">AF sárgáról lilára</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">HY spread > 4.5%</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">Yield de-inversion ⚠</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">PCR eufória < 0.65</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">Rec.prob > 20%</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">GEX negatív 🔴</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">VIX spike >20%/nap 🚨</div></div><div class="trig off"><div class="trig-dot off"></div><div class="trig-txt off">Breadth divergencia</div></div><div class="trig on"><div class="trig-dot on"></div><div class="trig-txt on">Net liq. gyors szűkülés</div></div></div>
+    <div class="trig-status">Aktív triggerek: <strong style="color:#f0a500">2</strong> / 12 — ⚠ Figyelj</div>
+  </div>
+</div>
+
+<!-- MOST: 1-4 HÉT -->
+<div class="sec">
+  <div class="sec-title"><span class="ind-horizon">MOST · 1–4 HÉT</span><span>Technikai + hangulat</span></div>
+  <div class="ind"><div class="ind-left"><div class="ind-name">SPX AF (18,6) – heti TRIX<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#f04060">-0.328</div><div class="ind-sub">Lila oszlop (-0.328) – gyengülő momentum</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Lila, eső (-0.3<)">1</div><div class="c5-box" style="background:#f08040;color:#000;" title="Lila, gyenge (-0.1 – -0.3)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Semleges (0 körül)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Sárga, gyenge (0–0.1)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Sárga, erős (>0.1) / forduló">5</div><span class="c5-lbl" style="color:#f08040">Gyenge</span><span class="c5-avg">· átlag: 0.0</span></div></div><div class="ind-weight"><div class="wt-label">súly: 7/9</div><div class="wt-bar"><div class="wt-fill" style="width:78%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#f04060;background:#f0406018;border:1px solid #f0406030">BEAR</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Put/Call Ratio (PCR) – profi kontrarian<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#f0a500">0.85</div><div class="ind-sub">Nincs adat (fallback: 0.85)</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Eufória (<0.65) – tető közelben, BEARISH!">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Alacsony (0.65–0.75)">2</div><div class="c5-box" style="background:#f0a500;color:#000;" title="Normál (0.75–1.0)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Magas (1.0–1.2) – félelem">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Extreme Fear (>1.2) – kontrarian vétel!">5</div><span class="c5-lbl" style="color:#f0a500">Közepes</span><span class="c5-avg">· átlag: 0.85</span></div></div><div class="ind-weight"><div class="wt-label">súly: 6/9</div><div class="wt-bar"><div class="wt-fill" style="width:67%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">CNN Fear & Greed<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f0a500">68</div><div class="ind-sub">greed</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Extreme Fear (<25) – kontrarian vétel">1</div><div class="c5-box" style="background:#f08040;color:#000;" title="Fear (25–40)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Neutral (40–60)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Greed (60–75)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Extreme Greed (>75) – körültekintés">5</div><span class="c5-lbl" style="color:#f08040">Gyenge</span><span class="c5-avg">· átlag: 50</span></div></div><div class="ind-weight"><div class="wt-label">súly: 6/9</div><div class="wt-bar"><div class="wt-fill" style="width:67%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">MACD Hisztogram<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f04060">13.31</div><div class="ind-sub">Gyengül</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Csökkenő, negatív">1</div><div class="c5-box" style="background:#f08040;color:#000;" title="Negatív, lassul">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Nulla körül">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Pozitív, lassul">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Pozitív, gyorsuló – erős momentum">5</div><span class="c5-lbl" style="color:#f08040">Gyenge</span><span class="c5-avg">· átlag: 0</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f04060;background:#f0406018;border:1px solid #f0406030">BEAR</div></div><div class="ind"><div class="ind-left"><div class="ind-name">VIX Term Structure (VIX/VIX3M)<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#00d488">0.839</div><div class="ind-sub">Contango – nyugodt</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Backwardation >1.0 – pánik!">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Lapos 0.97–1.0">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Enyhe contango 0.92–0.97">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Normál contango 0.85–0.92">4</div><div class="c5-box" style="background:#00d488;color:#000;" title="Mély contango <0.85 – nyugalom">5</div><span class="c5-lbl" style="color:#00d488">Nagyon erős</span><span class="c5-avg">· átlag: 0.95</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="ind"><div class="ind-left"><div class="ind-name">RSI + Divergencia (SPX)<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f04060">68.0</div><div class="ind-sub">Bearish divergencia!</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Túlvett + bearish div. (>80)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Magas (70–80)">2</div><div class="c5-box" style="background:#f0a500;color:#000;" title="Normál (40–70)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Alacsony (30–40)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Túladott + bullish div. (<30)">5</div><span class="c5-lbl" style="color:#f0a500">Közepes</span><span class="c5-avg">· átlag: 50</span></div></div><div class="ind-weight"><div class="wt-label">súly: 4/9</div><div class="wt-bar"><div class="wt-fill" style="width:44%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f04060;background:#f0406018;border:1px solid #f0406030">BEAR</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Bollinger Squeeze (SPX)<span class="imp-pill" style="color:#4da6ff;background:#4da6ff15">KIEGÉSZÍTŐ</span></div><div class="ind-val" style="color:#f0a500">7.6%</div><div class="ind-sub">SQUEEZE – nagy mozgás közeleg!</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Nagyon széles (>25%)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Széles (20–25%)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Normál (12–20%)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Szűk (8–12%)">4</div><div class="c5-box" style="background:#00d488;color:#000;" title="SQUEEZE (<8%) – nagy mozgás közeleg">5</div><span class="c5-lbl" style="color:#00d488">Nagyon erős</span><span class="c5-avg">· átlag: ~15%</span></div></div><div class="ind-weight"><div class="wt-label">súly: 3/9</div><div class="wt-bar"><div class="wt-fill" style="width:33%;background:#4da6ff"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">VIX<span class="imp-pill" style="color:#4da6ff;background:#4da6ff15">KIEGÉSZÍTŐ</span></div><div class="ind-val" style="color:#00d488">17.1</div><div class="ind-sub">Heti: -0.3</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Pánik (>28)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Félelem (22–28)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Normál (18–22)">3</div><div class="c5-box" style="background:#7dd3fc;color:#000;" title="Nyugodt (14–18)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Nagyon alacsony (<14) – önelégültség">5</div><span class="c5-lbl" style="color:#7dd3fc">Erős</span><span class="c5-avg">· átlag: 20</span></div></div><div class="ind-weight"><div class="wt-label">súly: 3/9</div><div class="wt-bar"><div class="wt-fill" style="width:33%;background:#4da6ff"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div>
+</div>
+
+<!-- 3-6 HÓNAP -->
+<div class="sec">
+  <div class="sec-title"><span class="ind-horizon">3–6 HÓNAP</span><span>Gazdasági ciklus</span></div>
+  <div class="ind"><div class="ind-left"><div class="ind-name">ISM New Orders<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#f0a500">50</div><div class="ind-sub">Nincs adat</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Mély zsugorodás (<44)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Zsugorodás (44–48)">2</div><div class="c5-box" style="background:#f0a500;color:#000;" title="Semleges (48–53)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Bővülés (53–58)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Erős bővülés (>58)">5</div><span class="c5-lbl" style="color:#f0a500">Közepes</span><span class="c5-avg">· átlag: 50</span></div></div><div class="ind-weight"><div class="wt-label">súly: 8/9</div><div class="wt-bar"><div class="wt-fill" style="width:89%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Copper / Gold arány<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#00d488">0.001318</div><div class="ind-sub">Emelkedő – bővülési jel</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Esik, tartósan alacsony">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Csökkenő">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Stabil">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Enyhe emelkedés">4</div><div class="c5-box" style="background:#00d488;color:#000;" title="Erősen emelkedő – bővülési jel">5</div><span class="c5-lbl" style="color:#00d488">Nagyon erős</span><span class="c5-avg">· átlag: ~0.00130</span></div></div><div class="ind-weight"><div class="wt-label">súly: 7/9</div><div class="wt-bar"><div class="wt-fill" style="width:78%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Piaci Breadth (% > MA50)<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f0a500">50%</div><div class="ind-sub">Vegyes</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Nagyon szűk (<35%) – csak néhány vezet">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Szűk (35–45%)">2</div><div class="c5-box" style="background:#f0a500;color:#000;" title="Közepes (45–60%)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Széles (60–70%)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Nagyon széles (>70%) – egészséges rally">5</div><span class="c5-lbl" style="color:#f0a500">Közepes</span><span class="c5-avg">· átlag: 55%</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Golden / Death Cross<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#00d488">MA50 vs MA200</div><div class="ind-sub">Golden Cross – bullish trend</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Death Cross, eső">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Death Cross, stabil">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Közel egymáshoz">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Golden Cross, lassul">4</div><div class="c5-box" style="background:#00d488;color:#000;" title="Golden Cross, gyorsuló">5</div><span class="c5-lbl" style="color:#00d488">Nagyon erős</span><span class="c5-avg">· átlag: –</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Forward P/E<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f0a500">21.7x</div><div class="ind-sub">TÚLÉRTÉKELT</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Nagyon drága (>25x)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Drága (22–25x)">2</div><div class="c5-box" style="background:#f0a500;color:#000;" title="Fair (19–22x)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Kedvező (17–19x)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Olcsó (<17x)">5</div><span class="c5-lbl" style="color:#f0a500">Közepes</span><span class="c5-avg">· átlag: 18–19x (historikus)</span></div></div><div class="ind-weight"><div class="wt-label">súly: 4/9</div><div class="wt-bar"><div class="wt-fill" style="width:44%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">HY Credit Spread<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#00d488">2.75%</div><div class="ind-sub">Szűk – nincs stresszjel</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Krízis (>5%)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Stressz (4.5–5%)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Normál (3.2–4.5%)">3</div><div class="c5-box" style="background:#7dd3fc;color:#000;" title="Alacsony (2.5–3.2%)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Nagyon szűk (<2.5%) – optimizmus">5</div><span class="c5-lbl" style="color:#7dd3fc">Erős</span><span class="c5-avg">· átlag: ~3.5%</span></div></div><div class="ind-weight"><div class="wt-label">súly: 4/9</div><div class="wt-bar"><div class="wt-fill" style="width:44%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div>
+</div>
+
+<!-- 6-18 HÓNAP -->
+<div class="sec">
+  <div class="sec-title"><span class="ind-horizon">6–18 HÓNAP</span><span>Makro előrejelzők</span></div>
+  <div class="ind"><div class="ind-left"><div class="ind-name">Conference Board LEI<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#00d488">1.72</div><div class="ind-sub">Emelkedő – bővülés jön (+0.24/3h)</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Csökkenő, meredeken – recesszió előtt">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Csökkenő, lassul">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Stabil">3</div><div class="c5-box" style="background:#7dd3fc;color:#000;" title="Emelkedő, lassan">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Emelkedő, gyorsuló – bővülés jön">5</div><span class="c5-lbl" style="color:#7dd3fc">Erős</span><span class="c5-avg">· átlag: ~100</span></div></div><div class="ind-weight"><div class="wt-label">súly: 9/9</div><div class="wt-bar"><div class="wt-fill" style="width:100%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="ind"><div class="ind-left"><div class="ind-name">M2 Pénzkínálat YoY<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#f0a500">4.2%</div><div class="ind-sub">+4.2% YoY – semleges</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Zsugorodó (<-1%)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Stagnáló (-1–1%)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Mérsékelt (1–4%)">3</div><div class="c5-box" style="background:#7dd3fc;color:#000;" title="Normál (4–7%)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Bőséges (>7%) – inflációs kockázat">5</div><span class="c5-lbl" style="color:#7dd3fc">Erős</span><span class="c5-avg">· átlag: +4–5% (normál)</span></div></div><div class="ind-weight"><div class="wt-label">súly: 7/9</div><div class="wt-bar"><div class="wt-fill" style="width:78%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Recessziós val. (NY Fed)<span class="imp-pill" style="color:#f04060;background:#f0406015">KRITIKUS</span></div><div class="ind-val" style="color:#00d488">1.8%</div><div class="ind-sub">Alacsony</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Magas kockázat (>25%)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Emelkedett (15–25%)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Mérsékelt (8–15%)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Alacsony (3–8%)">4</div><div class="c5-box" style="background:#00d488;color:#000;" title="Nagyon alacsony (<3%)">5</div><span class="c5-lbl" style="color:#00d488">Nagyon erős</span><span class="c5-avg">· átlag: ~5%</span></div></div><div class="ind-weight"><div class="wt-label">súly: 6/9</div><div class="wt-bar"><div class="wt-fill" style="width:67%;background:#f04060"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Consumer Expectations (UMich)<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#f04060">53.3</div><div class="ind-sub">53.3 – csökkenő</div><div class="c5-wrap"><div class="c5-box" style="background:#f04060;color:#000;" title="Nagyon gyenge (<55) – bizalomvesztés">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Gyenge (55–65)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Normál (65–80)">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc;" title="Erős (80–90)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Nagyon erős (>90)">5</div><span class="c5-lbl" style="color:#f04060">Nagyon gyenge</span><span class="c5-avg">· átlag: ~75</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#f04060;background:#f0406018;border:1px solid #f0406030">BEAR</div></div><div class="ind"><div class="ind-left"><div class="ind-name">Hozamgörbe 10Y–2Y + De-inversion sebesség<span class="imp-pill" style="color:#f0a500;background:#f0a50015">FONTOS</span></div><div class="ind-val" style="color:#00d488">+49 bp</div><div class="ind-sub">Normál (+49bp, trend: +0bp/hó) | Re-steep: -1bp/3hó</div><div class="c5-wrap"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060;" title="Mélyen invertált (<-25bp)">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040;" title="Enyhe inverzió (-25–0bp)">2</div><div class="c5-box" style="border:1px solid #f0a50040;color:#f0a500;" title="Lapos (0–25bp)">3</div><div class="c5-box" style="background:#7dd3fc;color:#000;" title="Normál (25–75bp)">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488;" title="Meredek (>75bp) – bővülés">5</div><span class="c5-lbl" style="color:#7dd3fc">Erős</span><span class="c5-avg">· átlag: +50–100 bp (normál)</span></div></div><div class="ind-weight"><div class="wt-label">súly: 5/9</div><div class="wt-bar"><div class="wt-fill" style="width:56%;background:#f0a500"></div></div></div><div class="sig-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div>
+</div>
+
+<!-- RUBBER BAND INDICATOR -->
+<div class="sec" style="margin-bottom:12px;border-color:#f0a50025">
+  <div class="sec-title">
+    <span>🎯 Rubber Band – SPX vs SMA40 havi</span>
+    <span class="sec-badge" style="color:#f04060;border-color:#f0406030">Erősen feszített · +31.3%</span>
+  </div>
+  <div class="rb-stretch-bar" style="margin-bottom:10px"><div style="height:10px;border-radius:5px;overflow:hidden;background:linear-gradient(to right,#1d9e75,#5dcaa5,#f0c040,#ef9f27,#e24b4a,#8b0000)"><div style="position:relative"><div style="position:absolute;left:88%;top:-3px;width:4px;height:16px;background:white;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px #0006"></div></div></div><div style="display:flex;justify-content:space-between;font-size:8px;color:var(--mut);font-family:var(--mono);margin-top:4px"><span>Mély diszkont (&lt;-15%)</span><span>Trendnél (0%)</span><span style="color:#f04060;font-weight:700">+31.3% MOST</span><span>Extrém (+40%+)</span></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px"><div class="huf-box"><div class="huf-rate" style="font-size:16px">7,337</div><div style="font-size:9px;color:var(--mut)">SPX most</div></div><div class="huf-box"><div class="huf-rate" style="font-size:16px;color:#5b9cf0">5,588</div><div style="font-size:9px;color:var(--mut)">SMA40 havi trend</div></div><div class="huf-box"><div class="huf-rate" style="font-size:16px;color:#f04060">+31.3%</div><div style="font-size:9px;color:var(--mut)">Feszítés (Erősen feszített)</div></div></div><div style="padding:8px 11px;background:var(--c2);border-radius:8px;border:1px solid var(--brd);margin-bottom:8px"><div style="font-size:9px;color:var(--mut);margin-bottom:5px;font-family:var(--mono)">AF(18,6) szignál: 🟡 Semleges</div><div style="font-size:10px;color:var(--sub);line-height:1.5">Ha AF negatívba fordul → SMA40 visszatérés: <span style="color:#f04060;font-family:var(--mono)">5,588 (-23.8%)</span> · Historikus túllövés: <span style="color:#f04060;font-family:var(--mono)">4,750 (-35.3%)</span></div></div><div style="font-size:9px;color:var(--mut);font-family:var(--mono)">⚡ Penalty a score-ban: <strong style="color:#f04060">-15 pont</strong> (csak ha AF is negatív)</div>
+</div>
+
+<!-- HUF/USD + SZEKTORROTÁCIÓ (2 oszlop) -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+  <div class="sec" style="margin-bottom:0">
+    <div class="sec-title">HUF/USD árfolyam</div>
+    <div class="huf-box"><div class="huf-rate">304.4 <span class="huf-unit">Ft/USD</span></div><div class="huf-trend" style="color:#00d488">erősödő (1h: -1.87% · 1hó: -9.7%)</div><div class="c5-wrap" style="margin-top:8px"><div class="c5-box" style="border:1px solid #f0406040;color:#f04060">1</div><div class="c5-box" style="border:1px solid #f0804040;color:#f08040">2</div><div class="c5-box" style="background:#f0a500;color:#000">3</div><div class="c5-box" style="border:1px solid #7dd3fc40;color:#7dd3fc">4</div><div class="c5-box" style="border:1px solid #00d48840;color:#00d488">5</div><span class="c5-avg">USD vétel ár</span></div><div style="font-size:10px;font-family:var(--mono);margin-top:6px;color:#f04060">✗ Drága most – várj gyengébb forintra</div><div style="font-size:9px;color:var(--mut);margin-top:4px">1=Nagyon erős Ft (drága USD) · 5=Gyenge Ft (olcsó USD)</div></div>
+    <div style="font-size:9px;color:var(--mut);margin-top:8px;font-family:var(--mono)">1 hónapos változás: -9.7%</div>
+  </div>
+  <div class="sec" style="margin-bottom:0">
+    <div class="sec-title">Szektorrotáció (1 hónapos telj.)</div>
+    <div class="sec-row"><div class="sec-name">Tech</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:95.0%;background:#00d488;float:right"></div></div><div class="sec-val" style="color:#00d488">+19.0%</div></div><div class="sec-row"><div class="sec-name">RE</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:18.5%;background:#00d488;float:right"></div></div><div class="sec-val" style="color:#00d488">+3.7%</div></div><div class="sec-row"><div class="sec-name">Comm.</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:15.0%;background:#00d488;float:right"></div></div><div class="sec-val" style="color:#00d488">+3.0%</div></div><div class="sec-row"><div class="sec-name">Def.fogy.</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:10.0%;background:#f0a500;float:right"></div></div><div class="sec-val" style="color:#f0a500">+2.0%</div></div><div class="sec-row"><div class="sec-name">Pénzügy</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:7.5%;background:#f0a500;float:right"></div></div><div class="sec-val" style="color:#f0a500">+1.5%</div></div><div class="sec-row"><div class="sec-name">Ipar</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:7.0%;background:#f0a500;float:right"></div></div><div class="sec-val" style="color:#f0a500">+1.4%</div></div><div class="sec-row"><div class="sec-name">Anyag</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:5.5%;background:#f0a500;float:left"></div></div><div class="sec-val" style="color:#f0a500">-1.1%</div></div><div class="sec-row"><div class="sec-name">Energia</div><div class="sec-bar-wrap"><div class="sec-bar" style="width:8.5%;background:#f0a500;float:left"></div></div><div class="sec-val" style="color:#f0a500">-1.7%</div></div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="sec">
+  <div class="sec-title">Kompozit Score + Korrekciós kockázat historikus</div>
+  <div class="bt-box"><span class="bt-l">Historikus (signal követése):</span><span style="color:#f0a500;font-weight:700">Stratégia: +8.9%</span><span class="bt-s">vs</span><span>Buy&Hold: +9.5%</span><span class="bt-n">(13 hét)</span></div>
+  <div class="chart-box">
+    <canvas id="histChart" height="160"></canvas>
+  </div>
+</div>
+
+
+<!-- SMART MONEY RÉTEG -->
+<div class="sec" style="border-color:#a78bfa25">
+  <div class="sec-title">
+    <span>🧠 Smart Money Réteg</span>
+    <span class="sec-badge" style="color:#a78bfa;border-color:#a78bfa30">McClellan · Globális Likviditás · Dark Pool (DIX/GEX) · COT</span>
+  </div>
+  <div class="sm-row"><div class="sm-left"><div class="sm-name">Globális Likviditás (Fed – TGA)</div><div class="sm-val" style="color:#f04060">$5,831,743B nettó</div><div class="sm-desc">⚠ GYORS SZŰKÜLÉS (-113751B$) – TGA:877761B$ + RRP:1B$ elszívja a likviditást! | Változás: -113751B$ / 4hét</div></div><div class="sm-badge" style="color:#f04060;background:#f0406018;border:1px solid #f0406030">BEAR</div></div><div class="sm-row"><div class="sm-left"><div class="sm-name">McClellan Summation Index</div><div class="sm-val" style="color:#f0a500">+0</div><div class="sm-desc">Nincs adat</div></div><div class="sm-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="sm-row"><div class="sm-left"><div class="sm-name">DIX – Dark Pool Index</div><div class="sm-val" style="color:#00d488">46.6%</div><div class="sm-desc">Intézményi vétel (46.6%) – smart money aktív</div></div><div class="sm-badge" style="color:#00d488;background:#00d48818;border:1px solid #00d48830">BULL</div></div><div class="sm-row"><div class="sm-left"><div class="sm-name">GEX – Gamma Exposure</div><div class="sm-val" style="color:#f0a500">$8.5B</div><div class="sm-desc">Pozitív GEX (8.5B$) – stabilizáló</div></div><div class="sm-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div><div class="sm-row"><div class="sm-left"><div class="sm-name">COT Smart Money (Large Speculators)</div><div class="sm-val" style="color:#f0a500">+0 kontraktus</div><div class="sm-desc">Nincs adat (CFTC fallback) | Z-score: +0.0</div></div><div class="sm-badge" style="color:#f0a500;background:#f0a50018;border:1px solid #f0a50030">NEU</div></div>
+</div>
+
+<!-- RIASZTÁSOK -->
+<div class="sec" style="border-color:#f0406020">
+  <div class="sec-title">
+    <span>⚡ Piaci Riasztások</span>
+    <span class="sec-badge" style="color:#f04060;border-color:#f0406030">Nagy esések · Zuhanó kések · Figyelők</span>
+  </div>
+  <div class="al-card" style="border-color:#a78bfa25"><div class="al-left"><div class="al-ticker" style="color:#a78bfa">SNOW</div><div class="al-type" style="color:#a78bfa;background:#a78bfa15">ZUHANÓ KÉS</div></div><div class="al-info"><div class="al-desc">SMA200 alatt -25.3% – screenerből kiesett</div></div><div class="al-right"><div class="al-val" style="color:#a78bfa">-25.3%</div><div class="al-date">05-08</div></div></div>
+</div>
+
+<!-- WATCHLIST -->
+<div class="sec" style="border-color:#00d48820">
+  <div class="sec-title">
+    <span>🔍 Quality-at-Discount Watchlist</span>
+    <span class="sec-badge" style="color:#00d488;border-color:#00d48830">0 jelölt · 2026-05-08</span>
+  </div>
+  <div class="wl-pills">
+    <span class="wl-pill">ROE &gt;10%</span>
+    <span class="wl-pill">D/E &lt;1.5</span>
+    <span class="wl-pill wl-pill-disc">SMA200: -10% – -25%</span>
+    <span class="wl-pill">EPS+ outlook</span>
+    <span class="wl-pill">MktCap &gt;$5B</span>
+  </div>
+  <div class="wl-score-info">
+    📊 <strong>Quality Score (0–100)</strong> – Összetett mutató: ROE minőség + ROI + SMA200 diszkont mértéke + D/E alacsony értéke + EPS növekedés + Earnings Scout revíziós delta. <strong>75+</strong> = erős jelölt · <strong>60–74</strong> = figyelemre méltó · <strong>&lt;60</strong> = gyengébb pozíció
+  </div>
+  <div class="wl-grid"><div class="wl-empty">Screener még nem futott – pénteken frissül</div></div>
+</div>
+
+<!-- FOOTER -->
 <div class="footer">
-  <div>yfinance · FRED API · CNN F&G · GitHub Actions: péntek 20:00<br>
-  v4 · 3 idohorizont · TA · Kelly · Hibák: <a href="error_log.json">error_log.json</a></div>
-  <div style="text-align:right">Buy & hold timing eszköz · Nem befektetési tanácsadás</div>
-</div></div>
+  <span>yfinance · FRED API · CNN F&G · FMP Screener</span>
+  <span>GitHub Actions: péntek 20:00</span>
+  <span>v5 · 3 idóhorizont · 4-szintű playbook · Kelly · EPS delta</span>
+  <span style="margin-left:auto">Nem befektetési tanácsadás</span>
+</div>
+
 <script>
-Chart.defaults.color='#3a5068';Chart.defaults.font.family="'JetBrains Mono',monospace";Chart.defaults.font.size=9;
-const G='rgba(22,32,48,.9)';
-const hD=["2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-20", "2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01"],hS=[58, 60, 60, 93, 88, 84, 84, 93, 85, 82, 64, 63],hC=[23, 23, 23, 15, 15, 38, 38, 7, 0, 4, 22, 22];
-new Chart(document.getElementById('ch'),{type:'line',data:{labels:hD,datasets:[
-  {label:'Score',data:hS,borderColor:'#00c878',borderWidth:2,pointRadius:3,tension:.3,fill:false,
-    pointBackgroundColor:hS.map(s=>s>=65?'#00c878':s>=40?'#f0a500':'#f03050')},
-  {label:'Korr.%',data:hC,borderColor:'rgba(167,139,250,.7)',borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[4,3]},
-  {label:'Küszöb',data:Array(hD.length).fill(65),type:'line',borderColor:'rgba(0,200,120,.2)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false},
-]},options:{responsive:true,interaction:{mode:'index',intersect:false},
-  plugins:{legend:{display:true,position:'top',align:'end',labels:{boxWidth:12,boxHeight:1,padding:10,color:'#3a5068'}},
-    tooltip:{backgroundColor:'#080c14',borderColor:'#162030',borderWidth:1}},
-  scales:{x:{grid:{color:G},ticks:{maxTicksLimit:8,maxRotation:0}},y:{grid:{color:G},min:0,max:100}}
-}});
-</script></body></html>
+const hd=["2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-20", "2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01", "2026-05-08"], hs=[58, 60, 60, 93, 88, 84, 84, 93, 85, 82, 64, 63, 45], hc=[23, 23, 23, 15, 15, 38, 38, 7, 0, 4, 22, 22, 28];
+if(hd.length>1){
+  const ctx=document.getElementById("histChart").getContext("2d");
+  new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:hd,
+      datasets:[
+        {label:"Score",data:hs,borderColor:"#00d488",backgroundColor:"#00d48812",
+          borderWidth:2,pointBackgroundColor:"#00d488",pointRadius:4,tension:.3},
+        {label:"Korr.%",data:hc,borderColor:"#a78bfa",backgroundColor:"transparent",
+          borderWidth:1.5,borderDash:[4,3],pointRadius:3,pointBackgroundColor:"#a78bfa",tension:.3},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      scales:{
+        x:{ticks:{color:"#4e6f8f",font:{size:9}},grid:{color:"#1d2f4a"}},
+        y:{min:0,max:100,ticks:{color:"#4e6f8f",font:{size:9}},grid:{color:"#1d2f4a"}},
+      },
+      plugins:{
+        legend:{labels:{color:"#8aabcc",font:{size:10}}},
+        annotation:{annotations:{
+          line65:{type:"line",yMin:65,yMax:65,borderColor:"#4da6ff50",borderWidth:1,borderDash:[4,4]},
+          line85:{type:"line",yMin:85,yMax:85,borderColor:"#00d48850",borderWidth:1,borderDash:[4,4]},
+        }},
+      }
+    }
+  });
+}
+</script>
+</body></html>
