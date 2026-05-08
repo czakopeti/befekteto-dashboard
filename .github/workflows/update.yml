@@ -1,62 +1,40 @@
-name: Befektető Dashboard – Heti Frissítés
+name: Update Befekteto Dashboard
 
 on:
   schedule:
-    - cron: '0 18 * * 5'
-  workflow_dispatch:
+    - cron: '0 15 * * 5'   # Péntek 15:00 UTC = 17:00 Budapest (CEST)
+  workflow_dispatch:         # Manuális trigger – bármikor futtatható
 
 jobs:
-  update-dashboard:
+  update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    
     steps:
-      - name: Kód letöltése
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Python beállítása
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Csomagok telepítése
-        run: pip install yfinance requests pandas openpyxl --quiet
+      - name: Install dependencies
+        run: |
+          pip install yfinance pandas requests
 
-      - name: Dashboard frissítése
-        continue-on-error: true
+      - name: Run Quality Screener
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+        run: python screener.py
+
+      - name: Run Dashboard Update
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python auto_update.py --no-browser
+          FMP_API_KEY:  ${{ secrets.FMP_API_KEY }}
+        run: python auto_update.py
 
-      - name: Fallback fájlok ha script crashelt
-        if: always()
+      - name: Commit and Push
         run: |
-          if [ ! -f error_log.json ]; then
-            echo '{"last_run":"'$(date -u +%Y-%m-%dT%H:%M:%S)'","status":"CRASHED","errors":[{"source":"script","error":"Script crashed before error_log was created. Check FRED_API_KEY secret!"}],"success_count":0}' > error_log.json
-          fi
-          if [ ! -f index.html ]; then
-            echo '<html><body style="font-family:monospace;background:#03050a;color:#c0d0e8;padding:40px"><h1>Dashboard frissítés sikertelen</h1><p>Futtasd újra manuálisan: Actions → Run workflow</p><p>Leggyakoribb ok: FRED_API_KEY secret nincs beállítva</p></body></html>' > index.html
-          fi
-
-      - name: Eredmény commitolása
-        if: always()
-        run: |
-          git config --local user.email "dashboard@auto.update"
-          git config --local user.name "Auto Update"
-          git add -f index.html error_log.json 2>/dev/null || true
-          git add history.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "Auto update: $(date '+%Y-%m-%d %H:%M')"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Dashboard v5 frissítés $(date +'%Y-%m-%d %H:%M')"
           git push
-
-      - name: Error log artifact mentése
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: error-log-${{ github.run_id }}
-          path: error_log.json
-          retention-days: 30
-          if-no-files-found: warn
-
-
-       
