@@ -587,7 +587,35 @@ def fetch_forward_pe(spx_price):
     val_score = round(max(0, min(30, (PE_FAIR_VALUE+1.5-pe)/6*30)))
     label = ("ALULÉRTÉKELT" if pe<18 else "FAIR" if pe<21
              else "TÚLÉRTÉKELT" if pe<25 else "EXTRÉM DRÁGA")
-    return {"forwardPE": pe, "valScore": val_score, "valLabel": label}
+
+    # ERP = Earnings Yield (1/PE) - 10Y Treasury Yield
+    try:
+        dgs10_v = fetch_fred_series("DGS10", n=5)
+        treasury_10y = round(float(dgs10_v[0]), 2)
+    except Exception:
+        treasury_10y = 4.5  # fallback aktuális szint
+
+    earnings_yield = round(100 / pe, 2) if pe > 0 else 0
+    erp = round(earnings_yield - treasury_10y, 2)
+
+    # ERP kategória
+    if erp < 0:      erp_cat = 1; erp_lbl = "Negatív – kötvény vonzóbb!"
+    elif erp < 1.0:  erp_cat = 2; erp_lbl = f"Minimális prémium ({erp:.2f}%) – nem éri meg a kockázat"
+    elif erp < 2.0:  erp_cat = 3; erp_lbl = f"Semleges ({erp:.2f}%) – historikusan alacsony"
+    elif erp < 3.5:  erp_cat = 4; erp_lbl = f"Vonzó ({erp:.2f}%) – részvény prémium megvan"
+    else:            erp_cat = 5; erp_lbl = f"Nagyon vonzó ({erp:.2f}%) – historikus vétel"
+
+    # ERP score hatás
+    if erp_cat == 1:   erp_score_adj = -8
+    elif erp_cat == 2: erp_score_adj = -4
+    elif erp_cat == 3: erp_score_adj = 0
+    elif erp_cat == 4: erp_score_adj = 3
+    else:              erp_score_adj = 6
+
+    return {"forwardPE": pe, "valScore": val_score, "valLabel": label,
+            "erp": erp, "erpCat": erp_cat, "erpLabel": erp_lbl,
+            "erpScoreAdj": erp_score_adj, "treasury10y": treasury_10y,
+            "earningsYield": earnings_yield}
 
 # ══════════════════════════════════════════════════════════════
 # HUF/USD ÁRFOLYAM (ÚJ)
@@ -1016,6 +1044,8 @@ def calc_entry_score(now, mid, lng, base, smart=None):
     s+=(3 if vix<16 else 1 if vix<22 else -2 if vix<28 else -5)
     s+=(3 if hy<3.0 else 1 if hy<3.8 else -3 if hy>4.5 else 0)
     s+=(3 if pe<18 else 1 if pe<21 else -2 if pe>24 else 0)
+    # ERP (Equity Risk Premium) – részvény vonzóság kötvényhez képest
+    s += base.get("erpScoreAdj", 0)
     if isinstance(rec,(int,float)):
         s+=(0 if rec<5 else -3 if rec<12 else -8 if rec<20 else -15)
 
@@ -1499,6 +1529,19 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             cat5={"cur":pe_cat,"avg":"18–19x (historikus)",
                   "refs":["Nagyon drága (>25x)","Drága (22–25x)","Fair (19–22x)",
                           "Kedvező (17–19x)","Olcsó (<17x)"]}, src_label="Forward P/E"),
+
+        ind(("go" if base.get("erpCat",3)>=4 else "bear" if base.get("erpCat",3)<=2 else "wait"),
+            "ERP – Equity Risk Premium",
+            f"{base.get('erp',0):+.2f}%",
+            base.get("erpLabel","?") + f" | Earnings yield: {base.get('earningsYield',0):.2f}% – 10Y: {base.get('treasury10y',0):.2f}%",
+            weight=5, imp="FONTOS",
+            cat5={"cur": base.get("erpCat",3), "avg": "2–3% (historikus)",
+                  "refs":["Negatív (<0%) – kötvény vonzóbb!",
+                          "Minimális (0–1%) – kockázat nem térül",
+                          "Semleges (1–2%) – historikusan alacsony",
+                          "Vonzó (2–3.5%) – részvény prémium megvan",
+                          "Nagyon vonzó (>3.5%) – historikus vétel"]},
+            src_label="Forward P/E"),
 
         ind("go" if hy<3.5 else "bear" if hy>4.5 else "wait",
             "HY Credit Spread", f"{hy}%",
