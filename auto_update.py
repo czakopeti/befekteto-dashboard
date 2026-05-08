@@ -1963,6 +1963,10 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     huf_1m   = huf.get("hufChg1m", 0)
     huf_1w   = huf.get("hufChg1w", 0)
 
+    # Inicializálás (minden esetben legyen érték)
+    huf_reversion_note = ""
+    rate_diff_note     = ""
+
     # Gumiszalag elv: -10% egy hónap → statisztikailag visszapattanás esélyes
     huf_reversion_note = ""
     if huf_1m < -7:
