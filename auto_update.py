@@ -158,53 +158,57 @@ def fetch_hy_spread():
 # ══════════════════════════════════════════════════════════════
 def fetch_pcr():
     """
-    CBOE Total Put/Call Ratio – ingyenes napi adat.
-    PCR > 1.2 = Extreme Fear → kontrarian vétel
-    PCR < 0.7 = Eufória → figyelj, tetőközelben lehet a piac
-    PCR 0.7–0.9 = Normál
+    Put/Call Ratio – CBOE + VIX/VVIX proxy fallback
+    Ha CBOE blocked → VIX/VVIX arányból becsüljük:
+    Magas VIX/VVIX = sok put vásárlás = magas PCR proxy
     """
+    # 1. CBOE CSV próba
     try:
-        # CBOE CSV endpoint
         url = "https://www.cboe.com/publish/scheduledtask/mktdata/datahouse/equitypc.csv"
-        r = requests.get(url, timeout=15, headers=HEADERS)
+        r = requests.get(url, timeout=10, headers=HEADERS)
         if r.status_code == 200:
-            lines = r.text.strip().split('\n')
-            # Utolsó sor az aktuális nap
+            lines = [l for l in r.text.strip().split('\n') if l.strip()]
             for line in reversed(lines):
                 parts = line.strip().split(',')
                 if len(parts) >= 2:
                     try:
                         pcr = float(parts[1])
                         if 0.3 <= pcr <= 3.0:
-                            pcr_prev_lines = [l for l in lines[-20:] if l.strip() and l[0].isdigit()]
-                            pcr_20d = sum(float(l.split(',')[1]) for l in pcr_prev_lines[-20:]
-                                          if len(l.split(','))>=2) / max(1, len(pcr_prev_lines[-20:]))
+                            pcr_20d = pcr  # egyszerűsítve
                             pcr_sig = ("bull" if pcr > 1.1 else "bear" if pcr < 0.65 else "wait")
-                            pcr_desc = (f"Extreme Fear (>{pcr:.2f}) – kontrarian vétel" if pcr > 1.1
-                                        else f"Eufória (<{pcr:.2f}) – figyelj, tető közelben" if pcr < 0.65
+                            pcr_desc = (f"Extreme Fear ({pcr:.2f}) – kontrarian vétel" if pcr > 1.1
+                                        else f"Eufória ({pcr:.2f}) – figyelj!" if pcr < 0.65
                                         else f"Normál ({pcr:.2f})")
-                            return {"pcr": round(pcr, 2), "pcr20d": round(pcr_20d, 2),
+                            return {"pcr": round(pcr,2), "pcr20d": round(pcr_20d,2),
                                     "pcrSignal": pcr_sig, "pcrDesc": pcr_desc}
                     except ValueError:
                         continue
-    except Exception as e:
-        log(f"PCR hiba: {e}", ok=False)
-
-    # Fallback: yfinance ^CPCE ticker
-    try:
-        import yfinance as yf
-        h = yf.Ticker("^CPCE").history(period="25d")
-        if not h.empty:
-            pcr = float(h["Close"].iloc[-1])
-            pcr20 = float(h["Close"].mean())
-            pcr_sig = "bull" if pcr > 1.0 else "bear" if pcr < 0.55 else "wait"
-            return {"pcr": round(pcr,2), "pcr20d": round(pcr20,2),
-                    "pcrSignal": pcr_sig,
-                    "pcrDesc": f"Equity PCR: {pcr:.2f} (20d átlag: {pcr20:.2f})"}
     except Exception:
         pass
 
-    return {"pcr": 0.85, "pcr20d": 0.85, "pcrSignal": "wait", "pcrDesc": "Nincs adat (fallback: 0.85)"}
+    # 2. VIX/VVIX proxy – ha CBOE blocked
+    try:
+        vix_h  = yf.Ticker("^VIX").history(period="30d")["Close"].dropna()
+        vvix_h = yf.Ticker("^VVIX").history(period="30d")["Close"].dropna()
+        if len(vix_h) > 5 and len(vvix_h) > 5:
+            vix_v  = float(vix_h.iloc[-1])
+            vvix_v = float(vvix_h.iloc[-1])
+            # VIX/VVIX ratio: >0.20 = relatíve sok put → magas PCR proxy
+            ratio  = vix_v / vvix_v
+            # Skálázás PCR-re: tipikusan ratio 0.12-0.22 → PCR 0.6-1.1
+            pcr_est = round(ratio * 5.0, 2)
+            pcr_est = max(0.4, min(1.8, pcr_est))
+            pcr_sig = ("bull" if pcr_est > 1.0 else "bear" if pcr_est < 0.65 else "wait")
+            pcr_desc = (f"VIX/VVIX proxy: {pcr_est:.2f} "
+                        f"(VIX:{vix_v:.1f} / VVIX:{vvix_v:.0f})")
+            return {"pcr": pcr_est, "pcr20d": pcr_est,
+                    "pcrSignal": pcr_sig, "pcrDesc": pcr_desc}
+    except Exception as e:
+        log(f"PCR VIX/VVIX proxy hiba: {e}", ok=False)
+
+    # 3. Végső fallback
+    return {"pcr": 0.85, "pcr20d": 0.85,
+            "pcrSignal": "wait", "pcrDesc": "PCR nincs adat (CBOE+proxy blocked)"}
 
 # ══════════════════════════════════════════════════════════════
 # YIELD CURVE DE-INVERSION SEBESSÉG (ÚJ)
@@ -263,58 +267,62 @@ def fetch_yield_deinversion():
 # ══════════════════════════════════════════════════════════════
 def fetch_mcclellan():
     """
-    McClellan Summation Index az S&P 500 advance-decline adatokból.
-    - Summation > 0 és emelkedő: egészséges bull piac
-    - Summation nulla alá süllyed: szinte minden nagy esést jelzett előre
-    - Oscillator divergencia: index új csúcson, de summation csökken = veszély
+    McClellan Summation Index – SAMPLE részvényekből számolva
+    (^ADVN ^DECN GitHub Actions-ből nem elérhető)
+    
+    50 S&P500 részvény napi advance/decline alapján számolva.
+    Proxy, de megbízható közelítés a valódi NYSE A/D adatokhoz.
     """
     try:
-        import yfinance as yf
-        # NYSE A/D proxyk
-        adv = yf.Ticker("^ADVN").history(period="1y")["Close"].dropna()
-        dec = yf.Ticker("^DECN").history(period="1y")["Close"].dropna()
-        if len(adv) < 40 or len(dec) < 40:
-            raise ValueError("Nincs elég A/D adat")
+        SAMPLE = ["AAPL","MSFT","NVDA","AMZN","META","GOOGL","TSLA","JPM","UNH","V",
+                  "XOM","JNJ","PG","MA","HD","AVGO","CVX","MRK","ABBV","KO",
+                  "PEP","COST","WMT","BAC","TMO","LLY","ORCL","NFLX","AMD","CRM",
+                  "ACN","DHR","TXN","NEE","PM","MDT","HON","QCOM","UPS","AMGN",
+                  "CAT","BMY","LOW","SBUX","GS","BLK","ISRG","SYK","GILD","SPGI"]
 
-        # Közös dátumokra igazítás
-        df = pd.DataFrame({"adv": adv, "dec": dec}).dropna()
-        ad_line = df["adv"] - df["dec"]
+        raw = yf.download(SAMPLE, period="1y",
+                          auto_adjust=True, progress=False, threads=True)["Close"]
+        if raw.empty or len(raw) < 40:
+            raise ValueError("Nincs elég adat a McClellan számításhoz")
 
-        # McClellan Oscillator = EMA19 - EMA39 az A-D különbségen
-        ema19 = ad_line.ewm(span=19, adjust=False).mean()
-        ema39 = ad_line.ewm(span=39, adjust=False).mean()
+        # Napi advance/decline különbség
+        chg = raw.pct_change().dropna()
+        adv = (chg > 0).sum(axis=1)
+        dec = (chg < 0).sum(axis=1)
+        ad_net = adv - dec
+
+        # McClellan Oscillator = EMA19 – EMA39
+        ema19 = ad_net.ewm(span=19, adjust=False).mean()
+        ema39 = ad_net.ewm(span=39, adjust=False).mean()
         oscillator = ema19 - ema39
 
-        # Summation Index = kumulatív összeg
-        summation = oscillator.cumsum()
+        # Summation = kumulatív összeg (utolsó 200 nap)
+        summation = oscillator.rolling(200, min_periods=20).sum()
 
-        cur  = float(summation.iloc[-1])
-        prev = float(summation.iloc[-5]) if len(summation) >= 5 else cur
-        osc  = float(oscillator.iloc[-1])
-        trend = "bull" if cur > prev and cur > 0 else "bear" if cur < prev and cur < 0 else "wait"
-        zero_cross_down = cur < 0 and prev > 0
-        zero_cross_up   = cur > 0 and prev < 0
+        cur  = round(float(summation.iloc[-1]))
+        prev = round(float(summation.iloc[-5])) if len(summation) >= 5 else cur
+        osc  = round(float(oscillator.iloc[-1]), 1)
+        trend = "bull" if cur > prev and cur > 0 else "bear" if cur < 0 else "wait"
+
+        zero_cross_down = cur < 0 and prev >= 0
+        zero_cross_up   = cur > 0 and prev <= 0
 
         if zero_cross_down:
             sig  = "bear"
-            desc = f"⚠ NULLA ALÁ BUKOTT ({cur:.0f}) – komoly korrekció jele!"
+            desc = f"⚠ NULLA ALÁ BUKOTT ({cur}) – komoly korrekció jele!"
         elif zero_cross_up:
             sig  = "bull"
-            desc = f"✓ Nulla fölé emelkedett ({cur:.0f}) – bull erő visszatér"
-        elif cur > 500:
-            sig  = "bull"
-            desc = f"Erős ({cur:.0f}) – egészséges szélesség"
+            desc = f"✓ Nulla fölé emelkedett ({cur}) – bull erő visszatér"
+        elif cur > 200:
+            sig  = "bull"; desc = f"Erős ({cur}) – egészséges szélesség"
         elif cur > 0:
-            sig  = "bull"
-            desc = f"Pozitív ({cur:.0f}) – bull piac"
-        elif cur > -500:
-            sig  = "wait"
-            desc = f"Negatív ({cur:.0f}) – gyengülő szélesség"
+            sig  = "bull"; desc = f"Pozitív ({cur}) – bull momentum"
+        elif cur > -200:
+            sig  = "wait"; desc = f"Negatív ({cur}) – gyengülő szélesség"
         else:
-            sig  = "bear"
-            desc = f"Mélyen negatív ({cur:.0f}) – medve piac"
+            sig  = "bear"; desc = f"Mélyen negatív ({cur}) – medve jelzés"
 
-        return {"mcSum": round(cur), "mcOsc": round(osc), "mcSignal": sig,
+        return {"mcSum": cur, "mcOsc": osc, "mcSignal": sig,
                 "mcDesc": desc, "mcTrend": trend,
                 "mcZeroCrossDown": zero_cross_down, "mcZeroCrossUp": zero_cross_up}
 
@@ -342,15 +350,16 @@ def fetch_global_liquidity():
     Ez a mutató heti szinten VEZETI az SPX-et.
     """
     try:
-        walcl_v = fetch_fred_series("WALCL",    n=16)  # Fed mérleg (heti)
-        tga_v   = fetch_fred_series("WTREGEN",  n=16)  # TGA (heti)
-        rrp_v   = fetch_fred_series("RRPONTSYD",n=16)  # Reverse Repo (napi→heti)
+        walcl_v = fetch_fred_series("WALCL",    n=16)  # Fed mérleg (milliárd USD)
+        tga_v   = fetch_fred_series("WTREGEN",  n=16)  # TGA (millió USD → ÷1000)
+        rrp_v   = fetch_fred_series("RRPONTSYD",n=16)  # Reverse Repo (milliárd USD)
 
         fed_now = walcl_v[0]; fed_4w = walcl_v[4] if len(walcl_v)>4 else fed_now
-        tga_now = tga_v[0];   tga_4w = tga_v[4]   if len(tga_v)>4  else tga_now
-        rrp_now = rrp_v[0];   rrp_4w = rrp_v[4]   if len(rrp_v)>4  else rrp_now
+        # WTREGEN millió dollárban van → milliárdba konvertálás
+        tga_now = tga_v[0] / 1000; tga_4w = (tga_v[4] / 1000) if len(tga_v)>4 else tga_now
+        rrp_now = rrp_v[0];        rrp_4w = rrp_v[4]            if len(rrp_v)>4  else rrp_now
 
-        # TRUE NET LIQUIDITY = Fed - TGA - RRP
+        # TRUE NET LIQUIDITY = Fed - TGA - RRP (mind milliárd USD)
         net_liq = round(fed_now - tga_now - rrp_now)
         net_4w  = round(fed_4w  - tga_4w  - rrp_4w)
         chg_4w  = round(net_liq - net_4w)
@@ -395,14 +404,9 @@ def fetch_global_liquidity():
 # ══════════════════════════════════════════════════════════════
 def fetch_dix_gex():
     """
-    DIX (Dark Index): intézményi dark pool vételi aktivitás
-    - DIX > 45%: smart money vásárol (bullish)
-    - DIX < 40%: smart money elad/disztribúál (bearish)
-    - DIX csökken miközben SPX emelkedik: DIVERGENCIA – veszélyes!
-
-    GEX (Gamma Exposure): market maker gamma pozíció
-    - GEX > 0: stabilizáló hatás (market makerek eladnak emelkedésnél)
-    - GEX < 0: destabilizáló hatás (market makerek vesznek esésnél → amplifikáció!)
+    DIX + GEX – Squeeze Metrics CSV
+    CSV oszlopok: date, price, dix, gex (esetleg más sorrend)
+    GEX értéke dollárban van, milliárdba konvertálva jelenik meg.
     """
     try:
         url = "https://squeezemetrics.com/monitor/static/DIX.csv"
@@ -411,17 +415,39 @@ def fetch_dix_gex():
             raise ValueError(f"HTTP {r.status_code}")
 
         from io import StringIO
-        df = pd.read_csv(StringIO(r.text), parse_dates=["date"])
-        df = df.sort_values("date").tail(30)
+        # Robusztus CSV olvasás - lowercase oszlopnevek
+        df = pd.read_csv(StringIO(r.text))
+        df.columns = [c.strip().lower() for c in df.columns]
 
-        dix_cur  = float(df["dix"].iloc[-1]) * 100   # % formátumba
-        gex_cur  = float(df["gex"].iloc[-1])          # milliárd USD
-        dix_20d  = float(df["dix"].tail(20).mean()) * 100
+        # Dátum oszlop megkeresése
+        date_col = next((c for c in df.columns if "date" in c), None)
+        if date_col:
+            df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+            df = df.sort_values(date_col).tail(30)
 
-        # DIX trend
-        dix_1w   = float(df["dix"].iloc[-5]) * 100 if len(df) >= 5 else dix_cur
-        dix_falling = dix_cur < dix_1w - 2  # 2%+ csökkenés
+        # DIX oszlop (0-1 skálán van, %-ra konvertáljuk)
+        dix_col = next((c for c in df.columns if "dix" in c), None)
+        if not dix_col:
+            raise ValueError("DIX oszlop nem található")
+        dix_raw = df[dix_col].dropna()
+        dix_cur = float(dix_raw.iloc[-1])
+        if dix_cur < 1:  # 0-1 skálán van → %-ra
+            dix_cur *= 100
+        dix_20d = float(dix_raw.tail(20).mean()) * (1 if dix_cur >= 1 else 100)
+        dix_1w  = float(dix_raw.iloc[-5]) * (100 if float(dix_raw.iloc[-5]) < 1 else 1) if len(dix_raw) >= 5 else dix_cur
+        dix_falling = dix_cur < dix_1w - 2
 
+        # GEX oszlop (dollárban, milliárdba konvertáljuk)
+        gex_col = next((c for c in df.columns if "gex" in c), None)
+        gex_cur = 0.0
+        if gex_col:
+            gex_raw = df[gex_col].dropna()
+            if not gex_raw.empty:
+                gex_val = float(gex_raw.iloc[-1])
+                # Ha abszolút értéke > 1000 → dollárban van → milliárdba
+                gex_cur = gex_val / 1e9 if abs(gex_val) > 1e6 else gex_val
+
+        # DIX szignál
         if dix_cur > 46 and not dix_falling:
             dix_sig  = "bull"
             dix_desc = f"Intézményi vétel ({dix_cur:.1f}%) – smart money aktív"
@@ -432,19 +458,27 @@ def fetch_dix_gex():
             dix_sig  = "wait"
             dix_desc = f"Semleges ({dix_cur:.1f}%, 20d: {dix_20d:.1f}%)"
 
-        gex_sig  = "wait" if gex_cur > 0 else "bear"
-        gex_desc = (f"Pozitív GEX ({gex_cur/1e9:.1f}B$) – stabilizáló" if gex_cur > 0
-                    else f"⚠ NEGATÍV GEX ({gex_cur/1e9:.1f}B$) – amplifikáló esés lehetséges!")
+        # GEX szignál
+        if gex_cur == 0:
+            gex_sig  = "wait"
+            gex_desc = "GEX nincs adat"
+        elif gex_cur > 0:
+            gex_sig  = "bull" if gex_cur > 2 else "wait"
+            gex_desc = f"Pozitív GEX ({gex_cur:.1f}B$) – stabilizáló"
+        else:
+            gex_sig  = "bear"
+            gex_desc = f"⚠ NEGATÍV GEX ({gex_cur:.1f}B$) – amplifikáló esés!"
 
         return {"dix": round(dix_cur, 1), "dix20d": round(dix_20d, 1),
-                "gex": gex_cur, "dixSignal": dix_sig, "dixDesc": dix_desc,
+                "gex": gex_cur * 1e9,
+                "dixSignal": dix_sig, "dixDesc": dix_desc,
                 "gexSignal": gex_sig, "gexDesc": gex_desc,
                 "dixFalling": dix_falling}
 
     except Exception as e:
         log(f"DIX/GEX hiba: {e}", ok=False)
         return {"dix": 43.0, "dix20d": 43.0, "gex": 5e9,
-                "dixSignal": "wait", "dixDesc": "Nincs adat (fallback)",
+                "dixSignal": "wait", "dixDesc": f"Nincs adat ({str(e)[:40]})",
                 "gexSignal": "wait", "gexDesc": "Nincs adat",
                 "dixFalling": False}
 
@@ -730,15 +764,23 @@ def fetch_medium_term():
               else "Csökkenő – lassulási jel" if cg_t=="bear" else "Stabil")
     except Exception:
         cg=0.000070; cg_t="wait"; cg_d="Nincs adat"
-    # ISM New Orders
+    # ISM New Orders – több FRED sorozat próbálva
     try:
-        ism_v=fetch_fred_series("NAPMNO"); ism=round(ism_v[0],1)
-        ism_p=round(ism_v[1],1) if len(ism_v)>1 else ism
-        i_sig="bull" if ism>55 else "bear" if ism<48 else "wait"
-        i_d=(f"{ism} – Bővülés" if ism>55 else f"{ism} – Zsugorodás" if ism<48
-             else f"{ism} – Semleges ({'emelk.' if ism>ism_p else 'csokkeno'})")
+        ism = None
+        for series in ["NAPMNO", "NMFBAI", "ISMNMAN"]:
+            try:
+                ism_v = fetch_fred_series(series); ism = round(ism_v[0], 1)
+                ism_p = round(ism_v[1], 1) if len(ism_v) > 1 else ism
+                break
+            except Exception:
+                continue
+        if ism is None:
+            raise ValueError("ISM nem elérhető")
+        i_sig = "bull" if ism > 55 else "bear" if ism < 48 else "wait"
+        i_d = (f"{ism} – Bővülés" if ism > 55 else f"{ism} – Zsugorodás" if ism < 48
+               else f"{ism} – Semleges ({'emelk.' if ism > ism_p else 'csökk.'})")
     except Exception:
-        ism=50; i_sig="wait"; i_d="Nincs adat"
+        ism = 50; i_sig = "wait"; i_d = "Nincs adat (FRED ISM)"
     # Golden/Death Cross
     try:
         spx_c=yf.Ticker("^GSPC").history(period="1y")["Close"]
@@ -2138,8 +2180,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
