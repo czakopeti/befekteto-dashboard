@@ -350,14 +350,14 @@ def fetch_global_liquidity():
     Ez a mutató heti szinten VEZETI az SPX-et.
     """
     try:
-        walcl_v = fetch_fred_series("WALCL",    n=16)  # Fed mérleg (milliárd USD)
+        walcl_v = fetch_fred_series("WALCL",    n=16)  # Fed mérleg (millió USD → ÷1000)
         tga_v   = fetch_fred_series("WTREGEN",  n=16)  # TGA (millió USD → ÷1000)
         rrp_v   = fetch_fred_series("RRPONTSYD",n=16)  # Reverse Repo (milliárd USD)
 
-        fed_now = walcl_v[0]; fed_4w = walcl_v[4] if len(walcl_v)>4 else fed_now
-        # WTREGEN millió dollárban van → milliárdba konvertálás
-        tga_now = tga_v[0] / 1000; tga_4w = (tga_v[4] / 1000) if len(tga_v)>4 else tga_now
-        rrp_now = rrp_v[0];        rrp_4w = rrp_v[4]            if len(rrp_v)>4  else rrp_now
+        # WALCL és WTREGEN egyaránt millió USD → milliárdba konvertálás
+        fed_now = walcl_v[0] / 1000; fed_4w = (walcl_v[4] / 1000) if len(walcl_v)>4 else fed_now
+        tga_now = tga_v[0]  / 1000; tga_4w = (tga_v[4]  / 1000) if len(tga_v)>4  else tga_now
+        rrp_now = rrp_v[0];          rrp_4w = rrp_v[4]            if len(rrp_v)>4  else rrp_now
 
         # TRUE NET LIQUIDITY = Fed - TGA - RRP (mind milliárd USD)
         net_liq = round(fed_now - tga_now - rrp_now)
@@ -437,15 +437,23 @@ def fetch_dix_gex():
         dix_1w  = float(dix_raw.iloc[-5]) * (100 if float(dix_raw.iloc[-5]) < 1 else 1) if len(dix_raw) >= 5 else dix_cur
         dix_falling = dix_cur < dix_1w - 2
 
-        # GEX oszlop (dollárban, milliárdba konvertáljuk)
+        # GEX oszlop (dollárban)
         gex_col = next((c for c in df.columns if "gex" in c), None)
         gex_cur = 0.0
         if gex_col:
-            gex_raw = df[gex_col].dropna()
-            if not gex_raw.empty:
-                gex_val = float(gex_raw.iloc[-1])
-                # Ha abszolút értéke > 1000 → dollárban van → milliárdba
-                gex_cur = gex_val / 1e9 if abs(gex_val) > 1e6 else gex_val
+            gex_series = df[gex_col].dropna()
+            if not gex_series.empty:
+                gex_raw = float(gex_series.iloc[-1])
+                # Squeeze Metrics GEX értéke dollárban, általában -5B → +10B tartomány
+                # Ha >1000: dollárban van → milliárdba
+                # Ha <1000 és >-1000: már milliárdban van
+                if abs(gex_raw) > 1e9:
+                    gex_cur = gex_raw / 1e9  # dollár → milliárd
+                elif abs(gex_raw) > 1e6:
+                    gex_cur = gex_raw / 1e6  # millió → milliárd
+                else:
+                    gex_cur = gex_raw  # már milliárdban
+                log(f"  GEX raw: {gex_raw:.2e} → {gex_cur:.2f}B$")
 
         # DIX szignál
         if dix_cur > 46 and not dix_falling:
@@ -470,7 +478,7 @@ def fetch_dix_gex():
             gex_desc = f"⚠ NEGATÍV GEX ({gex_cur:.1f}B$) – amplifikáló esés!"
 
         return {"dix": round(dix_cur, 1), "dix20d": round(dix_20d, 1),
-                "gex": gex_cur * 1e9,
+                "gex": gex_cur * 1e9 if abs(gex_cur) < 1000 else gex_cur,
                 "dixSignal": dix_sig, "dixDesc": dix_desc,
                 "gexSignal": gex_sig, "gexDesc": gex_desc,
                 "dixFalling": dix_falling}
@@ -764,21 +772,34 @@ def fetch_medium_term():
               else "Csökkenő – lassulási jel" if cg_t=="bear" else "Stabil")
     except Exception:
         cg=0.000070; cg_t="wait"; cg_d="Nincs adat"
-    # ISM New Orders – több FRED sorozat próbálva
+    # ISM New Orders – FRED + S&P Global PMI proxy
     try:
         ism = None
-        for series in ["NAPMNO", "NMFBAI", "ISMNMAN"]:
+        # Próbáljuk az ISM Manufacturing PMI-t (tágabb)
+        for series in ["NAPMNO", "MANEMP", "AMTMNO"]:
             try:
-                ism_v = fetch_fred_series(series); ism = round(ism_v[0], 1)
-                ism_p = round(ism_v[1], 1) if len(ism_v) > 1 else ism
-                break
+                ism_v = fetch_fred_series(series)
+                val = round(ism_v[0], 1)
+                if 20 <= val <= 80:  # érvényes PMI range
+                    ism = val
+                    ism_p = round(ism_v[1], 1) if len(ism_v) > 1 else ism
+                    break
             except Exception:
                 continue
+
         if ism is None:
-            raise ValueError("ISM nem elérhető")
+            # Fallback: S&P Global US Manufacturing PMI FRED-en
+            try:
+                ism_v2 = fetch_fred_series("SPGNAUSMANPMI")
+                ism = round(ism_v2[0], 1)
+                ism_p = round(ism_v2[1], 1) if len(ism_v2) > 1 else ism
+            except Exception:
+                ism = 50; ism_p = 50
+
         i_sig = "bull" if ism > 55 else "bear" if ism < 48 else "wait"
-        i_d = (f"{ism} – Bővülés" if ism > 55 else f"{ism} – Zsugorodás" if ism < 48
-               else f"{ism} – Semleges ({'emelk.' if ism > ism_p else 'csökk.'})")
+        i_d = (f"{ism} – Bővülés" if ism > 55 else
+               f"{ism} – Zsugorodás" if ism < 48 else
+               f"{ism} – Semleges ({'emelk.' if ism > ism_p else 'csökk.'})")
     except Exception:
         ism = 50; i_sig = "wait"; i_d = "Nincs adat (FRED ISM)"
     # Golden/Death Cross
@@ -2180,3 +2201,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
