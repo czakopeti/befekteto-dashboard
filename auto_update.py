@@ -1396,28 +1396,28 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             str(round(af_cur,4)), af_desc, weight=7, imp="KRITIKUS",
             cat5={"cur":af_cat,"avg":"0.0",
                   "refs":["Lila, eső (-0.3<)","Lila, gyenge (-0.1 – -0.3)",
-                          "Semleges (0 körül)","Sárga, gyenge (0–0.1)","Sárga, erős (>0.1) / forduló"]}),
+                          "Semleges (0 körül)","Sárga, gyenge (0–0.1)","Sárga, erős (>0.1) / forduló"]}, src_label="TA SPX"),
 
         ind(pcr_sig, "Put/Call Ratio (PCR) – profi kontrarian",
             str(pcr_val), pcr_desc, weight=6, imp="KRITIKUS",
             cat5={"cur":pcr_cat,"avg":"0.85",
                   "refs":["Eufória (<0.65) – tető közelben, BEARISH!","Alacsony (0.65–0.75)",
                           "Normál (0.75–1.0)","Magas (1.0–1.2) – félelem",
-                          "Extreme Fear (>1.2) – kontrarian vétel!"]}),
+                          "Extreme Fear (>1.2) – kontrarian vétel!"]}, src_label="PCR"),
 
         ind("go" if isinstance(cnn,(int,float)) and cnn<30 else
             "bear" if isinstance(cnn,(int,float)) and cnn>70 else "wait",
             "CNN Fear & Greed", str(cnn), cnn_desc, weight=6, imp="FONTOS",
             cat5={"cur":cnn_cat,"avg":"50",
                   "refs":["Extreme Fear (<25) – kontrarian vétel","Fear (25–40)","Neutral (40–60)",
-                          "Greed (60–75)","Extreme Greed (>75) – körültekintés"]}),
+                          "Greed (60–75)","Extreme Greed (>75) – körültekintés"]}, src_label="TA SPX"),
 
         ind(now.get("macdSignal","wait"), "MACD Hisztogram",
             str(now.get("macdHist","?")), now.get("macdDesc","?"), weight=5, imp="FONTOS",
             cat5={"cur":(5 if now.get("macdSignal")=="bull" else 2 if now.get("macdSignal")=="bear" else 3),
                   "avg":"0",
                   "refs":["Csökkenő, negatív","Negatív, lassul","Nulla körül",
-                          "Pozitív, lassul","Pozitív, gyorsuló – erős momentum"]}),
+                          "Pozitív, lassul","Pozitív, gyorsuló – erős momentum"]}, src_label="TA SPX"),
 
         ind(now.get("termSignal","wait"), "VIX Term Structure (VIX/VIX3M)",
             str(now.get("termRatio","?")), now.get("termDesc","?"), weight=5, imp="FONTOS",
@@ -1425,19 +1425,19 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                          else 3 if now.get("termRatio",1)<0.97 else 2 if now.get("termRatio",1)<1.0 else 1),
                   "avg":"0.95",
                   "refs":["Backwardation >1.0 – pánik!","Lapos 0.97–1.0",
-                          "Enyhe contango 0.92–0.97","Normál contango 0.85–0.92","Mély contango <0.85 – nyugalom"]}),
+                          "Enyhe contango 0.92–0.97","Normál contango 0.85–0.92","Mély contango <0.85 – nyugalom"]}, src_label="TA SPX"),
 
         ind(now.get("rsiSignal","wait"), "RSI + Divergencia (SPX)",
             str(now.get("rsiSPX","?")), now.get("rsiDesc","?"), weight=4, imp="FONTOS",
             cat5={"cur":rsi_cat,"avg":"50",
                   "refs":["Túlvett + bearish div. (>80)","Magas (70–80)","Normál (40–70)",
-                          "Alacsony (30–40)","Túladott + bullish div. (<30)"]}),
+                          "Alacsony (30–40)","Túladott + bullish div. (<30)"]}, src_label="TA SPX"),
 
         ind("wait" if now.get("bbSqueeze") else "neutral", "Bollinger Squeeze (SPX)",
             f"{now.get('bbWidth','?')}%", now.get("bbDesc","?"), weight=3, imp="KIEGÉSZÍTŐ",
             cat5={"cur":(5 if now.get("bbSqueeze") else 3),"avg":"~15%",
                   "refs":["Nagyon széles (>25%)","Széles (20–25%)","Normál (12–20%)",
-                          "Szűk (8–12%)","SQUEEZE (<8%) – nagy mozgás közeleg"]}),
+                          "Szűk (8–12%)","SQUEEZE (<8%) – nagy mozgás közeleg"]}, src_label="TA SPX"),
 
         ind("go" if vix<18 else "bear" if vix>25 else "wait", "VIX",
             str(vix), f"Heti: {base.get('vixTrend',0):+.1f}", weight=3, imp="KIEGÉSZÍTŐ",
@@ -1464,12 +1464,12 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             str(ism), mid.get("ismDesc","?"), weight=8, imp="KRITIKUS",
             cat5={"cur":ism_cat,"avg":"50",
                   "refs":["Mély zsugorodás (<44)","Zsugorodás (44–48)",
-                          "Semleges (48–53)","Bővülés (53–58)","Erős bővülés (>58)"]}),
+                          "Semleges (48–53)","Bővülés (53–58)","Erős bővülés (>58)"]}, src_label="Medium Term"),
 
         ind(mid.get("cgTrend","wait"), "Copper / Gold arány",
             str(mid.get("cgRatio","?")), mid.get("cgDesc","?"), weight=7, imp="FONTOS",
             cat5={"cur":cg_cat,"avg":"~0.00130",
-                  "refs":["Esik, tartósan alacsony","Csökkenő","Stabil","Enyhe emelkedés","Erősen emelkedő – bővülési jel"]}),
+                  "refs":["Esik, tartósan alacsony","Csökkenő","Stabil","Enyhe emelkedés","Erősen emelkedő – bővülési jel"]}, src_label="Medium Term"),
 
         ind("go" if br>65 else "bear" if br<40 else "wait",
             "Piaci Breadth (% > MA50)", f"{br}%",
@@ -1477,19 +1477,19 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             weight=5, imp="FONTOS",
             cat5={"cur":br_cat,"avg":"55%",
                   "refs":["Nagyon szűk (<35%) – csak néhány vezet","Szűk (35–45%)",
-                          "Közepes (45–60%)","Széles (60–70%)","Nagyon széles (>70%) – egészséges rally"]}),
+                          "Közepes (45–60%)","Széles (60–70%)","Nagyon széles (>70%) – egészséges rally"]}, src_label="Medium Term"),
 
         ind(mid.get("crossSignal","wait"), "Golden / Death Cross",
             "MA50 vs MA200", mid.get("crossDesc","?"), weight=5, imp="FONTOS",
             cat5={"cur":cross_cat,"avg":"–",
                   "refs":["Death Cross, eső","Death Cross, stabil","Közel egymáshoz",
-                          "Golden Cross, lassul","Golden Cross, gyorsuló"]}),
+                          "Golden Cross, lassul","Golden Cross, gyorsuló"]}, src_label="Medium Term"),
 
         ind("go" if pe<18 else "bear" if pe>24 else "wait",
             "Forward P/E", f"{pe}x", base.get("valLabel","?"), weight=4, imp="FONTOS",
             cat5={"cur":pe_cat,"avg":"18–19x (historikus)",
                   "refs":["Nagyon drága (>25x)","Drága (22–25x)","Fair (19–22x)",
-                          "Kedvező (17–19x)","Olcsó (<17x)"]}),
+                          "Kedvező (17–19x)","Olcsó (<17x)"]}, src_label="Forward P/E"),
 
         ind("go" if hy<3.5 else "bear" if hy>4.5 else "wait",
             "HY Credit Spread", f"{hy}%",
@@ -1497,7 +1497,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             weight=4, imp="FONTOS",
             cat5={"cur":hy_cat,"avg":"~3.5%",
                   "refs":["Krízis (>5%)","Stressz (4.5–5%)","Normál (3.2–4.5%)",
-                          "Alacsony (2.5–3.2%)","Nagyon szűk (<2.5%) – optimizmus"]}),
+                          "Alacsony (2.5–3.2%)","Nagyon szűk (<2.5%) – optimizmus"]}, src_label="HY Spread"),
     ])
 
     lei_cat = (5 if lng.get("leiSignal")=="bull" and lng.get("leiChg3",0)>0.3
@@ -1519,13 +1519,13 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             str(lng.get("leiCur","?")), lng.get("leiDesc","?"), weight=9, imp="KRITIKUS",
             cat5={"cur":lei_cat,"avg":"~100",
                   "refs":["Csökkenő, meredeken – recesszió előtt","Csökkenő, lassul",
-                          "Stabil","Emelkedő, lassan","Emelkedő, gyorsuló – bővülés jön"]}),
+                          "Stabil","Emelkedő, lassan","Emelkedő, gyorsuló – bővülés jön"]}, src_label="Long Term"),
 
         ind(lng.get("m2Signal","wait"), "M2 Pénzkínálat YoY",
             f"{lng.get('m2Yoy','?')}%", lng.get("m2Desc","?"), weight=7, imp="KRITIKUS",
             cat5={"cur":m2_cat,"avg":"+4–5% (normál)",
                   "refs":["Zsugorodó (<-1%)","Stagnáló (-1–1%)","Mérsékelt (1–4%)",
-                          "Normál (4–7%)","Bőséges (>7%) – inflációs kockázat"]}),
+                          "Normál (4–7%)","Bőséges (>7%) – inflációs kockázat"]}, src_label="Long Term"),
 
         ind("go" if isinstance(rec,(int,float)) and rec<5 else
             "bear" if isinstance(rec,(int,float)) and rec>20 else "wait",
@@ -1535,13 +1535,13 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             weight=6, imp="KRITIKUS",
             cat5={"cur":rec_cat,"avg":"~5%",
                   "refs":["Magas kockázat (>25%)","Emelkedett (15–25%)","Mérsékelt (8–15%)",
-                          "Alacsony (3–8%)","Nagyon alacsony (<3%)"]}),
+                          "Alacsony (3–8%)","Nagyon alacsony (<3%)"]}, src_label="Long Term"),
 
         ind(lng.get("umiSignal","wait"), "Consumer Expectations (UMich)",
             str(lng.get("umiCur","?")), lng.get("umiDesc","?"), weight=5, imp="FONTOS",
             cat5={"cur":umi_cat,"avg":"~75",
                   "refs":["Nagyon gyenge (<55) – bizalomvesztés","Gyenge (55–65)",
-                          "Normál (65–80)","Erős (80–90)","Nagyon erős (>90)"]}),
+                          "Normál (65–80)","Erős (80–90)","Nagyon erős (>90)"]}, src_label="Long Term"),
 
         ind(lng.get("yieldSignal","wait"),
             "Hozamgörbe 10Y–2Y + De-inversion sebesség",
@@ -1551,7 +1551,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             cat5={"cur":yld_cat,"avg":"+50–100 bp (normál)",
                   "refs":["Mélyen invertált (<-25bp)","Enyhe inverzió (-25–0bp)",
                           "Lapos (0–25bp)","Normál (25–75bp)",
-                          "Meredek (>75bp) – bővülés"]}),
+                          "Meredek (>75bp) – bővülés"]}, src_label="Long Term"),
     ])
 
     # ── SÚLYOZOTT KILÉPÉSI TRIGGEREK (v5.4) ──────────────────
@@ -1594,8 +1594,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                        f"⚠ Figyelj – Súly: {trigger_weight}/6" if trigger_weight >= 3 else
                        f"✓ Biztonságos – Súly: {trigger_weight}/6")
 
-    # Inverz ETF javaslat
-    inv_etf_html = ""
+    # Inverz ETF javaslat – mindig látható
     if exit_signal:
         hedge_pct = min(30, round(trigger_weight * 4))
         inv_etf_html = (
@@ -1609,10 +1608,21 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             f'<span style="color:var(--mut);font-size:9px">⚠ Csak rövid fedezésre! '
             f'Napi visszaállítás miatt hosszú tartásra nem alkalmas.</span></div></div>'
         )
-    elif trigger_weight >= 2:
-        inv_etf_html = (f'<div style="margin-top:6px;font-size:9px;color:var(--mut);'
-            f'font-family:var(--mono)">📉 Inverz ETF: nem szükséges (súly {trigger_weight}/6). '
-            f'Aktivál ha ≥6 lesz.</div>')
+    elif trigger_weight >= 3:
+        inv_etf_html = (
+            f'<div style="margin-top:8px;padding:8px 11px;background:#f0a50010;'
+            f'border:1px solid #f0a50025;border-radius:7px;font-size:9.5px;'
+            f'font-family:var(--mono);color:#f0a500">'
+            f'📉 Inverz ETF: Figyelmeztetés (súly {trigger_weight}/6). '
+            f'Aktivál ha súly ≥6. Jelöltek: <strong>SH</strong> / <strong>PSQ</strong></div>'
+        )
+    else:
+        inv_etf_html = (
+            f'<div style="margin-top:6px;padding:6px 10px;background:var(--c2);'
+            f'border-radius:6px;font-size:9px;color:var(--mut);font-family:var(--mono)">'
+            f'📉 Inverz ETF: Nem szükséges (súly {trigger_weight}/6 – küszöb: 6). '
+            f'SH/PSQ automatikusan javasolt ha súly ≥6.</div>'
+        )
 
 
 
@@ -1653,18 +1663,21 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     # HUF 5 kategória: érdemes-e most dollárt venni?
     # Alacsony HUF/USD szám = erős forint = olcsóbb USD vásárlás
     if huf_rate > 0:
-        if huf_rate < 280:   huf_cat = 1  # nagyon erős forint – most drágán vennél dollárt
-        elif huf_rate < 300: huf_cat = 2  # erős forint
-        elif huf_rate < 320: huf_cat = 3  # közepes
-        elif huf_rate < 350: huf_cat = 4  # gyenge forint – olcsó USD
-        else:               huf_cat = 5  # nagyon gyenge forint – jó USD vétel ár
+        # Alacsony Ft/USD = erős forint = olcsó USD = jó vásárolni (magas kategória)
+        if huf_rate < 285:   huf_cat = 5  # nagyon erős forint = nagyon olcsó USD
+        elif huf_rate < 305: huf_cat = 4  # erős forint = olcsó USD
+        elif huf_rate < 325: huf_cat = 3  # közepes
+        elif huf_rate < 350: huf_cat = 2  # gyenge forint = drága USD
+        else:                huf_cat = 1  # nagyon gyenge forint = nagyon drága USD
     else:
         huf_cat = 3
 
-    huf_buy_signal = ("✓ ÉRDEMES dollárt venni" if huf_rate > 330
-                      else "⚠ Kivárhatod" if huf_rate > 310
-                      else "✗ Drága most – várj gyengébb forintra")
-    huf_buy_col = ("#00d488" if huf_rate > 330 else "#f0a500" if huf_rate > 310 else "#f04060")
+    huf_buy_signal = (
+        "✓ ÉRDEMES dollárt venni – erős forint, olcsó USD" if huf_rate < 310
+        else "⚠ Kivárhatod – közepes szint" if huf_rate < 330
+        else "✗ Gyenge forint – drága most USD-t venni, várj erősebb forintra"
+    )
+    huf_buy_col = ("#00d488" if huf_rate < 310 else "#f0a500" if huf_rate < 330 else "#f04060")
 
     # HUF 5 kategória boxok generálása
     cat_colors = ["#f04060","#f08040","#f0a500","#7dd3fc","#00d488"]
@@ -1679,15 +1692,18 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     # HUF gumiszalag + kamat megjegyzés (INSIDE generate_html)
     huf_reversion_note = ""
     if huf_1m < -7:
+        # Forint erősödött sokat → valószínűleg visszagyengül → USD drágább lesz
         huf_reversion_note = (
-            f'<div style="font-size:9.5px;color:#f0a500;margin-top:5px;line-height:1.5">'
-            f'⚠ <strong>Gumiszalag:</strong> {huf_1m:.1f}%/hó devizapiacon extrém gyors. '
-            f'Statisztikailag 5-7%-os visszagyengülés normális rövid távon. '
-            f'<strong>Várj a váltással!</strong></div>')
-    elif huf_1m > 5:
+            f'<div style="font-size:9.5px;color:#00d488;margin-top:5px;line-height:1.5">'
+            f'✓ <strong>Gumiszalag:</strong> Forint {huf_1m:.1f}%/hó erősödött – USD olcsó. '
+            f'Statisztikailag 5-7%-os visszagyengülés várható, tehát USD '
+            f'<strong>hamarosan drágul. Most érdemes váltani!</strong></div>')
+    elif huf_1m > 7:
+        # Forint gyengült sokat → valószínűleg visszaerősödik → USD olcsóbb lesz
         huf_reversion_note = (
-            f'<div style="font-size:9.5px;color:#f04060;margin-top:5px">'
-            f'📉 Forint gyengült +{huf_1m:.1f}%/hó → jobb USD vételi lehetőség közeledhet.</div>')
+            f'<div style="font-size:9.5px;color:#f0a500;margin-top:5px">'
+            f'⚠ <strong>Gumiszalag:</strong> Forint +{huf_1m:.1f}%/hó gyengült – USD drága. '
+            f'Visszaerősödés valószínű, várj olcsóbb USD-re.</div>')
     rate_diff_note = (
         f'<div style="font-size:9px;color:var(--mut);margin-top:4px;font-family:var(--mono)">'
         f'Kamatkülönbözet: Fed ~4.5% vs MNB ~6.5% → forint erősítő nyomás hosszú távon.</div>')
@@ -1703,7 +1719,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         f'<div style="font-size:10px;font-family:var(--mono);margin-top:6px;color:{huf_buy_col}">'
         f'{huf_buy_signal}</div>'
         f'<div style="font-size:9px;color:var(--mut);margin-top:4px">'
-        f'1=Nagyon erős Ft (~270 Ft/USD) · 3=Semleges (~320) · 5=Gyenge Ft (~380+)</div>'
+        f'5=Erős Ft (~&lt;285, olcsó USD) · 3=Semleges (~310-325) · 1=Gyenge Ft (~350+, drága USD)</div>'
         f'{huf_reversion_note}'
         f'{rate_diff_note}'
         f'</div>'
