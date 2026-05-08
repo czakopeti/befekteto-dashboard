@@ -373,6 +373,11 @@ def fetch_global_liquidity():
         # RRP külön figyelő – ha magas, bankok nem hiteleznek
         rrp_high = rrp_now > 500  # 500B$ felett aggasztó
 
+        # Sanity check: Fed balance sheet ~$7T, TGA ~$500B-1T, RRP ~$0-500B
+        # net_liq kell hogy 4,000-7,000 B$ között legyen
+        if net_liq < 1000 or net_liq > 15000:
+            raise ValueError(f"Net liquidity értéke gyanús: {net_liq}B$ (vártunk: 4000-7000B$)")
+
         trend = ("bull" if chg_4w > 100 else "bear" if chg_4w < -100 else "wait")
 
         if trend == "bear" and chg_4w < -500:
@@ -1314,12 +1319,15 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         imp_col={"KRITIKUS":"#f04060","FONTOS":"#f0a500","KIEGÉSZÍTŐ":"#4da6ff"}.get(imp,"#f0a500")
         imp_bg ={"KRITIKUS":"#f0406015","FONTOS":"#f0a50015","KIEGÉSZÍTŐ":"#4da6ff15"}.get(imp,"#f0a50015")
 
-        # Adatminőség jelző
+        # Adatminőség jelző - figyelembe veszi ha a leírás "Nincs adat"-ot tartalmaz
+        is_fallback = (desc and "Nincs adat" in str(desc))
         if src_label and src_label in data_quality:
-            ok = data_quality[src_label]
-            dq_badge = (f'<span style="color:#00d488;font-size:8px;margin-left:4px">✓</span>'
+            ok = data_quality[src_label] and not is_fallback
+            dq_badge = (f'<span style="color:#00d488;font-size:8px;margin-left:4px" title="Valódi API adat">✓</span>'
                         if ok else
-                        f'<span style="color:#f0a500;font-size:8px;margin-left:4px" title="Fallback érték">⚠</span>')
+                        f'<span style="color:#f0a500;font-size:8px;margin-left:4px" title="Fallback/becsült érték">⚠</span>')
+        elif is_fallback:
+            dq_badge = f'<span style="color:#f0a500;font-size:8px;margin-left:4px" title="Fallback érték">⚠</span>'
         else:
             dq_badge = ""
         wt_pct = round(weight/9*100)
@@ -1443,7 +1451,8 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             str(vix), f"Heti: {base.get('vixTrend',0):+.1f}", weight=3, imp="KIEGÉSZÍTŐ",
             cat5={"cur":vix_cat,"avg":"20",
                   "refs":["Pánik (>28)","Félelem (22–28)","Normál (18–22)",
-                          "Nyugodt (14–18)","Nagyon alacsony (<14) – önelégültség"]}),
+                          "Nyugodt (14–18)","Nagyon alacsony (<14) – önelégültség"]},
+            src_label="VIX"),
     ])
 
     br=mid.get("breadth",50)
@@ -1888,11 +1897,20 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     rl = regime_map.get(regime, regime)
 
     # Smart Money HTML
-    def sm_row(sig, name, val, desc, badge_extra=""):
+    def sm_row(sig, name, val, desc, badge_extra="", src_key=None):
         col = {"bull":"#00d488","wait":"#f0a500","bear":"#f04060"}.get(sig,"#f0a500")
         bt  = {"bull":"BULL","wait":"NEU","bear":"BEAR"}.get(sig,"NEU")
+        is_fallback = "Nincs adat" in str(desc) or "fallback" in str(desc).lower() or str(val) == "0"
+        if src_key and src_key in data_quality:
+            ok = data_quality[src_key] and not is_fallback
+            dq_html = (f'<span style="color:#00d488;font-size:9px;margin-left:4px">✓</span>'
+                       if ok else f'<span style="color:#f0a500;font-size:9px;margin-left:4px">⚠</span>')
+        elif is_fallback:
+            dq_html = '<span style="color:#f0a500;font-size:9px;margin-left:4px">⚠</span>'
+        else:
+            dq_html = ''
         return (f'<div class="sm-row">' +
-                f'<div class="sm-left"><div class="sm-name">{name}</div>' +
+                f'<div class="sm-left"><div class="sm-name">{name}{dq_html}</div>' +
                 f'<div class="sm-val" style="color:{col}">{val}</div>' +
                 f'<div class="sm-desc">{desc}{badge_extra}</div></div>' +
                 f'<div class="sm-badge" style="color:{col};background:{col}18;border:1px solid {col}30">{bt}</div>' +
@@ -1924,19 +1942,21 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     smart_html = "".join([
         sm_row(liq_sig, "Globális Likviditás (Fed – TGA)",
                f"${net_liq:,.0f}B nettó",
-               smart.get("liqDesc","?") + f" | Változás: {liq_chg:+.0f}B$ / 4hét"),
+               smart.get("liqDesc","?") + f" | Változás: {liq_chg:+.0f}B$ / 4hét",
+               src_key="Global Liquidity"),
         sm_row(mc_sig, "McClellan Summation Index",
                f"{mc_sum:+,.0f}",
-               smart.get("mcDesc","?"), mc_badge),
+               smart.get("mcDesc","?"), mc_badge, src_key="McClellan"),
         sm_row(dix_sig, "DIX – Dark Pool Index",
                f"{dix_v2:.1f}%",
-               smart.get("dixDesc","?") + dix_badge),
+               smart.get("dixDesc","?") + dix_badge, src_key="DIX/GEX"),
         sm_row(gex_sig, "GEX – Gamma Exposure",
                f"${gex_v/1e9:.1f}B",
-               smart.get("gexDesc","?")),
+               smart.get("gexDesc","?"), src_key="DIX/GEX"),
         sm_row(cot_sig, "COT Smart Money (Large Speculators)",
                f"{cot_net:+,.0f} kontraktus",
-               smart.get("cotDesc","?") + f" | Z-score: {cot_z:+.1f}"),
+               smart.get("cotDesc","?") + f" | Z-score: {cot_z:+.1f}",
+               src_key="COT"),
     ])
 
         # ── IDŐJÁRÁS FEJLÉC – 3 kulcsmutató ──────────────────────
