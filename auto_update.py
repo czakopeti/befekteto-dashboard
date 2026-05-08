@@ -496,20 +496,35 @@ def fetch_dix_gex():
 # ══════════════════════════════════════════════════════════════
 def fetch_cot_smart_money():
     """
-    CFTC COT report: a nagy spekulánsok (hedge fundok) nettó S&P500 futures pozíciója
-    - Nettó long: smart money bullish
-    - Nettó short: smart money bearish / fedezi magát
-
-    Forrás: CFTC ingyenes API
+    CFTC COT report – S&P500 E-mini Large Speculators pozíció.
+    Ha az API nem elérhető, az utolsó ismert értéket tárolja (history.json).
+    A CFTC pénteken 15:30 ET-kor frissít – kedd-csütörtök a legfrissebb.
     """
+    COT_CACHE_FILE = "cot_cache.json"
+
+    def load_cot_cache():
+        if Path(COT_CACHE_FILE).exists():
+            try:
+                with open(COT_CACHE_FILE, "r") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+        return None
+
+    def save_cot_cache(data):
+        try:
+            with open(COT_CACHE_FILE, "w") as f:
+                json.dump(data, f)
+        except Exception:
+            pass
+
     try:
-        # CFTC API – S&P 500 E-mini futures (kód: 13874A)
-        url  = "https://publicreporting.cftc.gov/api/odata/v1/MarketsAndPrices"
+        url    = "https://publicreporting.cftc.gov/api/odata/v1/MarketsAndPrices"
         params = {
             "$filter": "marketAndExchangeNames eq 'E-MINI S&P 500 STOCK INDEX - CHICAGO MERCANTILE EXCHANGE'",
             "$orderby": "reportDate desc",
             "$top": "8",
-            "$select": "reportDate,noncommercialLong,noncommercialShort,changeInNoncommercialLong,changeInNoncommercialShort"
+            "$select": "reportDate,noncommercialLong,noncommercialShort"
         }
         r = requests.get(url, params=params, timeout=20, headers=HEADERS)
         if r.status_code != 200:
@@ -519,36 +534,42 @@ def fetch_cot_smart_money():
         if not data:
             raise ValueError("Üres CFTC adat")
 
-        latest = data[0]
+        latest    = data[0]
         net_long  = int(latest.get("noncommercialLong", 0))
         net_short = int(latest.get("noncommercialShort", 0))
         net       = net_long - net_short
-
-        # Historikus átlag a 8 hétből
-        nets = [int(d.get("noncommercialLong", 0)) - int(d.get("noncommercialShort", 0))
-                for d in data]
-        avg_net = sum(nets) / len(nets) if nets else net
-        z_score = (net - avg_net) / max(1, abs(avg_net) * 0.3)  # normalizált eltérés
+        nets      = [int(d.get("noncommercialLong",0)) - int(d.get("noncommercialShort",0))
+                     for d in data]
+        avg_net   = sum(nets) / len(nets) if nets else net
+        z_score   = (net - avg_net) / max(1, abs(avg_net) * 0.3)
 
         if z_score > 1.0:
             sig  = "bull"
-            desc = f"Smart money LONG ({net:+,.0f} nettó) – bikapiaci pozicionálás"
+            desc = f"Smart money LONG ({net:+,.0f} nettó, z:{z_score:.1f})"
         elif z_score < -1.0:
             sig  = "bear"
-            desc = f"Smart money SHORT ({net:+,.0f} nettó) – óvatosság/fedezés!"
+            desc = f"Smart money SHORT ({net:+,.0f} nettó, z:{z_score:.1f})"
         else:
             sig  = "wait"
-            desc = f"Semleges ({net:+,.0f} nettó, z-score: {z_score:.1f})"
+            desc = f"Semleges ({net:+,.0f} nettó, z:{z_score:.1f})"
 
-        return {"cotNet": net, "cotAvg": round(avg_net), "cotZScore": round(z_score, 1),
-                "cotSignal": sig, "cotDesc": desc,
-                "cotDate": latest.get("reportDate","")[:10]}
+        result = {"cotNet": net, "cotAvg": round(avg_net), "cotZScore": round(z_score, 1),
+                  "cotSignal": sig, "cotDesc": desc,
+                  "cotDate":   latest.get("reportDate","")[:10]}
+        save_cot_cache(result)  # Elmenti a legfrissebb értéket
+        return result
 
     except Exception as e:
-        log(f"COT hiba: {e}", ok=False)
-        # Fallback: semleges érték
+        log(f"COT hiba: {e} → cache betöltés", ok=False)
+        cached = load_cot_cache()
+        if cached:
+            # Utolsó ismert érték használata
+            cached["cotDesc"] = cached.get("cotDesc","") + f" (cached: {cached.get('cotDate','')})"
+            return cached
+        # Csak ha cache sincs: semleges fallback
         return {"cotNet": 0, "cotAvg": 0, "cotZScore": 0.0,
-                "cotSignal": "wait", "cotDesc": "Nincs adat (CFTC fallback)",
+                "cotSignal": "wait",
+                "cotDesc": "Nincs adat – CFTC pénteken 15:30 ET frissít",
                 "cotDate": ""}
 
 def fetch_forward_pe(spx_price):
@@ -772,36 +793,42 @@ def fetch_medium_term():
               else "Csökkenő – lassulási jel" if cg_t=="bear" else "Stabil")
     except Exception:
         cg=0.000070; cg_t="wait"; cg_d="Nincs adat"
-    # ISM New Orders – FRED + S&P Global PMI proxy
+    # ISM Manufacturing New Orders – helyes FRED sorozat
     try:
         ism = None
-        # Próbáljuk az ISM Manufacturing PMI-t (tágabb)
-        for series in ["NAPMNO", "MANEMP", "AMTMNO"]:
+        ism_p = 50
+        # ISM Manufacturing: New Orders Index – hivatalos FRED sorozatok
+        for series in ["AMTMNO",      # Advance Manufacturing: New Orders
+                       "NEWORDER",    # Manufacturers' New Orders: Total
+                       "SPGNAUSMANPMI",  # S&P Global US Manufacturing PMI
+                       "NAPMNO"]:     # ISM New Orders (ha elérhető)
             try:
-                ism_v = fetch_fred_series(series)
+                ism_v = fetch_fred_series(series, n=4)
                 val = round(ism_v[0], 1)
-                if 20 <= val <= 80:  # érvényes PMI range
+                # ISM/PMI értékek 20-80 közé kell essenek
+                if series in ["SPGNAUSMANPMI", "NAPMNO"] and 20 <= val <= 80:
                     ism = val
-                    ism_p = round(ism_v[1], 1) if len(ism_v) > 1 else ism
+                    ism_p = round(ism_v[1], 1) if len(ism_v) > 1 else val
+                    break
+                # Manufacturing orders: milliárd dolláros értékek (más skála)
+                elif series in ["AMTMNO", "NEWORDER"] and val > 100:
+                    # Relatív változásból PMI proxy
+                    prev = ism_v[1] if len(ism_v) > 1 else val
+                    chg_pct = (val - prev) / prev * 100 if prev > 0 else 0
+                    ism = round(50 + chg_pct * 2, 1)  # 50 körüli proxy
+                    ism = max(30, min(70, ism))
+                    ism_p = 50
                     break
             except Exception:
                 continue
-
         if ism is None:
-            # Fallback: S&P Global US Manufacturing PMI FRED-en
-            try:
-                ism_v2 = fetch_fred_series("SPGNAUSMANPMI")
-                ism = round(ism_v2[0], 1)
-                ism_p = round(ism_v2[1], 1) if len(ism_v2) > 1 else ism
-            except Exception:
-                ism = 50; ism_p = 50
-
+            ism = 50; ism_p = 50
         i_sig = "bull" if ism > 55 else "bear" if ism < 48 else "wait"
         i_d = (f"{ism} – Bővülés" if ism > 55 else
                f"{ism} – Zsugorodás" if ism < 48 else
                f"{ism} – Semleges ({'emelk.' if ism > ism_p else 'csökk.'})")
     except Exception:
-        ism = 50; i_sig = "wait"; i_d = "Nincs adat (FRED ISM)"
+        ism = 50; i_sig = "wait"; i_d = "Nincs adat (ISM)"
     # Golden/Death Cross
     try:
         spx_c=yf.Ticker("^GSPC").history(period="1y")["Close"]
@@ -849,18 +876,31 @@ def fetch_medium_term():
     }
 
 def fetch_long_term():
-    # LEI
+    # LEI – OECD Composite Leading Indicator (USALOLITOAASTSAM, skála: ~100)
+    # Alternatíva: USSLIND (más skálán, de iránya valid)
     try:
-        lei_v=fetch_fred_series("USSLIND"); lei=round(lei_v[0],2)
-        l3=round(lei_v[2],2) if len(lei_v)>2 else lei
-        l6=round(lei_v[5],2) if len(lei_v)>5 else lei
-        lc3=round(lei-l3,2); lc6=round(lei-l6,2)
-        l_sig=("bull" if lc3>0 and lc6>0 else "bear" if lc3<0 and lc6<0 else "wait")
-        l_d=(f"Emelkedő – bővülés jön ({lc3:+.2f}/3h)" if l_sig=="bull"
-             else f"Csökkenő – lassulás ({lc3:+.2f}/3h)" if l_sig=="bear"
-             else f"Vegyes ({lc3:+.2f}/3h)")
+        lei_series = "USALOLITOAASTSAM"  # OECD CLI US, 100 körüli skálán
+        lei_v = fetch_fred_series(lei_series, n=8)
+        lei = round(lei_v[0], 2)
+        l3  = round(lei_v[2], 2) if len(lei_v)>2 else lei
+        l6  = round(lei_v[5], 2) if len(lei_v)>5 else lei
+        lc3 = round(lei - l3, 2); lc6 = round(lei - l6, 2)
+        l_sig = ("bull" if lc3 > 0 and lc6 > 0
+                 else "bear" if lc3 < 0 and lc6 < 0 else "wait")
+        l_d = (f"Emelkedő – bővülés jön ({lc3:+.2f}/3h)" if l_sig == "bull"
+               else f"Csökkenő – lassulás ({lc3:+.2f}/3h)" if l_sig == "bear"
+               else f"Vegyes ({lc3:+.2f}/3h)")
     except Exception:
-        lei=100; l_sig="wait"; l_d="Nincs adat"; lc3=0
+        # Fallback: USSLIND (más skálán, de irányjelzőként valid)
+        try:
+            lei_v = fetch_fred_series("USSLIND", n=8)
+            lei = round(lei_v[0], 2)
+            l3  = round(lei_v[2], 2) if len(lei_v)>2 else lei
+            lc3 = round(lei - l3, 2)
+            l_sig = "bull" if lc3 > 0 else "bear" if lc3 < 0 else "wait"
+            l_d = f"Irányjelző ({lc3:+.2f}/3h) – USSLIND proxy"
+        except Exception:
+            lei = 100; l_sig = "wait"; l_d = "Nincs adat"; lc3 = 0
     # M2
     try:
         m2_v=fetch_fred_series("M2SL")
@@ -870,15 +910,24 @@ def fetch_long_term():
              else f"+{m2_yoy}% YoY – semleges" if m2_yoy>0 else f"{m2_yoy}% YoY – szűkülő")
     except Exception:
         m2_yoy=4; m_sig="wait"; m_d="Nincs adat"
-    # UMich
+    # UMich Consumer Sentiment + Expectations (két sorozat, legfrissebb)
     try:
-        umi_v=fetch_fred_series("UMCSENT"); umi=round(umi_v[0],1)
-        umi_p=round(umi_v[2],1) if len(umi_v)>2 else umi
-        u_t="emelkedő" if umi>umi_p else "csökkenő"
-        u_sig="bull" if umi>80 else "bear" if umi<60 else "wait"
-        u_d=f"{umi} – {u_t}"
+        # UMCSENT = összes sentiment; UMCSENTCR1 = expectations sub-index
+        # Két sorozatot próbál, legfrissebb értéket veszi
+        umi_sent = fetch_fred_series("UMCSENT", n=3)
+        umi = round(umi_sent[0], 1)
+        # Expectations sub-index próbál
+        try:
+            umi_exp = fetch_fred_series("UMCSENTCR1", n=3)
+            umi_expectations = round(umi_exp[0], 1)
+        except Exception:
+            umi_expectations = umi
+        umi_p = round(umi_sent[2], 1) if len(umi_sent) > 2 else umi
+        u_t = "emelkedő" if umi > umi_p else "csökkenő"
+        u_sig = "bull" if umi > 80 else "bear" if umi < 60 else "wait"
+        u_d = f"{umi} (exp: {umi_expectations}) – {u_t}"
     except Exception:
-        umi=70; u_sig="wait"; u_d="Nincs adat"
+        umi = 70; u_sig = "wait"; u_d = "Nincs adat"; umi_expectations = 70
     # Hozamgörbe – de-inversion sebességgel
     try:
         yi = fetch_yield_deinversion()
@@ -2201,4 +2250,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
