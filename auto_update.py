@@ -1676,6 +1676,22 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         else:
             huf_cat_boxes += f'<div class="c5-box" style="border:1px solid {cc}40;color:{cc}">{i}</div>'
 
+    # HUF gumiszalag + kamat megjegyzés (INSIDE generate_html)
+    huf_reversion_note = ""
+    if huf_1m < -7:
+        huf_reversion_note = (
+            f'<div style="font-size:9.5px;color:#f0a500;margin-top:5px;line-height:1.5">'
+            f'⚠ <strong>Gumiszalag:</strong> {huf_1m:.1f}%/hó devizapiacon extrém gyors. '
+            f'Statisztikailag 5-7%-os visszagyengülés normális rövid távon. '
+            f'<strong>Várj a váltással!</strong></div>')
+    elif huf_1m > 5:
+        huf_reversion_note = (
+            f'<div style="font-size:9.5px;color:#f04060;margin-top:5px">'
+            f'📉 Forint gyengült +{huf_1m:.1f}%/hó → jobb USD vételi lehetőség közeledhet.</div>')
+    rate_diff_note = (
+        f'<div style="font-size:9px;color:var(--mut);margin-top:4px;font-family:var(--mono)">'
+        f'Kamatkülönbözet: Fed ~4.5% vs MNB ~6.5% → forint erősítő nyomás hosszú távon.</div>')
+
     huf_html = (
         f'<div class="huf-box">'
         f'<div class="huf-rate">{huf_rate} <span class="huf-unit">Ft/USD</span></div>'
@@ -1959,30 +1975,6 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             return None
 
     # ── HUF/USD MÉLYEBB ELEMZÉS ───────────────────────────────
-    huf_rate = huf.get("hufRate", 0)
-    huf_1m   = huf.get("hufChg1m", 0)
-    huf_1w   = huf.get("hufChg1w", 0)
-
-    # Inicializálás (minden esetben legyen érték)
-    huf_reversion_note = ""
-    rate_diff_note     = ""
-
-    # Gumiszalag elv: -10% egy hónap → statisztikailag visszapattanás esélyes
-    huf_reversion_note = ""
-    if huf_1m < -7:
-        huf_reversion_note = (f'<div style="font-size:9.5px;color:#f0a500;margin-top:5px;line-height:1.5">'
-            f'⚠ <strong>Gumiszalag:</strong> -10%/hó devizapiacon extrém gyors. '
-            f'Statisztikailag 5-7%-os visszagyengülés normális rövid távon. '
-            f'<strong>Várj a váltással!</strong></div>')
-    elif huf_1m > 5:
-        huf_reversion_note = (f'<div style="font-size:9.5px;color:#f04060;margin-top:5px">'
-            f'📉 Forint gyengült -{huf_1m:.1f}%/hó → jobb USD vételi lehetőség közeledhet.</div>')
-
-    # Kamat-különbözet megjegyzés
-    rate_diff_note = (f'<div style="font-size:9px;color:var(--mut);margin-top:4px;font-family:var(--mono)">'
-        f'Kamatkülönbözet: Fed ~4.5% vs MNB ~6.5% → forint erősítő nyomás hosszú távon, '
-        f'de rövid távon politikai kockázat dominál.</div>')
-
         # ── HTML ──────────────────────────────────────────────────
     html = f"""<!DOCTYPE html>
 <html lang="hu"><head>
