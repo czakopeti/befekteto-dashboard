@@ -58,17 +58,22 @@ SECTOR_ETFS = {
 }
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-errors  = []
+errors       = []
+data_quality = {}  # {label: True/False} – indikátor sikeresen betöltött-e
 
 def log(msg, ok=True): print(f"  {'OK' if ok else 'WW'} {msg}")
 
 def safe(fn, fallback, label):
     try:
-        r = fn(); log(f"{label}: OK"); return r
+        r = fn()
+        log(f"{label}: OK")
+        data_quality[label] = True
+        return r
     except Exception as e:
         log(f"{label} HIBA ({str(e)[:80]}) -> fallback", ok=False)
         errors.append({"source": label, "error": str(e)[:120],
                        "time": datetime.datetime.now().isoformat()})
+        data_quality[label] = False
         return fallback
 
 # ══════════════════════════════════════════════════════════════
@@ -1302,12 +1307,21 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                      f'<span class="bt-n">({len(history)} hét)</span></div>')
 
     # Indikátor HTML segédfüggvény (v5: súlysávok + imp. badge + 5 kategória)
-    def ind(cls, name, val, desc, weight=5, imp="FONTOS", cat5=None):
+    def ind(cls, name, val, desc, weight=5, imp="FONTOS", cat5=None, src_label=None):
         col={"go":"#00d488","bull":"#00d488","wait":"#f0a500","neutral":"#f0a500",
              "bear":"#f04060","stop":"#f04060"}.get(cls,"#f0a500")
         bt={"go":"BULL","bull":"BULL","wait":"NEU","neutral":"NEU","bear":"BEAR","stop":"BEAR"}.get(cls,"NEU")
         imp_col={"KRITIKUS":"#f04060","FONTOS":"#f0a500","KIEGÉSZÍTŐ":"#4da6ff"}.get(imp,"#f0a500")
         imp_bg ={"KRITIKUS":"#f0406015","FONTOS":"#f0a50015","KIEGÉSZÍTŐ":"#4da6ff15"}.get(imp,"#f0a50015")
+
+        # Adatminőség jelző
+        if src_label and src_label in data_quality:
+            ok = data_quality[src_label]
+            dq_badge = (f'<span style="color:#00d488;font-size:8px;margin-left:4px">✓</span>'
+                        if ok else
+                        f'<span style="color:#f0a500;font-size:8px;margin-left:4px" title="Fallback érték">⚠</span>')
+        else:
+            dq_badge = ""
         wt_pct = round(weight/9*100)
         wt_col ={"KRITIKUS":"#f04060","FONTOS":"#f0a500","KIEGÉSZÍTŐ":"#4da6ff"}.get(imp,"#f0a500")
         sig_col={"BULL":"#00d488","NEU":"#f0a500","BEAR":"#f04060"}.get(bt,"#f0a500")
@@ -1333,7 +1347,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
 
         return (f'<div class="ind">'
                 f'<div class="ind-left">'
-                f'<div class="ind-name">{name}'
+                f'<div class="ind-name">{name}{dq_badge}'
                 f'<span class="imp-pill" style="color:{imp_col};background:{imp_bg}">{imp}</span></div>'
                 f'<div class="ind-val" style="color:{col}">{val}</div>'
                 f'<div class="ind-sub">{desc}</div>'
@@ -1540,30 +1554,67 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                           "Meredek (>75bp) – bővülés"]}),
     ])
 
-    # Kilépési triggerek
+    # ── SÚLYOZOTT KILÉPÉSI TRIGGEREK (v5.4) ──────────────────
+    # Súlyozás: kritikus(3), fontos(2), standard(1)
+    # EXIT ha összesített súly ≥ 6
     triggers = [
-        ("VIX term backwardation",  now.get("termSignal","wait")=="bear"),
-        ("LEI csökkenő",            lng.get("leiSignal","wait")=="bear"),
-        ("Bearish RSI div.",        now.get("rsiDiv","none")=="bear"),
-        ("AF sárgáról lilára",      now.get("afTurningBear", False)),
-        ("HY spread > 4.5%",        hy > 4.5),
-        ("Yield de-inversion ⚠",    lng.get("yieldDangerous", False)),
-        ("PCR eufória < 0.65",      base.get("pcr", 0.85) < 0.65),
-        ("Rec.prob > 20%",          isinstance(rec,(int,float)) and rec > 20),
-        ("GEX negatív 🔴",          smart.get("gex", 1) < 0),
-        ("VIX spike >20%/nap 🚨",   base.get("vixBlackSwan", False)),
-        ("Breadth divergencia",     mid.get("breadthDiv", False)),
-        ("Net liq. gyors szűkülés", smart.get("netLiqChg4w", 0) < -500),
+        ("GEX negatív 🔴",          smart.get("gex",1) < 0,                         3, True),
+        ("VIX spike >20%/nap 🚨",   base.get("vixBlackSwan", False),                3, True),
+        ("Yield de-inversion ⚠",    lng.get("yieldDangerous", False),               3, True),
+        ("LEI csökkenő",            lng.get("leiSignal","wait")=="bear",             2, True),
+        ("McClellan nulla alá",     smart.get("mcZeroCrossDown", False),            2, False),
+        ("Net liq. gyors szűkülés", smart.get("netLiqChg4w",0) < -500,             2, False),
+        ("Bearish RSI div.",        now.get("rsiDiv","none")=="bear",               1, False),
+        ("AF sárgáról lilára",      now.get("afTurningBear", False),                1, False),
+        ("HY spread > 4.5%",        hy > 4.5,                                       1, False),
+        ("VIX term backwardation",  now.get("termSignal","wait")=="bear",           1, False),
+        ("Breadth divergencia",     mid.get("breadthDiv", False),                   1, False),
+        ("Rec.prob > 20%",          isinstance(rec,(int,float)) and rec > 20,       1, False),
+        ("PCR eufória < 0.65",      base.get("pcr",0.85) < 0.65,                   1, False),
     ]
-    active_cnt = sum(1 for _,a in triggers if a)
-    # 12 trigger van — 4+ aktív = EXIT (arányos maradt)
-    exit_threshold = 4
-    trig_html  = "".join([
-        f'<div class="trig {"on" if a else "off"}">'
-        f'<div class="trig-dot {"on" if a else "off"}"></div>'
-        f'<div class="trig-txt {"on" if a else "off"}">{n}</div>'
-        f'</div>' for n,a in triggers
-    ])
+    active_cnt     = sum(1 for _,a,_,_ in triggers if a)
+    trigger_weight = sum(w for _,a,w,_ in triggers if a)
+    exit_signal    = trigger_weight >= 6
+
+    trig_html = ""
+    for name_t, active, weight, critical in triggers:
+        if active:
+            tc = "#f04060" if critical else "#f0a500"
+            trig_html += (f'<div class="trig on" style="border-color:{tc}40;background:{tc}10">'
+                f'<div class="trig-dot on" style="background:{tc}"></div>'
+                f'<div class="trig-txt on" style="color:{tc}80">{name_t}</div>'
+                f'<div style="font-size:8px;color:{tc};font-family:var(--mono)">+{weight}</div>'
+                f'</div>')
+        else:
+            trig_html += (f'<div class="trig off"><div class="trig-dot off"></div>'
+                f'<div class="trig-txt off">{name_t}</div></div>')
+
+    trig_status_col = "#f04060" if exit_signal else "#f0a500" if trigger_weight >= 3 else "#00d488"
+    trig_status_txt = (f"🔴 EXIT JEL! Súly: {trigger_weight}/6" if exit_signal else
+                       f"⚠ Figyelj – Súly: {trigger_weight}/6" if trigger_weight >= 3 else
+                       f"✓ Biztonságos – Súly: {trigger_weight}/6")
+
+    # Inverz ETF javaslat
+    inv_etf_html = ""
+    if exit_signal:
+        hedge_pct = min(30, round(trigger_weight * 4))
+        inv_etf_html = (
+            f'<div style="margin-top:10px;padding:10px 12px;background:#f0406012;'
+            f'border:1px solid #f0406030;border-radius:8px">'
+            f'<div style="font-size:10px;font-family:var(--mono);color:#f04060;font-weight:700;margin-bottom:5px">'
+            f'📉 INVERZ ETF FEDEZÉS JAVASOLT ({hedge_pct}%)</div>'
+            f'<div style="font-size:10px;color:var(--sub);line-height:1.7">'
+            f'<strong>SH</strong> – S&P500 esésre (1×inverz) | '
+            f'<strong>PSQ</strong> – Nasdaq esésre (tech-nehéz portfólióhoz)<br>'
+            f'<span style="color:var(--mut);font-size:9px">⚠ Csak rövid fedezésre! '
+            f'Napi visszaállítás miatt hosszú tartásra nem alkalmas.</span></div></div>'
+        )
+    elif trigger_weight >= 2:
+        inv_etf_html = (f'<div style="margin-top:6px;font-size:9px;color:var(--mut);'
+            f'font-family:var(--mono)">📉 Inverz ETF: nem szükséges (súly {trigger_weight}/6). '
+            f'Aktivál ha ≥6 lesz.</div>')
+
+
 
     # Playbook szintek
     pb_levels = [
@@ -1636,7 +1687,9 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         f'<div style="font-size:10px;font-family:var(--mono);margin-top:6px;color:{huf_buy_col}">'
         f'{huf_buy_signal}</div>'
         f'<div style="font-size:9px;color:var(--mut);margin-top:4px">'
-        f'1=Nagyon erős Ft (drága USD) · 5=Gyenge Ft (olcsó USD)</div>'
+        f'1=Nagyon erős Ft (~270 Ft/USD) · 3=Semleges (~320) · 5=Gyenge Ft (~380+)</div>'
+        f'{huf_reversion_note}'
+        f'{rate_diff_note}'
         f'</div>'
     )
 
@@ -1760,6 +1813,18 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             eg_c = "#00d488" if eps_g>=10 else "#f0a500" if eps_g>=0 else "#f04060"
             eps_g_html = f'<div class="wl-row"><span>EPS növ.</span><span style="color:{eg_c}">{eps_g:+.1f}%</span></div>'
 
+        # ATR stop loss számítás
+        atr_data = calc_atr_stop(s["ticker"])
+        atr_html = ""
+        if atr_data:
+            sc_c2 = "#f04060" if atr_data["stopPct"] > 8 else "#f0a500"
+            atr_html = (f'<div class="wl-row" style="margin-top:4px;padding-top:4px;border-top:1px solid var(--brd)">'
+                f'<span style="color:var(--mut)">Stop</span>'
+                f'<span style="color:{sc_c2};font-size:9px">${atr_data["stopLoss"]:.2f} (-{atr_data["stopPct"]:.1f}%)</span>'
+                f'</div>'
+                f'<div class="wl-row"><span style="color:var(--mut)">Trail</span>'
+                f'<span style="color:var(--mut);font-size:9px">${atr_data["trailingStop"]:.2f}</span></div>')
+
         sc_html += (
             f'<div class="wl-card" style="border-top:2px solid {sc_c}">'
             f'<div class="wl-top"><span class="wl-tk">{s["ticker"]}</span>'
@@ -1772,6 +1837,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             f'{upside_html}'
             f'{eps_g_html}'
             f'{es_badge}'
+            f'{atr_html}'
             f'<div class="wl-bar"><div class="wl-fill" style="width:{sc}%;background:{sc_c}"></div></div>'
             f'</div>'
         )
@@ -1840,6 +1906,78 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                f"{cot_net:+,.0f} kontraktus",
                smart.get("cotDesc","?") + f" | Z-score: {cot_z:+.1f}"),
     ])
+
+        # ── IDŐJÁRÁS FEJLÉC – 3 kulcsmutató ──────────────────────
+    lei_sig   = lng.get("leiSignal","wait")
+    af_sig    = now.get("afSignal","wait")
+    term_sig  = now.get("termSignal","wait")
+
+    def wx_icon(sig, bull_txt, bear_txt, neu_txt):
+        if sig in ("bull","go"):   return "🟢", bull_txt, "#00d488"
+        elif sig in ("bear","stop"): return "🔴", bear_txt, "#f04060"
+        else:                        return "🟡", neu_txt,  "#f0a500"
+
+    lei_ico,  lei_wx,  lei_c  = wx_icon(lei_sig,  "Nincs jéghegy (LEI BULL)", "Jéghegy közeledik! (LEI BEAR)", "Vegyes (LEI NEU)")
+    af_ico,   af_wx,   af_c   = wx_icon(af_sig,   "Fúj a szél (AF sárga)",    "Elállt a szél (AF lila)",       "Szélcsendes (AF semleges)")
+    term_ico, term_wx, term_c = wx_icon(term_sig, "Nyugodt legénység (VIX Contango)", "PÁNIK! (VIX Backwardation)", "Nyughatatlan (VIX flat)")
+
+    weather_header_html = (
+        f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">'
+        f'<div style="background:var(--card);border:1px solid {lei_c}30;border-radius:10px;padding:10px 12px;text-align:center">'
+        f'<div style="font-size:18px">{lei_ico}</div>'
+        f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-top:2px">STRATÉGIA (6-18hó)</div>'
+        f'<div style="font-size:10px;color:{lei_c};margin-top:3px;font-weight:600">{lei_wx}</div></div>'
+        f'<div style="background:var(--card);border:1px solid {af_c}30;border-radius:10px;padding:10px 12px;text-align:center">'
+        f'<div style="font-size:18px">{af_ico}</div>'
+        f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-top:2px">MOMENTUM (1-4hét)</div>'
+        f'<div style="font-size:10px;color:{af_c};margin-top:3px;font-weight:600">{af_wx}</div></div>'
+        f'<div style="background:var(--card);border:1px solid {term_c}30;border-radius:10px;padding:10px 12px;text-align:center">'
+        f'<div style="font-size:18px">{term_ico}</div>'
+        f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-top:2px">HANGULAT (VIX)</div>'
+        f'<div style="font-size:10px;color:{term_c};margin-top:3px;font-weight:600">{term_wx}</div></div>'
+        f'</div>'
+    )
+
+    # ── ATR STOP LOSS – watchlist kártyákhoz ─────────────────
+    def calc_atr_stop(ticker):
+        """ATR(14) alapú stop loss és trailing stop"""
+        try:
+            h = yf.Ticker(ticker).history(period="60d")
+            if len(h) < 15: return None
+            high = h["High"]; low = h["Low"]; close = h["Close"]
+            tr = pd.concat([high-low,
+                            (high - close.shift(1)).abs(),
+                            (low  - close.shift(1)).abs()], axis=1).max(axis=1)
+            atr14 = float(tr.rolling(14).mean().iloc[-1])
+            price = float(close.iloc[-1])
+            stop_loss     = round(price - 2.0 * atr14, 2)
+            trailing_stop = round(price - 1.5 * atr14, 2)
+            stop_pct      = round((price - stop_loss) / price * 100, 1)
+            return {"atr": round(atr14, 2), "stopLoss": stop_loss,
+                    "trailingStop": trailing_stop, "stopPct": stop_pct}
+        except Exception:
+            return None
+
+    # ── HUF/USD MÉLYEBB ELEMZÉS ───────────────────────────────
+    huf_rate = huf.get("hufRate", 0)
+    huf_1m   = huf.get("hufChg1m", 0)
+    huf_1w   = huf.get("hufChg1w", 0)
+
+    # Gumiszalag elv: -10% egy hónap → statisztikailag visszapattanás esélyes
+    huf_reversion_note = ""
+    if huf_1m < -7:
+        huf_reversion_note = (f'<div style="font-size:9.5px;color:#f0a500;margin-top:5px;line-height:1.5">'
+            f'⚠ <strong>Gumiszalag:</strong> -10%/hó devizapiacon extrém gyors. '
+            f'Statisztikailag 5-7%-os visszagyengülés normális rövid távon. '
+            f'<strong>Várj a váltással!</strong></div>')
+    elif huf_1m > 5:
+        huf_reversion_note = (f'<div style="font-size:9.5px;color:#f04060;margin-top:5px">'
+            f'📉 Forint gyengült -{huf_1m:.1f}%/hó → jobb USD vételi lehetőség közeledhet.</div>')
+
+    # Kamat-különbözet megjegyzés
+    rate_diff_note = (f'<div style="font-size:9px;color:var(--mut);margin-top:4px;font-family:var(--mono)">'
+        f'Kamatkülönbözet: Fed ~4.5% vs MNB ~6.5% → forint erősítő nyomás hosszú távon, '
+        f'de rövid távon politikai kockázat dominál.</div>')
 
         # ── HTML ──────────────────────────────────────────────────
     html = f"""<!DOCTYPE html>
@@ -2012,8 +2150,11 @@ body{{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1
   <span class="sp sp-info">Frissítve: {today}</span>
   <span class="sp sp-info">Rezsim: {rl}</span>
   {"<span class='sp' style='color:#f0a500;border-color:#f0a50030;background:#f0a50010'>"+season.get('seasonLabel','')+"</span>" if season else ""}
-  <div class="sbar-r">Következő: péntek, {next_fri} · 20:00</div>
+  <div class="sbar-r">Következő: péntek, {next_fri} · 17:00</div>
 </div>
+
+<!-- IDŐJÁRÁS FEJLÉC – 3 kulcsmutató -->
+{weather_header_html}
 
 <!-- FŐ SCORE -->
 <div class="main">
@@ -2057,7 +2198,13 @@ body{{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1
   <div class="trig-wrap">
     <div class="trig-title">KILÉPÉSI TRIGGEREK – 4+ AKTÍV ESETÉN AZONNALI POZÍCIÓ CSÖKKENTÉS</div>
     <div class="trig-grid">{trig_html}</div>
-    <div class="trig-status">Aktív triggerek: <strong style="color:{"#f04060" if active_cnt>=4 else "#f0a500" if active_cnt>=2 else "#00d488"}">{active_cnt}</strong> / 12 — {"🔴 EXIT JEL!" if active_cnt>=4 else "⚠ Figyelj" if active_cnt>=2 else "✓ Biztonságos"}</div>
+    <div class="trig-status" style="color:{trig_status_col}">
+      <strong>{active_cnt}</strong> aktív trigger · Összesített súly: <strong>{trigger_weight}/6</strong> — {trig_status_txt}
+      <div style="font-size:8.5px;color:var(--mut);margin-top:3px;font-family:var(--mono)">
+        Kritikus(3): GEX neg, VIX spike, Yield deinv · Fontos(2): LEI, McClellan, Net Liq · Standard(1): RSI div, AF, HY, VIX term, Breadth, Rec, PCR
+      </div>
+    </div>
+    {inv_etf_html}
   </div>
 </div>
 
