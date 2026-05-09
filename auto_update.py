@@ -1884,7 +1884,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         except Exception:
             return None
 
-        sc_stocks = screener_data.get("stocks",[])
+    sc_stocks = screener_data.get("stocks",[])
     sc_updated = screener_data.get("updated","")[:10] if screener_data.get("updated") else "–"
     sc_html = ""
     for s in sc_stocks[:16]:
