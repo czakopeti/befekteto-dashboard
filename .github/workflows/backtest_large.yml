@@ -1,0 +1,31 @@
+name: Nagymintás Trend Backtest
+
+on:
+  workflow_dispatch:    # csak manuálisan indítható
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90    # max 1.5 óra
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: pip install yfinance pandas numpy requests
+
+      - name: Run Large Backtest
+        run: python trend_backtest_v2.py
+
+      - name: Save results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backtest_results.json || true
+          git diff --staged --quiet || git commit -m "Backtest results $(date +'%Y-%m-%d')"
+          git push || true
