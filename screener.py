@@ -24,13 +24,13 @@ OUTPUT_FILE   = "screener.json"
 FMP_BASE      = "https://financialmodelingprep.com/api/v3"
 
 # Szűrési paraméterek
-MIN_ROE        = 10.0   # % – Peter kérésére csökkentve 15→10
-MIN_ROI        = 10.0   # % – yfinance returnOnAssets proxy
+MIN_ROE        = 10.0   # %
+MIN_ROI        = 10.0   # %
 MAX_DE         = 1.5    # Debt/Equity ratio
 MIN_MKTCAP     = 5_000_000_000  # $5B
-SMA200_MIN     = -25.0  # % – ne vegyük a zuhanó késeket
-SMA200_MAX     = -10.0  # % – elég diszkont kell
-MAX_RESULTS    = 20     # Top N a dashboardon
+SMA200_MIN     = -30.0  # % – zuhanó kések határa
+SMA200_MAX     = -5.0   # % – kis diszkont is számít
+MAX_RESULTS    = 20
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
@@ -69,7 +69,9 @@ def fetch_fmp_candidates():
     return clean
 
 # ── 2. SMA200 SZŰRÉS – BATCH YFINANCE ────────────────────────
-def filter_by_sma200(candidates):
+def filter_by_sma200(candidates, sma_min=None, sma_max=None):
+    _min = sma_min if sma_min is not None else SMA200_MIN
+    _max = sma_max if sma_max is not None else SMA200_MAX
     """
     Batch letölti az áradatokat yfinance-szel,
     kiszűri a SMA200_MIN–SMA200_MAX sávba esőket.
@@ -113,7 +115,7 @@ def filter_by_sma200(candidates):
             pct_from_ma200 = (price - ma200) / ma200 * 100
             
             # Sweet spot szűrő
-            if SMA200_MIN <= pct_from_ma200 <= SMA200_MAX:
+            if _min <= pct_from_ma200 <= _max:
                 s = cand_map[ticker]
                 results.append({
                     "ticker":  ticker,
@@ -319,51 +321,42 @@ def run_screener():
     print(f"  Futás: {datetime.datetime.now().strftime('%Y.%m.%d %H:%M')}")
     print(f"  Paraméterek: ROE>{MIN_ROE}%, ROI>{MIN_ROI}%, "
           f"D/E<{MAX_DE}, SMA200: {SMA200_MIN}%–{SMA200_MAX}%\n")
-    
+
     try:
-        # 1. Alaplista
-        candidates = fetch_fmp_candidates()
-        
-        # 2. SMA200 szűrés (batch)
-        sma_filtered = filter_by_sma200(candidates)
-        
+        candidates    = fetch_fmp_candidates()
+        sma_filtered  = filter_by_sma200(candidates)
+
         if not sma_filtered:
-            log("Nincs SMA200 sweet spot-ban lévő jelölt – gyenge piac?", ok=False)
+            log(f"Nincs {SMA200_MIN}%–{SMA200_MAX}% sávban lévő jelölt – "
+                f"{'bull piac, kevés diszkont' if SMA200_MAX > -10 else 'gyenge piac?'}", ok=False)
             save_results([])
             return
-        
-        # 3. Fundamentális szűrés
+
         fund_filtered = filter_by_fundamentals(sma_filtered)
-        
+
         if not fund_filtered:
-            log("Nincs minőségi jelölt a szűrők után", ok=False)
+            log("Nincs minőségi jelölt a fundamentális szűrők után", ok=False)
             save_results([])
             return
-        
-        # 4. EPS outlook (FMP)
+
         enriched = enrich_with_eps_outlook(fund_filtered)
-        
-        # 5. Kompozit score + rendezés
+
         for s in enriched:
             s["qualityScore"] = calc_quality_score(s)
-        
+
         enriched.sort(key=lambda x: x["qualityScore"], reverse=True)
         top = enriched[:MAX_RESULTS]
-        
-        # 6. Mentés
         save_results(top)
-        
+
         print(f"\n  Top {len(top)} jelölt:")
         for s in top[:10]:
             print(f"    {s['ticker']:6} | Score:{s['qualityScore']:3} | "
                   f"MA200:{s['vsMA200']:6.1f}% | ROE:{s['roe']:5.1f}% | "
                   f"{s['name'][:35]}")
-        
         print("\n  ✓ Screener kész\n")
-        
+
     except Exception as e:
         log(f"Screener hiba: {e}", ok=False)
-        # Üres eredmény – ne törje el a dashboardot
         save_results([])
 
 if __name__ == "__main__":
