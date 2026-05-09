@@ -1,0 +1,33 @@
+name: Trend AF Alert
+
+on:
+  schedule:
+    - cron: '30 15 * * 5'   # Péntek 15:30 UTC = 17:30 Budapest – dashboard után
+  workflow_dispatch:
+
+jobs:
+  trend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: pip install yfinance pandas numpy requests
+
+      - name: Run Trend Alert
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python trend_alert.py
+
+      - name: Save results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trend_results.json || true
+          git diff --staged --quiet || git commit -m "Trend alert $(date +'%Y-%m-%d')"
+          git push || true
