@@ -269,7 +269,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 <!-- CHART -->
 <div class="sec">
   <div class="sec-title">Kompozit Score + Korrekciós kockázat historikus</div>
-  <div class="bt-box"><span class="bt-l">Historikus (signal követése):</span><span style="color:#f0a500;font-weight:700">Stratégia: +9.8%</span><span class="bt-s">vs</span><span>Buy&Hold: +10.4%</span><span class="bt-n">(22 hét)</span></div>
+  <div class="bt-box"><span class="bt-l">Historikus (signal követése):</span><span style="color:#f0a500;font-weight:700">Stratégia: +9.8%</span><span class="bt-s">vs</span><span>Buy&Hold: +10.4%</span><span class="bt-n">(23 hét)</span></div>
   <div class="chart-box">
     <canvas id="histChart" height="160"></canvas>
   </div>
@@ -303,7 +303,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
   <div class="wl-pills">
     <span class="wl-pill">ROE &gt;10%</span>
     <span class="wl-pill">D/E &lt;1.5</span>
-    <span class="wl-pill wl-pill-disc">SMA200: -10% – -25%</span>
+    <span class="wl-pill wl-pill-disc">SMA200: -5% – -30%</span>
     <span class="wl-pill">EPS+ outlook</span>
     <span class="wl-pill">MktCap &gt;$5B</span>
   </div>
@@ -322,7 +322,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 </div>
 
 <script>
-const hd=["2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-20", "2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-09"], hs=[58, 60, 60, 93, 88, 84, 84, 93, 85, 82, 64, 63, 45, 61, 53, 53, 53, 44, 53, 64, 63, 56], hc=[23, 23, 23, 15, 15, 38, 38, 7, 0, 4, 22, 22, 28, 28, 28, 28, 28, 28, 28, 10, 10, 10];
+const hd=["2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-17", "2026-03-20", "2026-03-27", "2026-04-03", "2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-08", "2026-05-09", "2026-05-09"], hs=[58, 60, 60, 93, 88, 84, 84, 93, 85, 82, 64, 63, 45, 61, 53, 53, 53, 44, 53, 64, 63, 56, 56], hc=[23, 23, 23, 15, 15, 38, 38, 7, 0, 4, 22, 22, 28, 28, 28, 28, 28, 28, 28, 10, 10, 10, 10];
 if(hd.length>1){
   const ctx=document.getElementById("histChart").getContext("2d");
   new Chart(ctx,{
