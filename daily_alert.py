@@ -29,13 +29,19 @@ def send_ntfy(title, message, priority="default", tags=""):
         print(f"[NTFY] {title}: {message}")
         return
     try:
+        # Emoji karakterek eltávolítása a headerből (HTTP header csak ASCII)
+        import re
+        title_clean = re.sub(r'[^\x00-\x7F]+', '', title).strip()
+        tags_clean  = re.sub(r'[^\x00-\x7F]+', '', tags).strip()
+
         requests.post(
             f"https://ntfy.sh/{NTFY_TOPIC}",
-            data=message.encode("utf-8"),
+            data=message.encode("utf-8"),   # body: UTF-8, emoji mehet
             headers={
-                "Title":    title,
+                "Title":    title_clean or "Dashboard Alert",
                 "Priority": priority,
-                "Tags":     tags,
+                "Tags":     tags_clean,
+                "Content-Type": "text/plain; charset=utf-8",
             }, timeout=10
         )
         print(f"[NTFY OK] {title}")
@@ -64,6 +70,7 @@ def run_alert():
     today = datetime.date.today().strftime("%Y-%m-%d")
     dow   = datetime.date.today().weekday()  # 0=Hétfő, 4=Péntek
     is_friday = (dow == 4)
+    is_manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
 
     state = load_state()
     alerts = []
@@ -152,12 +159,12 @@ def run_alert():
     for title, msg, priority, tags in alerts:
         send_ntfy(title, msg, priority, tags)
 
-    # Pénteken mindig jön összefoglaló
-    if is_friday or alerts:
+    # Küldés: péntek összefoglaló, manuális teszt, vagy riasztás
+    if is_friday or is_manual or alerts:
         summary = " | ".join(summary_parts)
         footer  = f" | {len(alerts)} riasztás" if alerts else " | Nincs sürgős teendő ✓"
         send_ntfy(
-            f"📊 {'PÉNTEK ÖSSZEFOGLALÓ' if is_friday else 'Napi Alert'}",
+            f"📊 {'🧪 TESZT' if is_manual and not is_friday else 'PÉNTEK ÖSSZEFOGLALÓ' if is_friday else 'Napi Alert'}",
             summary + footer,
             "default" if not alerts else "high",
             "chart_with_upwards_trend"
