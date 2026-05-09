@@ -2,8 +2,9 @@ name: Update Befekteto Dashboard
 
 on:
   schedule:
-    - cron: '0 15 * * 5'   # Péntek 15:00 UTC = 17:00 Budapest (CEST)
-  workflow_dispatch:         # Manuális trigger – bármikor futtatható
+    - cron: '0 15 * * 5'   # Péntek 15:00 UTC = 17:00 Budapest (CEST) – cselekvési ablak
+    - cron: '0 6 * * 6'    # Szombat 6:00 UTC = 8:00 Budapest – teljes heti összefoglaló (COT-tal)
+  workflow_dispatch:
 
 jobs:
   update:
