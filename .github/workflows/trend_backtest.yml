@@ -1,0 +1,23 @@
+name: Trend AF Backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: 'Reszvenyek (pl: NVDA,META,DDOG,CRWD,MSFT,AMD,TSLA)'
+        required: false
+        default: 'NVDA,META,DDOG,CRWD,MSFT,AAPL,AMD,TSLA,AMZN,GOOGL'
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install yfinance pandas numpy
+      - name: Run Trend Backtest
+        run: |
+          TICKERS="${{ github.event.inputs.tickers }}"
+          python trend_backtest.py ${TICKERS//,/ }
