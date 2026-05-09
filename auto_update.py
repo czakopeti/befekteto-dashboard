@@ -2360,7 +2360,7 @@ body{{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1
   <div class="wl-pills">
     <span class="wl-pill">ROE &gt;10%</span>
     <span class="wl-pill">D/E &lt;1.5</span>
-    <span class="wl-pill wl-pill-disc">SMA200: -10% – -25%</span>
+    <span class="wl-pill wl-pill-disc">SMA200: -5% – -30%</span>
     <span class="wl-pill">EPS+ outlook</span>
     <span class="wl-pill">MktCap &gt;$5B</span>
   </div>

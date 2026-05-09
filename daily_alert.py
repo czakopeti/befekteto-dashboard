@@ -67,9 +67,138 @@ def fetch_fred(series, n=3):
     return [float(o["value"]) for o in obs]
 
 def run_alert():
-    today = datetime.date.today().strftime("%Y-%m-%d")
-    dow   = datetime.date.today().weekday()  # 0=Hétfő, 4=Péntek
-    is_friday = (dow == 4)
+    today   = datetime.date.today().strftime("%Y-%m-%d")
+    dow     = datetime.date.today().weekday()  # 0=Hétfő, 4=Péntek, 5=Szombat, 6=Vasárnap
+    is_friday   = (dow == 4)
+    is_saturday = (dow == 5)
+    is_weekend  = (dow >= 5)
+
+    state = load_state()
+    alerts = []
+    summary_parts = []
+
+    # ── SPX + VIX ──────────────────────────────────────────
+    spx_h = yf.Ticker("^GSPC").history(period="5d")
+    vix_h = yf.Ticker("^VIX").history(period="5d")
+
+    spx   = round(float(spx_h["Close"].iloc[-1]))
+    spx_p = round(float(spx_h["Close"].iloc[-2]))
+    vix   = round(float(vix_h["Close"].iloc[-1]), 1)
+    vix_p = round(float(vix_h["Close"].iloc[-2]), 1)
+
+    spx_chg   = round((spx - spx_p) / spx_p * 100, 1)
+    vix_chg   = round((vix - vix_p) / vix_p * 100, 1)
+    vix_spike = vix_chg > 20
+
+    summary_parts.append(f"SPX: {spx:,} ({spx_chg:+.1f}%)")
+    summary_parts.append(f"VIX: {vix} ({vix_chg:+.1f}%)")
+
+    # ── GEX + DIX (Squeeze Metrics) ────────────────────────
+    gex_neg = False
+    dix_val = 0
+    try:
+        from io import StringIO
+        r = requests.get("https://squeezemetrics.com/monitor/static/DIX.csv",
+                        timeout=15, headers=HEADERS)
+        if r.status_code == 200:
+            df = pd.read_csv(StringIO(r.text))
+            df.columns = [c.strip().lower() for c in df.columns]
+            gex_col = next((c for c in df.columns if "gex" in c), None)
+            dix_col = next((c for c in df.columns if "dix" in c), None)
+            if gex_col:
+                gex_val = float(df[gex_col].dropna().iloc[-1])
+                gex_b   = gex_val / 1e9 if abs(gex_val) > 1e6 else gex_val
+                gex_neg = gex_b < 0
+                summary_parts.append(f"GEX: ${gex_b:.1f}B {'neg!' if gex_neg else 'ok'}")
+            if dix_col:
+                dix_raw = float(df[dix_col].dropna().iloc[-1])
+                dix_val = dix_raw * 100 if dix_raw < 1 else dix_raw
+                summary_parts.append(f"DIX: {dix_val:.1f}%")
+    except Exception as e:
+        print(f"GEX/DIX hiba: {e}")
+
+    # ── AF(18,6) ────────────────────────────────────────────
+    af_lila = False
+    af_val  = 0
+    try:
+        spx_w = yf.Ticker("^GSPC").history(period="5y", interval="1wk")
+        def trix(s, n):
+            e1=s.ewm(span=n,adjust=False).mean()
+            e2=e1.ewm(span=n,adjust=False).mean()
+            e3=e2.ewm(span=n,adjust=False).mean()
+            return ((e3-e3.shift(1))/e3.shift(1)*100).fillna(0)
+        t18 = trix(spx_w["Close"], 18)
+        t6  = trix(spx_w["Close"], 6)
+        af_val  = round(float(t18.iloc[-1] - t6.iloc[-1]), 3)
+        af_lila = af_val < 0
+        summary_parts.append(f"AF: {af_val:+.3f} ({'lila' if af_lila else 'sarga'})")
+    except Exception as e:
+        print(f"AF hiba: {e}")
+
+    # ── Trigger súly becslés ────────────────────────────────
+    prev_af_lila = state.get("af_lila", False)
+    af_just_turned = af_lila and not prev_af_lila  # csak az újdonság számít
+
+    trigger_weight = 0
+    if vix_spike:      trigger_weight += 3
+    if gex_neg:        trigger_weight += 3
+    if af_just_turned: trigger_weight += 1  # csak ha most fordult
+    if spx_chg < -3:   trigger_weight += 1
+    summary_parts.append(f"Trigger: {trigger_weight}/6")
+
+    # ── RIASZTÁSOK ──────────────────────────────────────────
+    prev_gex_neg = state.get("gex_neg", False)
+    prev_af_lila = state.get("af_lila", False)
+
+    if not is_weekend:
+        if vix_spike:
+            alerts.append(("VIX SPIKE!", f"VIX {vix_p} -> {vix} (+{vix_chg:.0f}%) Black Swan trigger!", "urgent", "warning"))
+        if gex_neg and not prev_gex_neg:
+            alerts.append(("GEX NEGATIV", f"GEX negatív – amplifikáló esés veszélye! VIX: {vix}", "high", "rotating_light"))
+        if af_just_turned:
+            alerts.append(("AF LILA FORDULAT", f"AF(18,6) sárgáról lilára – momentum fordulat! SPX: {spx:,}", "high", "chart_decreasing"))
+        if spx_chg < -3:
+            alerts.append(("NAGY ESES", f"SPX {spx_chg:+.1f}% – triggersuly: {trigger_weight}/6", "high", "chart_decreasing"))
+        if trigger_weight >= 6:
+            alerts.append(("EXIT JEL!", f"Triggersuly {trigger_weight}/6 – pozicio csokkentes! SH/PSQ fedezés!", "urgent", "rotating_light"))
+
+    # ── KÜLDÉS ──────────────────────────────────────────────
+    for title, msg, priority, tags in alerts:
+        send_ntfy(title, msg, priority, tags)
+
+    # Napi összefoglaló – mindig megy
+    summary = " | ".join(summary_parts)
+
+    if is_saturday:
+        # Szombat: heti összefoglaló (COT is bejött már)
+        title = "Heti osszefoglalo"
+        footer = f" | {len(alerts)} esemeny | Kovetkezo: Hetfo"
+        priority = "default"
+    elif is_friday:
+        # Péntek: részletes, cselekvési ablak
+        title = "Penteki riport – 30 perc ablak!"
+        footer = f" | Trigger: {trigger_weight}/6 | {'CSELEKDJ!' if trigger_weight >= 4 else 'Nincs sürgo teendo'}"
+        priority = "high" if trigger_weight >= 4 else "default"
+    elif dow == 6:
+        # Vasárnap: rövid, csak hogy fut
+        title = "Vasarnapi osszefoglalo"
+        footer = " | Piac zarva – hetfo terv"
+        priority = "min"
+    else:
+        # Hétfő–Csütörtök: napi check
+        title = "Napi check"
+        footer = f" | {len(alerts)} riasztas" if alerts else " | Nincs sürgo"
+        priority = "default" if not alerts else "high"
+
+    send_ntfy(title, summary + footer, priority, "chart_with_upwards_trend")
+    print(f"Osszefoglalo: {summary}{footer}")
+
+    # State mentés
+    save_state({"date": today, "vix": vix, "spx": spx,
+                "gex_neg": gex_neg, "af_lila": af_lila,
+                "dix": dix_val, "trigger_weight": trigger_weight})
+
+    print(f"Daily alert kesz – {today}")
     is_manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
 
     state = load_state()

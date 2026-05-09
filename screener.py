@@ -135,67 +135,70 @@ def filter_by_sma200(candidates, sma_min=None, sma_max=None):
 # ── 3. FUNDAMENTÁLIS SZŰRÉS – YFINANCE .INFO ─────────────────
 def filter_by_fundamentals(candidates):
     """
-    yfinance .info: ROE > 15%, D/E < 1.5
-    Egyenként kérdezi le, de csak a ~30-60 szűrt jelöltre.
+    yfinance .info: ROE > MIN_ROE%, ROI > MIN_ROI%, D/E < MAX_DE
+    Debug loggal – látjuk hol hull ki egy-egy részvény
     """
     results = []
-    
+    dropped = {"roe": 0, "roi": 0, "de": 0, "no_data": 0}
+
     for i, stock in enumerate(candidates):
         ticker = stock["ticker"]
         try:
             info = yf.Ticker(ticker).info
-            
-            # ROE (tizedes formátumban adja vissza yfinance)
+
             roe_raw = info.get("returnOnEquity")
             if roe_raw is None:
+                dropped["no_data"] += 1
                 continue
             roe = roe_raw * 100
-            
-            # ROI proxy: returnOnAssets (konzervatívabb, de megbízható)
+
             roi_raw = info.get("returnOnAssets")
             if roi_raw is None:
+                dropped["no_data"] += 1
                 continue
             roi = roi_raw * 100
-            
-            # Debt/Equity (yfinance 100x-os skálán adja)
+
             de_raw = info.get("debtToEquity", 0) or 0
-            de = de_raw / 100 if de_raw > 10 else de_raw  # normalizálás
-            
-            # Forward P/E – extra minőség jelző
-            fwd_pe = info.get("forwardPE") or info.get("trailingPE") or 0
-            
-            # EPS növekedés
-            eps_curr = info.get("trailingEps", 0) or 0
-            eps_fwd  = info.get("forwardEps", 0) or 0
+            de = de_raw / 100 if de_raw > 10 else de_raw
+
+            fwd_pe    = info.get("forwardPE") or info.get("trailingPE") or 0
+            eps_curr  = info.get("trailingEps", 0) or 0
+            eps_fwd   = info.get("forwardEps", 0) or 0
             eps_growth_ok = (eps_fwd > eps_curr > 0)
-            
-            # Szűrők
+
             if roe < MIN_ROE:
+                dropped["roe"] += 1
+                if ticker in ["MSFT","AAPL","NVDA","MA","V","GOOGL","META","CRWD","DDOG"]:
+                    log(f"  {ticker} kiesett: ROE={roe:.1f}% < {MIN_ROE}%", ok=False)
                 continue
             if roi < MIN_ROI:
+                dropped["roi"] += 1
+                if ticker in ["MSFT","AAPL","NVDA","MA","V","GOOGL","META","CRWD","DDOG"]:
+                    log(f"  {ticker} kiesett: ROI={roi:.1f}% < {MIN_ROI}%", ok=False)
                 continue
             if de > MAX_DE:
+                dropped["de"] += 1
+                if ticker in ["MSFT","AAPL","NVDA","MA","V","GOOGL","META","CRWD","DDOG"]:
+                    log(f"  {ticker} kiesett: D/E={de:.2f} > {MAX_DE}", ok=False)
                 continue
-            
+
             stock.update({
-                "roe":           round(roe, 1),
-                "roi":           round(roi, 1),
-                "de":            round(de, 2),
-                "fwdPE":         round(fwd_pe, 1) if fwd_pe else None,
-                "epsGrowthOk":   eps_growth_ok,
-                "eps":           round(eps_curr, 2),
-                "epsFwd":        round(eps_fwd, 2),
+                "roe": round(roe, 1), "roi": round(roi, 1), "de": round(de, 2),
+                "fwdPE": round(fwd_pe, 1) if fwd_pe else None,
+                "epsGrowthOk": eps_growth_ok,
+                "eps": round(eps_curr, 2), "epsFwd": round(eps_fwd, 2),
             })
             results.append(stock)
-            
-            # Rate limiting – kerüljük a yfinance throttle-t
+
             if i % 10 == 9:
                 time.sleep(0.5)
-                
+
         except Exception as e:
+            dropped["no_data"] += 1
             continue
-    
-    log(f"Fundamentális szűrés után: {len(results)} jelölt (ROE>{MIN_ROE}%, ROI>{MIN_ROI}%, D/E<{MAX_DE})")
+
+    log(f"Fundamentális szűrés: {len(results)} megfelelt | "
+        f"Kiesett: ROE:{dropped['roe']} ROI:{dropped['roi']} D/E:{dropped['de']} Nincs adat:{dropped['no_data']}")
     return results
 
 # ── 4. EPS OUTLOOK – FMP ANALYST ESTIMATES ───────────────────
