@@ -1,12 +1,12 @@
 {
-  "updated": "2026-05-08T18:21:00.364366",
+  "updated": "2026-05-09T05:58:20.382611",
   "count": 0,
   "params": {
     "min_roe": 10.0,
     "min_roi": 10.0,
     "max_de": 1.5,
-    "sma200_min": -25.0,
-    "sma200_max": -10.0,
+    "sma200_min": -30.0,
+    "sma200_max": -5.0,
     "min_mktcap_b": 5.0
   },
   "stocks": []
