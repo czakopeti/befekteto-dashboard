@@ -1865,7 +1865,26 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         alert_cards = '<div class="al-empty">✓ Nincs aktív riasztás</div>'
 
     # Watchlist kártyák (screener)
-    sc_stocks = screener_data.get("stocks",[])
+    def calc_atr_stop(ticker):
+        """ATR(14) alapú stop loss és trailing stop"""
+        try:
+            h = yf.Ticker(ticker).history(period="60d")
+            if len(h) < 15: return None
+            high = h["High"]; low = h["Low"]; close = h["Close"]
+            tr = pd.concat([high-low,
+                            (high - close.shift(1)).abs(),
+                            (low  - close.shift(1)).abs()], axis=1).max(axis=1)
+            atr14 = float(tr.rolling(14).mean().iloc[-1])
+            price = float(close.iloc[-1])
+            stop_loss     = round(price - 2.0 * atr14, 2)
+            trailing_stop = round(price - 1.5 * atr14, 2)
+            stop_pct      = round((price - stop_loss) / price * 100, 1)
+            return {"atr": round(atr14, 2), "stopLoss": stop_loss,
+                    "trailingStop": trailing_stop, "stopPct": stop_pct}
+        except Exception:
+            return None
+
+        sc_stocks = screener_data.get("stocks",[])
     sc_updated = screener_data.get("updated","")[:10] if screener_data.get("updated") else "–"
     sc_html = ""
     for s in sc_stocks[:16]:
@@ -2044,25 +2063,6 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     )
 
     # ── ATR STOP LOSS – watchlist kártyákhoz ─────────────────
-    def calc_atr_stop(ticker):
-        """ATR(14) alapú stop loss és trailing stop"""
-        try:
-            h = yf.Ticker(ticker).history(period="60d")
-            if len(h) < 15: return None
-            high = h["High"]; low = h["Low"]; close = h["Close"]
-            tr = pd.concat([high-low,
-                            (high - close.shift(1)).abs(),
-                            (low  - close.shift(1)).abs()], axis=1).max(axis=1)
-            atr14 = float(tr.rolling(14).mean().iloc[-1])
-            price = float(close.iloc[-1])
-            stop_loss     = round(price - 2.0 * atr14, 2)
-            trailing_stop = round(price - 1.5 * atr14, 2)
-            stop_pct      = round((price - stop_loss) / price * 100, 1)
-            return {"atr": round(atr14, 2), "stopLoss": stop_loss,
-                    "trailingStop": trailing_stop, "stopPct": stop_pct}
-        except Exception:
-            return None
-
     # ── HUF/USD MÉLYEBB ELEMZÉS ───────────────────────────────
         # ── HTML ──────────────────────────────────────────────────
     html = f"""<!DOCTYPE html>
