@@ -204,6 +204,54 @@ def calc_squeeze_score(close_series, volume_series):
     }
 
 # ── 3. Earnings dátum lekérés ────────────────────────────────
+def get_monthly_context(ticker):
+    """
+    Havi kontextus: SMA40 havi + AF(18,6) havi
+    STRONG-ot blokkol ha:
+      - Ár >20% SMA40 felett (ROST eset – túlfeszített)
+      - Ár <-20% SMA40 alatt ÉS AF havi 3+ hónapja lila (PATH eset – törött)
+    """
+    try:
+        h = yf.Ticker(ticker).history(period="10y", interval="1mo", auto_adjust=True)
+        if h.empty or len(h) < 50:
+            return 0, 0, True, ""
+
+        h.index = h.index.tz_localize(None) if h.index.tz else h.index
+        close = h["Close"].dropna()
+
+        sma40 = close.rolling(40).mean()
+        if pd.isna(sma40.iloc[-1]) or float(sma40.iloc[-1]) == 0:
+            return 0, 0, True, ""
+
+        price     = float(close.iloc[-1])
+        sma40_val = float(sma40.iloc[-1])
+        stretch   = round((price - sma40_val) / sma40_val * 100, 1)
+
+        # AF(18,6) havi
+        def trix_m(s, n):
+            e1 = s.ewm(span=n, adjust=False).mean()
+            e2 = e1.ewm(span=n, adjust=False).mean()
+            e3 = e2.ewm(span=n, adjust=False).mean()
+            return ((e3 - e3.shift(1)) / e3.shift(1) * 100).fillna(0)
+
+        t18 = trix_m(close, 18); t6 = trix_m(close, 6)
+        af  = float(t18.iloc[-1] - t6.iloc[-1])
+        af_3m = [float(t18.iloc[-i] - t6.iloc[-i]) for i in range(1, 4) if len(t18) >= i]
+        af_persistent_bear = all(v < 0 for v in af_3m)
+
+        monthly_ok = True; block_reason = ""
+        if stretch > 20:
+            monthly_ok = False
+            block_reason = f"havi gumiszalag tulfeszitett (+{stretch:.0f}%)"
+        elif stretch < -20 and af_persistent_bear:
+            monthly_ok = False
+            block_reason = f"havi trend torott ({stretch:.0f}%, AF lila 3ho)"
+
+        return stretch, af, monthly_ok, block_reason
+
+    except Exception:
+        return 0, 0, True, ""
+
 def get_earnings_days_away(ticker):
     """Hány nap múlva van az earnings? None ha nem elérhető."""
     try:
@@ -338,36 +386,49 @@ def run_scanner():
                 continue
 
             eps_rev, eps_dir = get_eps_revision(ticker)
-            time.sleep(0.15)  # rate limit
+            time.sleep(0.15)
+
+            # Havi kontextus – STRONG blokkoló
+            m_stretch, m_af, monthly_ok, block_reason = get_monthly_context(ticker)
+            time.sleep(0.1)
 
             # Besorolás
-            if eps_dir == "UP" and sq["squeeze_score"] >= 70:
+            if not monthly_ok:
+                # Havi kép blokkol – WATCH-ra minősítjük vissza
+                rating = "WATCH"
+                block_note = f" [{block_reason}]"
+            elif eps_dir == "UP" and sq["squeeze_score"] >= 70:
                 rating = "STRONG"
+                block_note = ""
             elif eps_dir == "DOWN":
                 rating = "AVOID"
-            elif sq["squeeze_score"] >= 75:
-                rating = "WATCH"
+                block_note = ""
             else:
                 rating = "WATCH"
+                block_note = ""
 
             # Szektorhoz tartozás
             sector = next((s for s, tickers in SECTORS.items()
                           if ticker in tickers), "egyéb")
 
             results.append({
-                "ticker":        ticker,
-                "rating":        rating,
-                "sector":        sector,
-                "squeeze_score": sq["squeeze_score"],
-                "bbw_pct":       sq["bbw_pct"],
-                "vol_dry":       sq["vol_dry"],
-                "nr7":           sq["nr7"],
-                "price":         sq["price"],
-                "price_1w":      sq["price_1w"],
-                "earnings_days": days,
-                "eps_revision":  eps_rev,
-                "eps_direction": eps_dir,
-                "type":          "earnings_setup",
+                "ticker":          ticker,
+                "rating":          rating,
+                "sector":          sector,
+                "squeeze_score":   sq["squeeze_score"],
+                "bbw_pct":         sq["bbw_pct"],
+                "vol_dry":         sq["vol_dry"],
+                "nr7":             sq["nr7"],
+                "price":           sq["price"],
+                "price_1w":        sq["price_1w"],
+                "earnings_days":   days,
+                "eps_revision":    eps_rev,
+                "eps_direction":   eps_dir,
+                "monthly_stretch": m_stretch,
+                "monthly_af":      round(m_af, 3),
+                "monthly_ok":      monthly_ok,
+                "block_reason":    block_reason,
+                "type":            "earnings_setup",
             })
         except Exception as e:
             continue
@@ -437,12 +498,13 @@ def run_scanner():
     lines = [f"SQUEEZE + EARNINGS SETUP – {today}\n"]
 
     if strong:
-        lines.append("STRONG (EPS rev + squeeze):")
+        lines.append("STRONG (EPS rev + squeeze + havi OK):")
         for r in strong[:4]:
             ep = f"E:{r['earnings_days']}n" if r.get("earnings_days") else ""
+            ms = f"havi:{r.get('monthly_stretch',0):+.0f}%"
             lines.append(f"  {r['ticker']:6} ${r['price']} | "
                         f"Squeeze:{r['squeeze_score']} | "
-                        f"EPS:{r['eps_revision']:+.0f}% | {ep}")
+                        f"EPS:{r['eps_revision']:+.0f}% | {ep} | {ms}")
 
     if sympathy:
         lines.append("\nSYMPATHY (2. hullam):")
