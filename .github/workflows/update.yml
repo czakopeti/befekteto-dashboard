@@ -2,8 +2,8 @@ name: Update Befekteto Dashboard
 
 on:
   schedule:
-    - cron: '0 15 * * 5'   # Péntek 15:00 UTC = 17:00 Budapest (CEST) – cselekvési ablak
-    - cron: '0 6 * * 6'    # Szombat 6:00 UTC = 8:00 Budapest – teljes heti összefoglaló (COT-tal)
+    - cron: '0 15 * * 5'   # Péntek 15:00 UTC = 17:00 Budapest
+    - cron: '0 6 * * 6'    # Szombat 06:00 UTC = 08:00 Budapest
   workflow_dispatch:
 
 jobs:
@@ -18,18 +18,15 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install yfinance pandas requests
+        run: pip install yfinance pandas requests
 
       - name: Run Quality Screener
-        env:
-          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
         run: python screener.py
 
       - name: Run Dashboard Update
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          FMP_API_KEY:  ${{ secrets.FMP_API_KEY }}
+          NTFY_TOPIC:   ${{ secrets.NTFY_TOPIC }}
         run: python auto_update.py
 
       - name: Commit and Push
@@ -37,5 +34,5 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --staged --quiet || git commit -m "Dashboard v5 frissítés $(date +'%Y-%m-%d %H:%M')"
+          git diff --staged --quiet || git commit -m "Dashboard frissítés $(date +'%Y-%m-%d %H:%M')"
           git push
