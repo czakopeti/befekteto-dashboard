@@ -1926,7 +1926,15 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
             f'</div>'
         )
     if not sc_html:
-        sc_html = '<div class="wl-empty">Screener még nem futott – pénteken frissül</div>'
+        sc_ran    = bool(screener_data.get("updated"))
+        sc_params = screener_data.get("params", {})
+        if sc_ran:
+            sc_html = (f'<div class="wl-empty">Screener lefutott de 0 jelölt – '
+                       f'bull piac, kevés részvény van diszkonton '
+                       f'({sc_params.get("sma200_min",-30)}%–{sc_params.get("sma200_max",-5)}% SMA200 sáv). '
+                       f'Korrekció után fog tölteni.</div>')
+        else:
+            sc_html = '<div class="wl-empty">Screener még nem futott – pénteken frissül</div>'
 
     # History chart adatok
     hd=json.dumps([h["date"] for h in history[-24:]])
@@ -1996,11 +2004,13 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         sm_row(gex_sig, "GEX – Gamma Exposure",
                f"${gex_v/1e9:.1f}B",
                smart.get("gexDesc","?"), src_key="DIX/GEX"),
-        sm_row(cot_sig, "COT Smart Money (Large Speculators)",
+    ])
+    # COT csak ha van valódi adat (CFTC API elérhetetlen esetén nem mutatjuk)
+    if cot_net != 0:
+        smart_html += sm_row(cot_sig, "COT Smart Money (Large Speculators)",
                f"{cot_net:+,.0f} kontraktus",
                smart.get("cotDesc","?") + f" | Z-score: {cot_z:+.1f}",
-               src_key="COT"),
-    ])
+               src_key="COT")
 
         # ── IDŐJÁRÁS FEJLÉC – 3 kulcsmutató ──────────────────────
     lei_sig   = lng.get("leiSignal","wait")
