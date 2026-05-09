@@ -1,0 +1,28 @@
+name: Squeeze Backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      tickers:
+        description: 'Reszvenyek vesszoval elvalasztva (pl: DDOG,CRWD,RKLB,NVDA,META)'
+        required: false
+        default: 'DDOG,CRWD,RKLB,NVDA,META,MSFT,ADBE,NOW'
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: pip install yfinance pandas numpy requests
+
+      - name: Run Backtest
+        run: |
+          TICKERS="${{ github.event.inputs.tickers }}"
+          python backtest_squeeze.py ${TICKERS//,/ }
