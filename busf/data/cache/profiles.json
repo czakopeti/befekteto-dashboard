@@ -1,1 +1,422 @@
-{}
+{
+  "MMM": {
+    "symbol": "MMM",
+    "name": "3M Company",
+    "sector": "Industrials",
+    "industry": "Conglomerates",
+    "fetched": "2026-05-10T11:12:25.339789+00:00"
+  },
+  "AOS": {
+    "symbol": "AOS",
+    "name": "A.O. Smith Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:12:25.557582+00:00"
+  },
+  "ABT": {
+    "symbol": "ABT",
+    "name": "Abbott Laboratories",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:12:25.772821+00:00"
+  },
+  "ABBV": {
+    "symbol": "ABBV",
+    "name": "AbbVie Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:12:25.991368+00:00"
+  },
+  "ACN": {
+    "symbol": "ACN",
+    "name": "Accenture plc",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:12:26.210826+00:00"
+  },
+  "ADBE": {
+    "symbol": "ADBE",
+    "name": "Adobe Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:12:26.426712+00:00"
+  },
+  "AMD": {
+    "symbol": "AMD",
+    "name": "Advanced Micro Devices, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:12:26.646102+00:00"
+  },
+  "AES": {
+    "symbol": "AES",
+    "name": "The AES Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Diversified",
+    "fetched": "2026-05-10T11:12:26.866107+00:00"
+  },
+  "AFL": {
+    "symbol": "AFL",
+    "name": "AFLAC Incorporated",
+    "sector": "Financial Services",
+    "industry": "Insurance - Life",
+    "fetched": "2026-05-10T11:12:27.085856+00:00"
+  },
+  "A": {
+    "symbol": "A",
+    "name": "Agilent Technologies, Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:12:27.302678+00:00"
+  },
+  "APD": {
+    "symbol": "APD",
+    "name": "Air Products and Chemicals, Inc",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:12:27.518861+00:00"
+  },
+  "ABNB": {
+    "symbol": "ABNB",
+    "name": "Airbnb, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-10T11:12:27.747487+00:00"
+  },
+  "AKAM": {
+    "symbol": "AKAM",
+    "name": "Akamai Technologies, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:12:27.969313+00:00"
+  },
+  "ALB": {
+    "symbol": "ALB",
+    "name": "Albemarle Corporation",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:12:28.189305+00:00"
+  },
+  "ARE": {
+    "symbol": "ARE",
+    "name": "Alexandria Real Estate Equities",
+    "sector": "Real Estate",
+    "industry": "REIT - Office",
+    "fetched": "2026-05-10T11:12:28.411621+00:00"
+  },
+  "ALGN": {
+    "symbol": "ALGN",
+    "name": "Align Technology, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-10T11:12:28.628016+00:00"
+  },
+  "ALLE": {
+    "symbol": "ALLE",
+    "name": "Allegion plc",
+    "sector": "Industrials",
+    "industry": "Security & Protection Services",
+    "fetched": "2026-05-10T11:12:28.894589+00:00"
+  },
+  "LNT": {
+    "symbol": "LNT",
+    "name": "Alliant Energy Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:12:29.114022+00:00"
+  },
+  "ALL": {
+    "symbol": "ALL",
+    "name": "Allstate Corporation (The)",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-10T11:12:29.332670+00:00"
+  },
+  "GOOGL": {
+    "symbol": "GOOGL",
+    "name": "Alphabet Inc.",
+    "sector": "Communication Services",
+    "industry": "Internet Content & Information",
+    "fetched": "2026-05-10T11:12:29.599262+00:00"
+  },
+  "GOOG": {
+    "symbol": "GOOG",
+    "name": "Alphabet Inc.",
+    "sector": "Communication Services",
+    "industry": "Internet Content & Information",
+    "fetched": "2026-05-10T11:12:29.817800+00:00"
+  },
+  "MO": {
+    "symbol": "MO",
+    "name": "Altria Group, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Tobacco",
+    "fetched": "2026-05-10T11:12:30.038919+00:00"
+  },
+  "AMZN": {
+    "symbol": "AMZN",
+    "name": "Amazon.com, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Internet Retail",
+    "fetched": "2026-05-10T11:12:30.258654+00:00"
+  },
+  "AMCR": {
+    "symbol": "AMCR",
+    "name": "Amcor plc",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-10T11:12:30.482163+00:00"
+  },
+  "AEE": {
+    "symbol": "AEE",
+    "name": "Ameren Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:12:30.700037+00:00"
+  },
+  "AEP": {
+    "symbol": "AEP",
+    "name": "American Electric Power Company",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:12:30.971815+00:00"
+  },
+  "AXP": {
+    "symbol": "AXP",
+    "name": "American Express Company",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-10T11:12:31.188828+00:00"
+  },
+  "AIG": {
+    "symbol": "AIG",
+    "name": "American International Group, I",
+    "sector": "Financial Services",
+    "industry": "Insurance - Diversified",
+    "fetched": "2026-05-10T11:12:31.404105+00:00"
+  },
+  "AMT": {
+    "symbol": "AMT",
+    "name": "American Tower Corporation (REI",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-10T11:12:31.630722+00:00"
+  },
+  "AWK": {
+    "symbol": "AWK",
+    "name": "American Water Works Company, I",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Water",
+    "fetched": "2026-05-10T11:12:31.848163+00:00"
+  },
+  "AMP": {
+    "symbol": "AMP",
+    "name": "Ameriprise Financial, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:12:32.162025+00:00"
+  },
+  "AME": {
+    "symbol": "AME",
+    "name": "AMETEK, Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:12:32.386689+00:00"
+  },
+  "AMGN": {
+    "symbol": "AMGN",
+    "name": "Amgen Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:12:32.604128+00:00"
+  },
+  "APH": {
+    "symbol": "APH",
+    "name": "Amphenol Corporation",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "fetched": "2026-05-10T11:12:32.822984+00:00"
+  },
+  "ADI": {
+    "symbol": "ADI",
+    "name": "Analog Devices, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:12:33.041482+00:00"
+  },
+  "AON": {
+    "symbol": "AON",
+    "name": "Aon plc",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-10T11:12:33.258847+00:00"
+  },
+  "APA": {
+    "symbol": "APA",
+    "name": "APA Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:12:33.472038+00:00"
+  },
+  "APO": {
+    "symbol": "APO",
+    "name": "Apollo Global Management, Inc. ",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:12:33.795332+00:00"
+  },
+  "AAPL": {
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "sector": "Technology",
+    "industry": "Consumer Electronics",
+    "fetched": "2026-05-10T11:12:34.012478+00:00"
+  },
+  "AMAT": {
+    "symbol": "AMAT",
+    "name": "Applied Materials, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials",
+    "fetched": "2026-05-10T11:12:34.231346+00:00"
+  },
+  "APP": {
+    "symbol": "APP",
+    "name": "Applovin Corporation",
+    "sector": "Communication Services",
+    "industry": "Advertising Agencies",
+    "fetched": "2026-05-10T11:12:34.450966+00:00"
+  },
+  "APTV": {
+    "symbol": "APTV",
+    "name": "Aptiv PLC",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts",
+    "fetched": "2026-05-10T11:12:34.673032+00:00"
+  },
+  "ACGL": {
+    "symbol": "ACGL",
+    "name": "Arch Capital Group Ltd.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Diversified",
+    "fetched": "2026-05-10T11:12:34.899977+00:00"
+  },
+  "ADM": {
+    "symbol": "ADM",
+    "name": "Archer-Daniels-Midland Company",
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products",
+    "fetched": "2026-05-10T11:12:35.120837+00:00"
+  },
+  "ARES": {
+    "symbol": "ARES",
+    "name": "Ares Management Corporation",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:12:35.338602+00:00"
+  },
+  "ANET": {
+    "symbol": "ANET",
+    "name": "Arista Networks, Inc.",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-10T11:12:35.562273+00:00"
+  },
+  "AJG": {
+    "symbol": "AJG",
+    "name": "Arthur J. Gallagher & Co.",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-10T11:12:35.780512+00:00"
+  },
+  "AIZ": {
+    "symbol": "AIZ",
+    "name": "Assurant, Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-10T11:12:35.995808+00:00"
+  },
+  "T": {
+    "symbol": "T",
+    "name": "AT&T Inc.",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-10T11:12:36.212119+00:00"
+  },
+  "ATO": {
+    "symbol": "ATO",
+    "name": "Atmos Energy Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas",
+    "fetched": "2026-05-10T11:12:36.430045+00:00"
+  },
+  "ADSK": {
+    "symbol": "ADSK",
+    "name": "Autodesk, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:12:36.643037+00:00"
+  },
+  "ADP": {
+    "symbol": "ADP",
+    "name": "Automatic Data Processing, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:12:36.857628+00:00"
+  },
+  "AZO": {
+    "symbol": "AZO",
+    "name": "AutoZone, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts",
+    "fetched": "2026-05-10T11:12:37.091046+00:00"
+  },
+  "AVB": {
+    "symbol": "AVB",
+    "name": "AvalonBay Communities, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:12:37.306568+00:00"
+  },
+  "AVY": {
+    "symbol": "AVY",
+    "name": "Avery Dennison Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-10T11:12:37.522942+00:00"
+  },
+  "AXON": {
+    "symbol": "AXON",
+    "name": "Axon Enterprise, Inc.",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:12:37.741882+00:00"
+  },
+  "BKR": {
+    "symbol": "BKR",
+    "name": "Baker Hughes Company",
+    "sector": "Energy",
+    "industry": "Oil & Gas Equipment & Services",
+    "fetched": "2026-05-10T11:12:37.960973+00:00"
+  },
+  "BALL": {
+    "symbol": "BALL",
+    "name": "Ball Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-10T11:12:38.231185+00:00"
+  },
+  "BAC": {
+    "symbol": "BAC",
+    "name": "Bank of America Corporation",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-10T11:12:38.445008+00:00"
+  },
+  "BAX": {
+    "symbol": "BAX",
+    "name": "Baxter International Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-10T11:12:38.661639+00:00"
+  }
+}
