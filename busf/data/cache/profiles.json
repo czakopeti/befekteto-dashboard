@@ -2098,5 +2098,425 @@
     "sector": "Consumer Cyclical",
     "industry": "Lodging",
     "fetched": "2026-05-10T11:48:00.992914+00:00"
+  },
+  "MRSH": {
+    "symbol": "MRSH",
+    "name": "Marsh",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-10T11:53:34.656042+00:00"
+  },
+  "MLM": {
+    "symbol": "MLM",
+    "name": "Martin Marietta Materials, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Building Materials",
+    "fetched": "2026-05-10T11:53:34.942926+00:00"
+  },
+  "MAS": {
+    "symbol": "MAS",
+    "name": "Masco Corporation",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-10T11:53:35.174538+00:00"
+  },
+  "MA": {
+    "symbol": "MA",
+    "name": "Mastercard Incorporated",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-10T11:53:35.433524+00:00"
+  },
+  "MKC": {
+    "symbol": "MKC",
+    "name": "McCormick & Company, Incorporat",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:53:35.686550+00:00"
+  },
+  "MCD": {
+    "symbol": "MCD",
+    "name": "McDonald's Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-10T11:53:35.955872+00:00"
+  },
+  "MCK": {
+    "symbol": "MCK",
+    "name": "McKesson Corporation",
+    "sector": "Healthcare",
+    "industry": "Medical Distribution",
+    "fetched": "2026-05-10T11:53:36.216984+00:00"
+  },
+  "MDT": {
+    "symbol": "MDT",
+    "name": "Medtronic plc.",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:53:36.519906+00:00"
+  },
+  "MRK": {
+    "symbol": "MRK",
+    "name": "Merck & Company, Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:53:36.767050+00:00"
+  },
+  "META": {
+    "symbol": "META",
+    "name": "Meta Platforms, Inc.",
+    "sector": "Communication Services",
+    "industry": "Internet Content & Information",
+    "fetched": "2026-05-10T11:53:37.027631+00:00"
+  },
+  "MET": {
+    "symbol": "MET",
+    "name": "MetLife, Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Life",
+    "fetched": "2026-05-10T11:53:37.303894+00:00"
+  },
+  "MTD": {
+    "symbol": "MTD",
+    "name": "Mettler-Toledo International, I",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:53:37.584647+00:00"
+  },
+  "MGM": {
+    "symbol": "MGM",
+    "name": "MGM Resorts International",
+    "sector": "Consumer Cyclical",
+    "industry": "Resorts & Casinos",
+    "fetched": "2026-05-10T11:53:37.833125+00:00"
+  },
+  "MCHP": {
+    "symbol": "MCHP",
+    "name": "Microchip Technology Incorporat",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:38.080604+00:00"
+  },
+  "MU": {
+    "symbol": "MU",
+    "name": "Micron Technology, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:38.316305+00:00"
+  },
+  "MSFT": {
+    "symbol": "MSFT",
+    "name": "Microsoft Corporation",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:53:38.566524+00:00"
+  },
+  "MAA": {
+    "symbol": "MAA",
+    "name": "Mid-America Apartment Communiti",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:53:38.869242+00:00"
+  },
+  "MRNA": {
+    "symbol": "MRNA",
+    "name": "Moderna, Inc.",
+    "sector": "Healthcare",
+    "industry": "Biotechnology",
+    "fetched": "2026-05-10T11:53:39.107916+00:00"
+  },
+  "TAP": {
+    "symbol": "TAP",
+    "name": "Molson Coors Beverage Company",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Brewers",
+    "fetched": "2026-05-10T11:53:39.362557+00:00"
+  },
+  "MDLZ": {
+    "symbol": "MDLZ",
+    "name": "Mondelez International, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Confectioners",
+    "fetched": "2026-05-10T11:53:39.603064+00:00"
+  },
+  "MPWR": {
+    "symbol": "MPWR",
+    "name": "Monolithic Power Systems, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:39.860693+00:00"
+  },
+  "MNST": {
+    "symbol": "MNST",
+    "name": "Monster Beverage Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic",
+    "fetched": "2026-05-10T11:53:40.111598+00:00"
+  },
+  "MCO": {
+    "symbol": "MCO",
+    "name": "Moody's Corporation",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:53:40.367351+00:00"
+  },
+  "MS": {
+    "symbol": "MS",
+    "name": "Morgan Stanley",
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "fetched": "2026-05-10T11:53:40.606745+00:00"
+  },
+  "MOS": {
+    "symbol": "MOS",
+    "name": "Mosaic Company (The)",
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs",
+    "fetched": "2026-05-10T11:53:40.869150+00:00"
+  },
+  "MSI": {
+    "symbol": "MSI",
+    "name": "Motorola Solutions, Inc.",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-10T11:53:41.117988+00:00"
+  },
+  "MSCI": {
+    "symbol": "MSCI",
+    "name": "MSCI Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:53:41.383139+00:00"
+  },
+  "NDAQ": {
+    "symbol": "NDAQ",
+    "name": "Nasdaq, Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:53:41.642848+00:00"
+  },
+  "NTAP": {
+    "symbol": "NTAP",
+    "name": "NetApp, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:53:41.881424+00:00"
+  },
+  "NFLX": {
+    "symbol": "NFLX",
+    "name": "Netflix, Inc.",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:53:42.111098+00:00"
+  },
+  "NEM": {
+    "symbol": "NEM",
+    "name": "Newmont Corporation",
+    "sector": "Basic Materials",
+    "industry": "Gold",
+    "fetched": "2026-05-10T11:53:42.377677+00:00"
+  },
+  "NWSA": {
+    "symbol": "NWSA",
+    "name": "News Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:53:42.677661+00:00"
+  },
+  "NWS": {
+    "symbol": "NWS",
+    "name": "News Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:53:42.915923+00:00"
+  },
+  "NEE": {
+    "symbol": "NEE",
+    "name": "NextEra Energy, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:53:43.155468+00:00"
+  },
+  "NKE": {
+    "symbol": "NKE",
+    "name": "Nike, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories",
+    "fetched": "2026-05-10T11:53:43.392141+00:00"
+  },
+  "NI": {
+    "symbol": "NI",
+    "name": "NiSource Inc",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Gas",
+    "fetched": "2026-05-10T11:53:43.670892+00:00"
+  },
+  "NDSN": {
+    "symbol": "NDSN",
+    "name": "Nordson Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:53:43.911947+00:00"
+  },
+  "NSC": {
+    "symbol": "NSC",
+    "name": "Norfolk Southern Corporation",
+    "sector": "Industrials",
+    "industry": "Railroads",
+    "fetched": "2026-05-10T11:53:44.145839+00:00"
+  },
+  "NTRS": {
+    "symbol": "NTRS",
+    "name": "Northern Trust Corporation",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:53:44.389251+00:00"
+  },
+  "NOC": {
+    "symbol": "NOC",
+    "name": "Northrop Grumman Corporation",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:53:44.631100+00:00"
+  },
+  "NCLH": {
+    "symbol": "NCLH",
+    "name": "Norwegian Cruise Line Holdings ",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-10T11:53:44.872431+00:00"
+  },
+  "NRG": {
+    "symbol": "NRG",
+    "name": "NRG Energy, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Independent Power Producers",
+    "fetched": "2026-05-10T11:53:45.116281+00:00"
+  },
+  "NUE": {
+    "symbol": "NUE",
+    "name": "Nucor Corporation",
+    "sector": "Basic Materials",
+    "industry": "Steel",
+    "fetched": "2026-05-10T11:53:45.349838+00:00"
+  },
+  "NVDA": {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:45.590171+00:00"
+  },
+  "NVR": {
+    "symbol": "NVR",
+    "name": "NVR, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Residential Construction",
+    "fetched": "2026-05-10T11:53:45.831352+00:00"
+  },
+  "NXPI": {
+    "symbol": "NXPI",
+    "name": "NXP Semiconductors N.V.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:46.097121+00:00"
+  },
+  "ORLY": {
+    "symbol": "ORLY",
+    "name": "O'Reilly Automotive, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts",
+    "fetched": "2026-05-10T11:53:46.425605+00:00"
+  },
+  "OXY": {
+    "symbol": "OXY",
+    "name": "Occidental Petroleum Corporatio",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:53:46.663413+00:00"
+  },
+  "ODFL": {
+    "symbol": "ODFL",
+    "name": "Old Dominion Freight Line, Inc.",
+    "sector": "Industrials",
+    "industry": "Trucking",
+    "fetched": "2026-05-10T11:53:46.962201+00:00"
+  },
+  "OMC": {
+    "symbol": "OMC",
+    "name": "Omnicom Group Inc.",
+    "sector": "Communication Services",
+    "industry": "Advertising Agencies",
+    "fetched": "2026-05-10T11:53:47.223093+00:00"
+  },
+  "ON": {
+    "symbol": "ON",
+    "name": "ON Semiconductor Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:53:47.501088+00:00"
+  },
+  "OKE": {
+    "symbol": "OKE",
+    "name": "ONEOK, Inc.",
+    "sector": "Energy",
+    "industry": "Oil & Gas Midstream",
+    "fetched": "2026-05-10T11:53:47.793619+00:00"
+  },
+  "ORCL": {
+    "symbol": "ORCL",
+    "name": "Oracle Corporation",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:53:48.047151+00:00"
+  },
+  "OTIS": {
+    "symbol": "OTIS",
+    "name": "Otis Worldwide Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:53:48.298436+00:00"
+  },
+  "PCAR": {
+    "symbol": "PCAR",
+    "name": "PACCAR Inc.",
+    "sector": "Industrials",
+    "industry": "Farm & Heavy Construction Machinery",
+    "fetched": "2026-05-10T11:53:48.546714+00:00"
+  },
+  "PKG": {
+    "symbol": "PKG",
+    "name": "Packaging Corporation of Americ",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-10T11:53:48.832214+00:00"
+  },
+  "PLTR": {
+    "symbol": "PLTR",
+    "name": "Palantir Technologies Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:53:49.090668+00:00"
+  },
+  "PANW": {
+    "symbol": "PANW",
+    "name": "Palo Alto Networks, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:53:49.350017+00:00"
+  },
+  "PSKY": {
+    "symbol": "PSKY",
+    "name": "Paramount Skydance Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:53:49.578325+00:00"
+  },
+  "PH": {
+    "symbol": "PH",
+    "name": "Parker-Hannifin Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:53:49.877143+00:00"
   }
 }
