@@ -14,7 +14,7 @@ import pandas as pd
 import requests
 import yfinance as yf
 
-CACHE_DIR           = Path("data/cache")
+CACHE_DIR           = Path(__file__).parent.parent / "data" / "cache"
 FUNDAMENTALS_CACHE  = CACHE_DIR / "fundamentals.json"
 PROFILES_CACHE      = CACHE_DIR / "profiles.json"
 CACHE_TTL_DAYS      = 30
@@ -252,7 +252,9 @@ def fetch_quotes_batch(symbols: list[str]) -> dict[str, dict]:
 def refresh_data(universe: list[str]) -> tuple[dict, dict, dict]:
     fundamentals, profiles = load_cache()
 
-    stale = [s for s in universe if is_stale(fundamentals.get(s))]
+    stale = [s for s in universe
+             if is_stale(fundamentals.get(s))
+             or fundamentals.get(s, {}).get("broken")]  # broken = mindig ujra
     print(f"[refresh] {len(stale)} stale / {len(universe)} total")
 
     refreshed = 0
