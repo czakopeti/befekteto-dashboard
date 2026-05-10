@@ -1,0 +1,45 @@
+name: BUSF Quality Screen
+
+on:
+  schedule:
+    - cron: '0 14 * * 6'   # Szombat 14:00 UTC = 16:00 Budapest
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r busf/requirements.txt
+
+      - name: Run BUSF screen
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          NTFY_TOPIC:  ${{ secrets.NTFY_TOPIC }}
+        run: |
+          cd busf
+          python src/run.py
+
+      - name: Commit updated cache and lists
+        run: |
+          git config user.name  "busf-bot"
+          git config user.email "busf-bot@users.noreply.github.com"
+          git add busf/data/
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "BUSF screen $(date -u +%Y-%m-%d)"
+            git push
+          fi
