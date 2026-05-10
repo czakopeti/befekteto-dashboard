@@ -838,5 +838,425 @@
     "sector": "Consumer Defensive",
     "industry": "Household & Personal Products",
     "fetched": "2026-05-10T11:18:46.929326+00:00"
+  },
+  "CMCSA": {
+    "symbol": "CMCSA",
+    "name": "Comcast Corporation",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-10T11:27:13.304488+00:00"
+  },
+  "FIX": {
+    "symbol": "FIX",
+    "name": "Comfort Systems USA, Inc.",
+    "sector": "Industrials",
+    "industry": "Engineering & Construction",
+    "fetched": "2026-05-10T11:27:13.626970+00:00"
+  },
+  "CAG": {
+    "symbol": "CAG",
+    "name": "ConAgra Brands, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:27:14.087889+00:00"
+  },
+  "COP": {
+    "symbol": "COP",
+    "name": "ConocoPhillips",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:27:14.438758+00:00"
+  },
+  "ED": {
+    "symbol": "ED",
+    "name": "Consolidated Edison, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:14.774132+00:00"
+  },
+  "STZ": {
+    "symbol": "STZ",
+    "name": "Constellation Brands, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Brewers",
+    "fetched": "2026-05-10T11:27:15.110769+00:00"
+  },
+  "CEG": {
+    "symbol": "CEG",
+    "name": "Constellation Energy Corporatio",
+    "sector": "Utilities",
+    "industry": "Utilities - Independent Power Producers",
+    "fetched": "2026-05-10T11:27:15.446094+00:00"
+  },
+  "COO": {
+    "symbol": "COO",
+    "name": "The Cooper Companies, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-10T11:27:15.745705+00:00"
+  },
+  "CPRT": {
+    "symbol": "CPRT",
+    "name": "Copart, Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Business Services",
+    "fetched": "2026-05-10T11:27:16.071280+00:00"
+  },
+  "GLW": {
+    "symbol": "GLW",
+    "name": "Corning Incorporated",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "fetched": "2026-05-10T11:27:16.424172+00:00"
+  },
+  "CPAY": {
+    "symbol": "CPAY",
+    "name": "Corpay, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:27:16.756874+00:00"
+  },
+  "CTVA": {
+    "symbol": "CTVA",
+    "name": "Corteva, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs",
+    "fetched": "2026-05-10T11:27:17.079145+00:00"
+  },
+  "CSGP": {
+    "symbol": "CSGP",
+    "name": "CoStar Group, Inc.",
+    "sector": "Real Estate",
+    "industry": "Real Estate Services",
+    "fetched": "2026-05-10T11:27:17.413706+00:00"
+  },
+  "COST": {
+    "symbol": "COST",
+    "name": "Costco Wholesale Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Discount Stores",
+    "fetched": "2026-05-10T11:27:17.743944+00:00"
+  },
+  "CRH": {
+    "symbol": "CRH",
+    "name": "CRH PLC",
+    "sector": "Basic Materials",
+    "industry": "Building Materials",
+    "fetched": "2026-05-10T11:27:18.071145+00:00"
+  },
+  "CRWD": {
+    "symbol": "CRWD",
+    "name": "CrowdStrike Holdings, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:27:18.386752+00:00"
+  },
+  "CCI": {
+    "symbol": "CCI",
+    "name": "Crown Castle Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-10T11:27:18.741974+00:00"
+  },
+  "CSX": {
+    "symbol": "CSX",
+    "name": "CSX Corporation",
+    "sector": "Industrials",
+    "industry": "Railroads",
+    "fetched": "2026-05-10T11:27:19.091439+00:00"
+  },
+  "CMI": {
+    "symbol": "CMI",
+    "name": "Cummins Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:27:19.419147+00:00"
+  },
+  "CVS": {
+    "symbol": "CVS",
+    "name": "CVS Health Corporation",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-10T11:27:19.761358+00:00"
+  },
+  "DHR": {
+    "symbol": "DHR",
+    "name": "Danaher Corporation",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:27:20.092148+00:00"
+  },
+  "DRI": {
+    "symbol": "DRI",
+    "name": "Darden Restaurants, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-10T11:27:20.422186+00:00"
+  },
+  "DDOG": {
+    "symbol": "DDOG",
+    "name": "Datadog, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:27:20.764932+00:00"
+  },
+  "DVA": {
+    "symbol": "DVA",
+    "name": "DaVita Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Care Facilities",
+    "fetched": "2026-05-10T11:27:21.070815+00:00"
+  },
+  "DECK": {
+    "symbol": "DECK",
+    "name": "Deckers Outdoor Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Footwear & Accessories",
+    "fetched": "2026-05-10T11:27:21.393146+00:00"
+  },
+  "DE": {
+    "symbol": "DE",
+    "name": "Deere & Company",
+    "sector": "Industrials",
+    "industry": "Farm & Heavy Construction Machinery",
+    "fetched": "2026-05-10T11:27:21.717625+00:00"
+  },
+  "DELL": {
+    "symbol": "DELL",
+    "name": "Dell Technologies Inc.",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-10T11:27:22.048270+00:00"
+  },
+  "DAL": {
+    "symbol": "DAL",
+    "name": "Delta Air Lines, Inc.",
+    "sector": "Industrials",
+    "industry": "Airlines",
+    "fetched": "2026-05-10T11:27:22.384289+00:00"
+  },
+  "DVN": {
+    "symbol": "DVN",
+    "name": "Devon Energy Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:27:22.727110+00:00"
+  },
+  "DXCM": {
+    "symbol": "DXCM",
+    "name": "DexCom, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:27:23.035253+00:00"
+  },
+  "FANG": {
+    "symbol": "FANG",
+    "name": "Diamondback Energy, Inc.",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:27:23.385906+00:00"
+  },
+  "DLR": {
+    "symbol": "DLR",
+    "name": "Digital Realty Trust, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-10T11:27:23.737724+00:00"
+  },
+  "DG": {
+    "symbol": "DG",
+    "name": "Dollar General Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Discount Stores",
+    "fetched": "2026-05-10T11:27:24.071883+00:00"
+  },
+  "DLTR": {
+    "symbol": "DLTR",
+    "name": "Dollar Tree, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Discount Stores",
+    "fetched": "2026-05-10T11:27:24.401787+00:00"
+  },
+  "D": {
+    "symbol": "D",
+    "name": "Dominion Energy, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:24.789475+00:00"
+  },
+  "DPZ": {
+    "symbol": "DPZ",
+    "name": "Domino's Pizza Inc",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-10T11:27:25.096319+00:00"
+  },
+  "DASH": {
+    "symbol": "DASH",
+    "name": "DoorDash, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Internet Retail",
+    "fetched": "2026-05-10T11:27:25.431473+00:00"
+  },
+  "DOV": {
+    "symbol": "DOV",
+    "name": "Dover Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:27:25.755317+00:00"
+  },
+  "DOW": {
+    "symbol": "DOW",
+    "name": "Dow Inc.",
+    "sector": "Basic Materials",
+    "industry": "Chemicals",
+    "fetched": "2026-05-10T11:27:26.072531+00:00"
+  },
+  "DHI": {
+    "symbol": "DHI",
+    "name": "D.R. Horton, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Residential Construction",
+    "fetched": "2026-05-10T11:27:26.387124+00:00"
+  },
+  "DTE": {
+    "symbol": "DTE",
+    "name": "DTE Energy Company",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:26.809941+00:00"
+  },
+  "DUK": {
+    "symbol": "DUK",
+    "name": "Duke Energy Corporation (Holdin",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:27.137501+00:00"
+  },
+  "DD": {
+    "symbol": "DD",
+    "name": "DuPont de Nemours, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:27:27.469703+00:00"
+  },
+  "ETN": {
+    "symbol": "ETN",
+    "name": "Eaton Corporation, PLC",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:27:27.802840+00:00"
+  },
+  "EBAY": {
+    "symbol": "EBAY",
+    "name": "eBay Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Internet Retail",
+    "fetched": "2026-05-10T11:27:28.129587+00:00"
+  },
+  "SATS": {
+    "symbol": "SATS",
+    "name": "EchoStar Corporation",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-10T11:27:28.439960+00:00"
+  },
+  "ECL": {
+    "symbol": "ECL",
+    "name": "Ecolab Inc.",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:27:28.758710+00:00"
+  },
+  "EIX": {
+    "symbol": "EIX",
+    "name": "Edison International",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:29.081023+00:00"
+  },
+  "EW": {
+    "symbol": "EW",
+    "name": "Edwards Lifesciences Corporatio",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:27:29.419504+00:00"
+  },
+  "EA": {
+    "symbol": "EA",
+    "name": "Electronic Arts Inc.",
+    "sector": "Communication Services",
+    "industry": "Electronic Gaming & Multimedia",
+    "fetched": "2026-05-10T11:27:29.765527+00:00"
+  },
+  "ELV": {
+    "symbol": "ELV",
+    "name": "Elevance Health, Inc.",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-10T11:27:30.102598+00:00"
+  },
+  "EME": {
+    "symbol": "EME",
+    "name": "EMCOR Group, Inc.",
+    "sector": "Industrials",
+    "industry": "Engineering & Construction",
+    "fetched": "2026-05-10T11:27:30.480459+00:00"
+  },
+  "EMR": {
+    "symbol": "EMR",
+    "name": "Emerson Electric Company",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:27:30.813520+00:00"
+  },
+  "ETR": {
+    "symbol": "ETR",
+    "name": "Entergy Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:27:31.164952+00:00"
+  },
+  "EOG": {
+    "symbol": "EOG",
+    "name": "EOG Resources, Inc.",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:27:31.495543+00:00"
+  },
+  "EPAM": {
+    "symbol": "EPAM",
+    "name": "EPAM Systems, Inc.",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:27:31.897925+00:00"
+  },
+  "EQT": {
+    "symbol": "EQT",
+    "name": "EQT Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:27:32.237678+00:00"
+  },
+  "EFX": {
+    "symbol": "EFX",
+    "name": "Equifax, Inc.",
+    "sector": "Industrials",
+    "industry": "Consulting Services",
+    "fetched": "2026-05-10T11:27:32.568622+00:00"
+  },
+  "EQIX": {
+    "symbol": "EQIX",
+    "name": "Equinix, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-10T11:27:32.918041+00:00"
+  },
+  "EQR": {
+    "symbol": "EQR",
+    "name": "Equity Residential",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:27:33.270611+00:00"
   }
 }
