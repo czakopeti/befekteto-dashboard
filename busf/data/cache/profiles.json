@@ -418,5 +418,425 @@
     "sector": "Healthcare",
     "industry": "Medical Instruments & Supplies",
     "fetched": "2026-05-10T11:12:38.661639+00:00"
+  },
+  "BDX": {
+    "symbol": "BDX",
+    "name": "Becton, Dickinson and Company",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-10T11:18:26.798021+00:00"
+  },
+  "BRK.B": {
+    "symbol": "BRK.B",
+    "name": "BRK.B",
+    "sector": "Unknown",
+    "industry": "Unknown",
+    "fetched": "2026-05-10T11:18:27.126654+00:00"
+  },
+  "BBY": {
+    "symbol": "BBY",
+    "name": "Best Buy Co., Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail",
+    "fetched": "2026-05-10T11:18:27.464294+00:00"
+  },
+  "TECH": {
+    "symbol": "TECH",
+    "name": "Bio-Techne Corp",
+    "sector": "Healthcare",
+    "industry": "Biotechnology",
+    "fetched": "2026-05-10T11:18:27.803499+00:00"
+  },
+  "BIIB": {
+    "symbol": "BIIB",
+    "name": "Biogen Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:18:28.134733+00:00"
+  },
+  "BLK": {
+    "symbol": "BLK",
+    "name": "BlackRock, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:18:28.498789+00:00"
+  },
+  "BX": {
+    "symbol": "BX",
+    "name": "Blackstone Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:18:28.836168+00:00"
+  },
+  "XYZ": {
+    "symbol": "XYZ",
+    "name": "Block, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:18:29.174425+00:00"
+  },
+  "BK": {
+    "symbol": "BK",
+    "name": "The Bank of New York Mellon Cor",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-10T11:18:29.512399+00:00"
+  },
+  "BA": {
+    "symbol": "BA",
+    "name": "Boeing Company (The)",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:18:29.836137+00:00"
+  },
+  "BKNG": {
+    "symbol": "BKNG",
+    "name": "Booking Holdings Inc. Common St",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-10T11:18:30.161502+00:00"
+  },
+  "BSX": {
+    "symbol": "BSX",
+    "name": "Boston Scientific Corporation",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:18:30.490709+00:00"
+  },
+  "BMY": {
+    "symbol": "BMY",
+    "name": "Bristol-Myers Squibb Company",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:18:30.826775+00:00"
+  },
+  "AVGO": {
+    "symbol": "AVGO",
+    "name": "Broadcom Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:18:31.186600+00:00"
+  },
+  "BR": {
+    "symbol": "BR",
+    "name": "Broadridge Financial Solutions,",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:18:31.517936+00:00"
+  },
+  "BRO": {
+    "symbol": "BRO",
+    "name": "Brown & Brown, Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-10T11:18:31.844732+00:00"
+  },
+  "BF.B": {
+    "symbol": "BF.B",
+    "name": "BF.B",
+    "sector": "Unknown",
+    "industry": "Unknown",
+    "fetched": "2026-05-10T11:18:32.231342+00:00"
+  },
+  "BLDR": {
+    "symbol": "BLDR",
+    "name": "Builders FirstSource, Inc.",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-10T11:18:32.633966+00:00"
+  },
+  "BG": {
+    "symbol": "BG",
+    "name": "Bunge Limited",
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products",
+    "fetched": "2026-05-10T11:18:32.971735+00:00"
+  },
+  "BXP": {
+    "symbol": "BXP",
+    "name": "BXP, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Office",
+    "fetched": "2026-05-10T11:18:33.309817+00:00"
+  },
+  "CHRW": {
+    "symbol": "CHRW",
+    "name": "C.H. Robinson Worldwide, Inc.",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-05-10T11:18:33.643934+00:00"
+  },
+  "CDNS": {
+    "symbol": "CDNS",
+    "name": "Cadence Design Systems, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:18:34.024536+00:00"
+  },
+  "CPT": {
+    "symbol": "CPT",
+    "name": "Camden Property Trust",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:18:34.380185+00:00"
+  },
+  "CPB": {
+    "symbol": "CPB",
+    "name": "The Campbell's Company",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:18:34.713351+00:00"
+  },
+  "COF": {
+    "symbol": "COF",
+    "name": "Capital One Financial Corporati",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-10T11:18:35.050328+00:00"
+  },
+  "CAH": {
+    "symbol": "CAH",
+    "name": "Cardinal Health, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Distribution",
+    "fetched": "2026-05-10T11:18:35.381405+00:00"
+  },
+  "CCL": {
+    "symbol": "CCL",
+    "name": "Carnival Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-10T11:18:35.716264+00:00"
+  },
+  "CARR": {
+    "symbol": "CARR",
+    "name": "Carrier Global Corporation",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-10T11:18:36.060275+00:00"
+  },
+  "CVNA": {
+    "symbol": "CVNA",
+    "name": "Carvana Co.",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto & Truck Dealerships",
+    "fetched": "2026-05-10T11:18:36.391016+00:00"
+  },
+  "CASY": {
+    "symbol": "CASY",
+    "name": "Caseys General Stores, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail",
+    "fetched": "2026-05-10T11:18:36.720898+00:00"
+  },
+  "CAT": {
+    "symbol": "CAT",
+    "name": "Caterpillar, Inc.",
+    "sector": "Industrials",
+    "industry": "Farm & Heavy Construction Machinery",
+    "fetched": "2026-05-10T11:18:37.056073+00:00"
+  },
+  "CBOE": {
+    "symbol": "CBOE",
+    "name": "Cboe Global Markets, Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:18:37.391952+00:00"
+  },
+  "CBRE": {
+    "symbol": "CBRE",
+    "name": "CBRE Group Inc",
+    "sector": "Real Estate",
+    "industry": "Real Estate Services",
+    "fetched": "2026-05-10T11:18:37.727149+00:00"
+  },
+  "CDW": {
+    "symbol": "CDW",
+    "name": "CDW Corporation",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:18:38.057467+00:00"
+  },
+  "COR": {
+    "symbol": "COR",
+    "name": "Cencora, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Distribution",
+    "fetched": "2026-05-10T11:18:38.391254+00:00"
+  },
+  "CNC": {
+    "symbol": "CNC",
+    "name": "Centene Corporation",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-10T11:18:38.721628+00:00"
+  },
+  "CNP": {
+    "symbol": "CNP",
+    "name": "CenterPoint Energy, Inc (Holdin",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:18:39.058203+00:00"
+  },
+  "CF": {
+    "symbol": "CF",
+    "name": "CF Industries Holdings, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Agricultural Inputs",
+    "fetched": "2026-05-10T11:18:39.387510+00:00"
+  },
+  "CRL": {
+    "symbol": "CRL",
+    "name": "Charles River Laboratories Inte",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:18:39.718441+00:00"
+  },
+  "SCHW": {
+    "symbol": "SCHW",
+    "name": "Charles Schwab Corporation (The",
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "fetched": "2026-05-10T11:18:40.103477+00:00"
+  },
+  "CHTR": {
+    "symbol": "CHTR",
+    "name": "Charter Communications, Inc.",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-10T11:18:40.438090+00:00"
+  },
+  "CVX": {
+    "symbol": "CVX",
+    "name": "Chevron Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas Integrated",
+    "fetched": "2026-05-10T11:18:40.777322+00:00"
+  },
+  "CMG": {
+    "symbol": "CMG",
+    "name": "Chipotle Mexican Grill, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-10T11:18:41.159591+00:00"
+  },
+  "CB": {
+    "symbol": "CB",
+    "name": "Chubb Limited",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-10T11:18:41.491049+00:00"
+  },
+  "CHD": {
+    "symbol": "CHD",
+    "name": "Church & Dwight Company, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:18:41.825215+00:00"
+  },
+  "CIEN": {
+    "symbol": "CIEN",
+    "name": "Ciena Corporation",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-10T11:18:42.151566+00:00"
+  },
+  "CI": {
+    "symbol": "CI",
+    "name": "The Cigna Group",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-10T11:18:42.486926+00:00"
+  },
+  "CINF": {
+    "symbol": "CINF",
+    "name": "Cincinnati Financial Corporatio",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-10T11:18:42.819068+00:00"
+  },
+  "CTAS": {
+    "symbol": "CTAS",
+    "name": "Cintas Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Business Services",
+    "fetched": "2026-05-10T11:18:43.157095+00:00"
+  },
+  "CSCO": {
+    "symbol": "CSCO",
+    "name": "Cisco Systems, Inc.",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-10T11:18:43.496114+00:00"
+  },
+  "C": {
+    "symbol": "C",
+    "name": "Citigroup, Inc.",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-10T11:18:43.829684+00:00"
+  },
+  "CFG": {
+    "symbol": "CFG",
+    "name": "Citizens Financial Group, Inc.",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-10T11:18:44.208077+00:00"
+  },
+  "CLX": {
+    "symbol": "CLX",
+    "name": "Clorox Company (The)",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:18:44.588884+00:00"
+  },
+  "CME": {
+    "symbol": "CME",
+    "name": "CME Group Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:18:44.915792+00:00"
+  },
+  "CMS": {
+    "symbol": "CMS",
+    "name": "CMS Energy Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:18:45.247858+00:00"
+  },
+  "KO": {
+    "symbol": "KO",
+    "name": "Coca-Cola Company (The)",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic",
+    "fetched": "2026-05-10T11:18:45.585510+00:00"
+  },
+  "CTSH": {
+    "symbol": "CTSH",
+    "name": "Cognizant Technology Solutions ",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:18:45.916615+00:00"
+  },
+  "COHR": {
+    "symbol": "COHR",
+    "name": "Coherent Corp.",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-10T11:18:46.258591+00:00"
+  },
+  "COIN": {
+    "symbol": "COIN",
+    "name": "Coinbase Global, Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:18:46.590345+00:00"
+  },
+  "CL": {
+    "symbol": "CL",
+    "name": "Colgate-Palmolive Company",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:18:46.929326+00:00"
   }
 }
