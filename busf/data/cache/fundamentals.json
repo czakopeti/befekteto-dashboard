@@ -1,0 +1,2517 @@
+{
+  "MMM": {
+    "symbol": "MMM",
+    "fetched": "2026-05-10T10:58:38.648278+00:00",
+    "broken": true
+  },
+  "AOS": {
+    "symbol": "AOS",
+    "fetched": "2026-05-10T10:58:38.719765+00:00",
+    "broken": true
+  },
+  "ABT": {
+    "symbol": "ABT",
+    "fetched": "2026-05-10T10:58:38.786798+00:00",
+    "broken": true
+  },
+  "ABBV": {
+    "symbol": "ABBV",
+    "fetched": "2026-05-10T10:58:38.841640+00:00",
+    "broken": true
+  },
+  "ACN": {
+    "symbol": "ACN",
+    "fetched": "2026-05-10T10:58:39.000742+00:00",
+    "broken": true
+  },
+  "ADBE": {
+    "symbol": "ADBE",
+    "fetched": "2026-05-10T10:58:39.072944+00:00",
+    "broken": true
+  },
+  "AMD": {
+    "symbol": "AMD",
+    "fetched": "2026-05-10T10:58:39.135542+00:00",
+    "broken": true
+  },
+  "AES": {
+    "symbol": "AES",
+    "fetched": "2026-05-10T10:58:39.196251+00:00",
+    "broken": true
+  },
+  "AFL": {
+    "symbol": "AFL",
+    "fetched": "2026-05-10T10:58:39.255449+00:00",
+    "broken": true
+  },
+  "A": {
+    "symbol": "A",
+    "fetched": "2026-05-10T10:58:39.314440+00:00",
+    "broken": true
+  },
+  "APD": {
+    "symbol": "APD",
+    "fetched": "2026-05-10T10:58:39.372298+00:00",
+    "broken": true
+  },
+  "ABNB": {
+    "symbol": "ABNB",
+    "fetched": "2026-05-10T10:58:39.430916+00:00",
+    "broken": true
+  },
+  "AKAM": {
+    "symbol": "AKAM",
+    "fetched": "2026-05-10T10:58:39.498251+00:00",
+    "broken": true
+  },
+  "ALB": {
+    "symbol": "ALB",
+    "fetched": "2026-05-10T10:58:39.570925+00:00",
+    "broken": true
+  },
+  "ARE": {
+    "symbol": "ARE",
+    "fetched": "2026-05-10T10:58:39.636971+00:00",
+    "broken": true
+  },
+  "ALGN": {
+    "symbol": "ALGN",
+    "fetched": "2026-05-10T10:58:39.733317+00:00",
+    "broken": true
+  },
+  "ALLE": {
+    "symbol": "ALLE",
+    "fetched": "2026-05-10T10:58:39.801222+00:00",
+    "broken": true
+  },
+  "LNT": {
+    "symbol": "LNT",
+    "fetched": "2026-05-10T10:58:39.859206+00:00",
+    "broken": true
+  },
+  "ALL": {
+    "symbol": "ALL",
+    "fetched": "2026-05-10T10:58:39.918650+00:00",
+    "broken": true
+  },
+  "GOOGL": {
+    "symbol": "GOOGL",
+    "fetched": "2026-05-10T10:58:40.006496+00:00",
+    "broken": true
+  },
+  "GOOG": {
+    "symbol": "GOOG",
+    "fetched": "2026-05-10T10:58:40.067027+00:00",
+    "broken": true
+  },
+  "MO": {
+    "symbol": "MO",
+    "fetched": "2026-05-10T10:58:40.128525+00:00",
+    "broken": true
+  },
+  "AMZN": {
+    "symbol": "AMZN",
+    "fetched": "2026-05-10T10:58:40.200220+00:00",
+    "broken": true
+  },
+  "AMCR": {
+    "symbol": "AMCR",
+    "fetched": "2026-05-10T10:58:40.269134+00:00",
+    "broken": true
+  },
+  "AEE": {
+    "symbol": "AEE",
+    "fetched": "2026-05-10T10:58:40.336202+00:00",
+    "broken": true
+  },
+  "AEP": {
+    "symbol": "AEP",
+    "fetched": "2026-05-10T10:58:40.407714+00:00",
+    "broken": true
+  },
+  "AXP": {
+    "symbol": "AXP",
+    "fetched": "2026-05-10T10:58:40.554597+00:00",
+    "broken": true
+  },
+  "AIG": {
+    "symbol": "AIG",
+    "fetched": "2026-05-10T10:58:40.610438+00:00",
+    "broken": true
+  },
+  "AMT": {
+    "symbol": "AMT",
+    "fetched": "2026-05-10T10:58:40.667848+00:00",
+    "broken": true
+  },
+  "AWK": {
+    "symbol": "AWK",
+    "fetched": "2026-05-10T10:58:40.724436+00:00",
+    "broken": true
+  },
+  "AMP": {
+    "symbol": "AMP",
+    "fetched": "2026-05-10T10:58:40.779034+00:00",
+    "broken": true
+  },
+  "AME": {
+    "symbol": "AME",
+    "fetched": "2026-05-10T10:58:40.835117+00:00",
+    "broken": true
+  },
+  "AMGN": {
+    "symbol": "AMGN",
+    "fetched": "2026-05-10T10:58:40.892468+00:00",
+    "broken": true
+  },
+  "APH": {
+    "symbol": "APH",
+    "fetched": "2026-05-10T10:58:40.948282+00:00",
+    "broken": true
+  },
+  "ADI": {
+    "symbol": "ADI",
+    "fetched": "2026-05-10T10:58:41.076131+00:00",
+    "broken": true
+  },
+  "AON": {
+    "symbol": "AON",
+    "fetched": "2026-05-10T10:58:41.132289+00:00",
+    "broken": true
+  },
+  "APA": {
+    "symbol": "APA",
+    "fetched": "2026-05-10T10:58:41.197228+00:00",
+    "broken": true
+  },
+  "APO": {
+    "symbol": "APO",
+    "fetched": "2026-05-10T10:58:41.252619+00:00",
+    "broken": true
+  },
+  "AAPL": {
+    "symbol": "AAPL",
+    "fetched": "2026-05-10T10:58:41.313823+00:00",
+    "broken": true
+  },
+  "AMAT": {
+    "symbol": "AMAT",
+    "fetched": "2026-05-10T10:58:41.372554+00:00",
+    "broken": true
+  },
+  "APP": {
+    "symbol": "APP",
+    "fetched": "2026-05-10T10:58:41.428637+00:00",
+    "broken": true
+  },
+  "APTV": {
+    "symbol": "APTV",
+    "fetched": "2026-05-10T10:58:41.484773+00:00",
+    "broken": true
+  },
+  "ACGL": {
+    "symbol": "ACGL",
+    "fetched": "2026-05-10T10:58:41.542873+00:00",
+    "broken": true
+  },
+  "ADM": {
+    "symbol": "ADM",
+    "fetched": "2026-05-10T10:58:41.600187+00:00",
+    "broken": true
+  },
+  "ARES": {
+    "symbol": "ARES",
+    "fetched": "2026-05-10T10:58:41.656424+00:00",
+    "broken": true
+  },
+  "ANET": {
+    "symbol": "ANET",
+    "fetched": "2026-05-10T10:58:41.714244+00:00",
+    "broken": true
+  },
+  "AJG": {
+    "symbol": "AJG",
+    "fetched": "2026-05-10T10:58:41.771200+00:00",
+    "broken": true
+  },
+  "AIZ": {
+    "symbol": "AIZ",
+    "fetched": "2026-05-10T10:58:41.828326+00:00",
+    "broken": true
+  },
+  "T": {
+    "symbol": "T",
+    "fetched": "2026-05-10T10:58:41.882495+00:00",
+    "broken": true
+  },
+  "ATO": {
+    "symbol": "ATO",
+    "fetched": "2026-05-10T10:58:41.939276+00:00",
+    "broken": true
+  },
+  "ADSK": {
+    "symbol": "ADSK",
+    "fetched": "2026-05-10T10:58:41.997252+00:00",
+    "broken": true
+  },
+  "ADP": {
+    "symbol": "ADP",
+    "fetched": "2026-05-10T10:58:42.056438+00:00",
+    "broken": true
+  },
+  "AZO": {
+    "symbol": "AZO",
+    "fetched": "2026-05-10T10:58:42.115591+00:00",
+    "broken": true
+  },
+  "AVB": {
+    "symbol": "AVB",
+    "fetched": "2026-05-10T10:58:42.174710+00:00",
+    "broken": true
+  },
+  "AVY": {
+    "symbol": "AVY",
+    "fetched": "2026-05-10T10:58:42.234233+00:00",
+    "broken": true
+  },
+  "AXON": {
+    "symbol": "AXON",
+    "fetched": "2026-05-10T10:58:42.289286+00:00",
+    "broken": true
+  },
+  "BKR": {
+    "symbol": "BKR",
+    "fetched": "2026-05-10T10:58:42.348259+00:00",
+    "broken": true
+  },
+  "BALL": {
+    "symbol": "BALL",
+    "fetched": "2026-05-10T10:58:42.403798+00:00",
+    "broken": true
+  },
+  "BAC": {
+    "symbol": "BAC",
+    "fetched": "2026-05-10T10:58:42.459970+00:00",
+    "broken": true
+  },
+  "BAX": {
+    "symbol": "BAX",
+    "fetched": "2026-05-10T10:58:42.517699+00:00",
+    "broken": true
+  },
+  "BDX": {
+    "symbol": "BDX",
+    "fetched": "2026-05-10T10:58:42.649809+00:00",
+    "broken": true
+  },
+  "BRK.B": {
+    "symbol": "BRK.B",
+    "fetched": "2026-05-10T10:58:42.706181+00:00",
+    "broken": true
+  },
+  "BBY": {
+    "symbol": "BBY",
+    "fetched": "2026-05-10T10:58:42.762036+00:00",
+    "broken": true
+  },
+  "TECH": {
+    "symbol": "TECH",
+    "fetched": "2026-05-10T10:58:42.818173+00:00",
+    "broken": true
+  },
+  "BIIB": {
+    "symbol": "BIIB",
+    "fetched": "2026-05-10T10:58:42.875876+00:00",
+    "broken": true
+  },
+  "BLK": {
+    "symbol": "BLK",
+    "fetched": "2026-05-10T10:58:42.933899+00:00",
+    "broken": true
+  },
+  "BX": {
+    "symbol": "BX",
+    "fetched": "2026-05-10T10:58:42.992019+00:00",
+    "broken": true
+  },
+  "XYZ": {
+    "symbol": "XYZ",
+    "fetched": "2026-05-10T10:58:43.049208+00:00",
+    "broken": true
+  },
+  "BK": {
+    "symbol": "BK",
+    "fetched": "2026-05-10T10:58:43.112318+00:00",
+    "broken": true
+  },
+  "BA": {
+    "symbol": "BA",
+    "fetched": "2026-05-10T10:58:43.167874+00:00",
+    "broken": true
+  },
+  "BKNG": {
+    "symbol": "BKNG",
+    "fetched": "2026-05-10T10:58:43.229026+00:00",
+    "broken": true
+  },
+  "BSX": {
+    "symbol": "BSX",
+    "fetched": "2026-05-10T10:58:43.285805+00:00",
+    "broken": true
+  },
+  "BMY": {
+    "symbol": "BMY",
+    "fetched": "2026-05-10T10:58:43.341828+00:00",
+    "broken": true
+  },
+  "AVGO": {
+    "symbol": "AVGO",
+    "fetched": "2026-05-10T10:58:43.398041+00:00",
+    "broken": true
+  },
+  "BR": {
+    "symbol": "BR",
+    "fetched": "2026-05-10T10:58:43.454596+00:00",
+    "broken": true
+  },
+  "BRO": {
+    "symbol": "BRO",
+    "fetched": "2026-05-10T10:58:43.511696+00:00",
+    "broken": true
+  },
+  "BF.B": {
+    "symbol": "BF.B",
+    "fetched": "2026-05-10T10:58:43.570632+00:00",
+    "broken": true
+  },
+  "BLDR": {
+    "symbol": "BLDR",
+    "fetched": "2026-05-10T10:58:43.629296+00:00",
+    "broken": true
+  },
+  "BG": {
+    "symbol": "BG",
+    "fetched": "2026-05-10T10:58:43.688143+00:00",
+    "broken": true
+  },
+  "BXP": {
+    "symbol": "BXP",
+    "fetched": "2026-05-10T10:58:43.748863+00:00",
+    "broken": true
+  },
+  "CHRW": {
+    "symbol": "CHRW",
+    "fetched": "2026-05-10T10:58:43.804413+00:00",
+    "broken": true
+  },
+  "CDNS": {
+    "symbol": "CDNS",
+    "fetched": "2026-05-10T10:58:43.867480+00:00",
+    "broken": true
+  },
+  "CPT": {
+    "symbol": "CPT",
+    "fetched": "2026-05-10T10:58:43.925155+00:00",
+    "broken": true
+  },
+  "CPB": {
+    "symbol": "CPB",
+    "fetched": "2026-05-10T10:58:43.980271+00:00",
+    "broken": true
+  },
+  "COF": {
+    "symbol": "COF",
+    "fetched": "2026-05-10T10:58:44.035641+00:00",
+    "broken": true
+  },
+  "CAH": {
+    "symbol": "CAH",
+    "fetched": "2026-05-10T10:58:44.090153+00:00",
+    "broken": true
+  },
+  "CCL": {
+    "symbol": "CCL",
+    "fetched": "2026-05-10T10:58:44.149727+00:00",
+    "broken": true
+  },
+  "CARR": {
+    "symbol": "CARR",
+    "fetched": "2026-05-10T10:58:44.217915+00:00",
+    "broken": true
+  },
+  "CVNA": {
+    "symbol": "CVNA",
+    "fetched": "2026-05-10T10:58:44.275402+00:00",
+    "broken": true
+  },
+  "CASY": {
+    "symbol": "CASY",
+    "fetched": "2026-05-10T10:58:44.330753+00:00",
+    "broken": true
+  },
+  "CAT": {
+    "symbol": "CAT",
+    "fetched": "2026-05-10T10:58:44.398482+00:00",
+    "broken": true
+  },
+  "CBOE": {
+    "symbol": "CBOE",
+    "fetched": "2026-05-10T10:58:44.455263+00:00",
+    "broken": true
+  },
+  "CBRE": {
+    "symbol": "CBRE",
+    "fetched": "2026-05-10T10:58:44.626046+00:00",
+    "broken": true
+  },
+  "CDW": {
+    "symbol": "CDW",
+    "fetched": "2026-05-10T10:58:44.684973+00:00",
+    "broken": true
+  },
+  "COR": {
+    "symbol": "COR",
+    "fetched": "2026-05-10T10:58:44.754784+00:00",
+    "broken": true
+  },
+  "CNC": {
+    "symbol": "CNC",
+    "fetched": "2026-05-10T10:58:44.812007+00:00",
+    "broken": true
+  },
+  "CNP": {
+    "symbol": "CNP",
+    "fetched": "2026-05-10T10:58:44.874041+00:00",
+    "broken": true
+  },
+  "CF": {
+    "symbol": "CF",
+    "fetched": "2026-05-10T10:58:44.930554+00:00",
+    "broken": true
+  },
+  "CRL": {
+    "symbol": "CRL",
+    "fetched": "2026-05-10T10:58:44.988405+00:00",
+    "broken": true
+  },
+  "SCHW": {
+    "symbol": "SCHW",
+    "fetched": "2026-05-10T10:58:45.066938+00:00",
+    "broken": true
+  },
+  "CHTR": {
+    "symbol": "CHTR",
+    "fetched": "2026-05-10T10:58:45.128966+00:00",
+    "broken": true
+  },
+  "CVX": {
+    "symbol": "CVX",
+    "fetched": "2026-05-10T10:58:45.186825+00:00",
+    "broken": true
+  },
+  "CMG": {
+    "symbol": "CMG",
+    "fetched": "2026-05-10T10:58:45.241876+00:00",
+    "broken": true
+  },
+  "CB": {
+    "symbol": "CB",
+    "fetched": "2026-05-10T10:58:45.299644+00:00",
+    "broken": true
+  },
+  "CHD": {
+    "symbol": "CHD",
+    "fetched": "2026-05-10T10:58:45.357977+00:00",
+    "broken": true
+  },
+  "CIEN": {
+    "symbol": "CIEN",
+    "fetched": "2026-05-10T10:58:45.415477+00:00",
+    "broken": true
+  },
+  "CI": {
+    "symbol": "CI",
+    "fetched": "2026-05-10T10:58:45.471191+00:00",
+    "broken": true
+  },
+  "CINF": {
+    "symbol": "CINF",
+    "fetched": "2026-05-10T10:58:45.527474+00:00",
+    "broken": true
+  },
+  "CTAS": {
+    "symbol": "CTAS",
+    "fetched": "2026-05-10T10:58:45.587544+00:00",
+    "broken": true
+  },
+  "CSCO": {
+    "symbol": "CSCO",
+    "fetched": "2026-05-10T10:58:45.642198+00:00",
+    "broken": true
+  },
+  "C": {
+    "symbol": "C",
+    "fetched": "2026-05-10T10:58:45.703021+00:00",
+    "broken": true
+  },
+  "CFG": {
+    "symbol": "CFG",
+    "fetched": "2026-05-10T10:58:45.760782+00:00",
+    "broken": true
+  },
+  "CLX": {
+    "symbol": "CLX",
+    "fetched": "2026-05-10T10:58:45.820426+00:00",
+    "broken": true
+  },
+  "CME": {
+    "symbol": "CME",
+    "fetched": "2026-05-10T10:58:45.876850+00:00",
+    "broken": true
+  },
+  "CMS": {
+    "symbol": "CMS",
+    "fetched": "2026-05-10T10:58:45.934846+00:00",
+    "broken": true
+  },
+  "KO": {
+    "symbol": "KO",
+    "fetched": "2026-05-10T10:58:45.993590+00:00",
+    "broken": true
+  },
+  "CTSH": {
+    "symbol": "CTSH",
+    "fetched": "2026-05-10T10:58:46.050453+00:00",
+    "broken": true
+  },
+  "COHR": {
+    "symbol": "COHR",
+    "fetched": "2026-05-10T10:58:46.109659+00:00",
+    "broken": true
+  },
+  "COIN": {
+    "symbol": "COIN",
+    "fetched": "2026-05-10T10:58:46.165616+00:00",
+    "broken": true
+  },
+  "CL": {
+    "symbol": "CL",
+    "fetched": "2026-05-10T10:58:46.225776+00:00",
+    "broken": true
+  },
+  "CMCSA": {
+    "symbol": "CMCSA",
+    "fetched": "2026-05-10T10:58:46.285902+00:00",
+    "broken": true
+  },
+  "FIX": {
+    "symbol": "FIX",
+    "fetched": "2026-05-10T10:58:46.345072+00:00",
+    "broken": true
+  },
+  "CAG": {
+    "symbol": "CAG",
+    "fetched": "2026-05-10T10:58:46.400263+00:00",
+    "broken": true
+  },
+  "COP": {
+    "symbol": "COP",
+    "fetched": "2026-05-10T10:58:46.459031+00:00",
+    "broken": true
+  },
+  "ED": {
+    "symbol": "ED",
+    "fetched": "2026-05-10T10:58:46.517409+00:00",
+    "broken": true
+  },
+  "STZ": {
+    "symbol": "STZ",
+    "fetched": "2026-05-10T10:58:46.579324+00:00",
+    "broken": true
+  },
+  "CEG": {
+    "symbol": "CEG",
+    "fetched": "2026-05-10T10:58:46.635004+00:00",
+    "broken": true
+  },
+  "COO": {
+    "symbol": "COO",
+    "fetched": "2026-05-10T10:58:46.690142+00:00",
+    "broken": true
+  },
+  "CPRT": {
+    "symbol": "CPRT",
+    "fetched": "2026-05-10T10:58:46.750331+00:00",
+    "broken": true
+  },
+  "GLW": {
+    "symbol": "GLW",
+    "fetched": "2026-05-10T10:58:46.805236+00:00",
+    "broken": true
+  },
+  "CPAY": {
+    "symbol": "CPAY",
+    "fetched": "2026-05-10T10:58:46.864783+00:00",
+    "broken": true
+  },
+  "CTVA": {
+    "symbol": "CTVA",
+    "fetched": "2026-05-10T10:58:46.925405+00:00",
+    "broken": true
+  },
+  "CSGP": {
+    "symbol": "CSGP",
+    "fetched": "2026-05-10T10:58:46.987129+00:00",
+    "broken": true
+  },
+  "COST": {
+    "symbol": "COST",
+    "fetched": "2026-05-10T10:58:47.043939+00:00",
+    "broken": true
+  },
+  "CRH": {
+    "symbol": "CRH",
+    "fetched": "2026-05-10T10:58:47.100031+00:00",
+    "broken": true
+  },
+  "CRWD": {
+    "symbol": "CRWD",
+    "fetched": "2026-05-10T10:58:47.162085+00:00",
+    "broken": true
+  },
+  "CCI": {
+    "symbol": "CCI",
+    "fetched": "2026-05-10T10:58:47.219381+00:00",
+    "broken": true
+  },
+  "CSX": {
+    "symbol": "CSX",
+    "fetched": "2026-05-10T10:58:47.277875+00:00",
+    "broken": true
+  },
+  "CMI": {
+    "symbol": "CMI",
+    "fetched": "2026-05-10T10:58:47.333883+00:00",
+    "broken": true
+  },
+  "CVS": {
+    "symbol": "CVS",
+    "fetched": "2026-05-10T10:58:47.391579+00:00",
+    "broken": true
+  },
+  "DHR": {
+    "symbol": "DHR",
+    "fetched": "2026-05-10T10:58:47.448762+00:00",
+    "broken": true
+  },
+  "DRI": {
+    "symbol": "DRI",
+    "fetched": "2026-05-10T10:58:47.504499+00:00",
+    "broken": true
+  },
+  "DDOG": {
+    "symbol": "DDOG",
+    "fetched": "2026-05-10T10:58:47.562673+00:00",
+    "broken": true
+  },
+  "DVA": {
+    "symbol": "DVA",
+    "fetched": "2026-05-10T10:58:47.620802+00:00",
+    "broken": true
+  },
+  "DECK": {
+    "symbol": "DECK",
+    "fetched": "2026-05-10T10:58:47.675200+00:00",
+    "broken": true
+  },
+  "DE": {
+    "symbol": "DE",
+    "fetched": "2026-05-10T10:58:47.733429+00:00",
+    "broken": true
+  },
+  "DELL": {
+    "symbol": "DELL",
+    "fetched": "2026-05-10T10:58:47.789854+00:00",
+    "broken": true
+  },
+  "DAL": {
+    "symbol": "DAL",
+    "fetched": "2026-05-10T10:58:47.844914+00:00",
+    "broken": true
+  },
+  "DVN": {
+    "symbol": "DVN",
+    "fetched": "2026-05-10T10:58:47.900799+00:00",
+    "broken": true
+  },
+  "DXCM": {
+    "symbol": "DXCM",
+    "fetched": "2026-05-10T10:58:47.957305+00:00",
+    "broken": true
+  },
+  "FANG": {
+    "symbol": "FANG",
+    "fetched": "2026-05-10T10:58:48.012741+00:00",
+    "broken": true
+  },
+  "DLR": {
+    "symbol": "DLR",
+    "fetched": "2026-05-10T10:58:48.073783+00:00",
+    "broken": true
+  },
+  "DG": {
+    "symbol": "DG",
+    "fetched": "2026-05-10T10:58:48.128959+00:00",
+    "broken": true
+  },
+  "DLTR": {
+    "symbol": "DLTR",
+    "fetched": "2026-05-10T10:58:48.188520+00:00",
+    "broken": true
+  },
+  "D": {
+    "symbol": "D",
+    "fetched": "2026-05-10T10:58:48.243129+00:00",
+    "broken": true
+  },
+  "DPZ": {
+    "symbol": "DPZ",
+    "fetched": "2026-05-10T10:58:48.299056+00:00",
+    "broken": true
+  },
+  "DASH": {
+    "symbol": "DASH",
+    "fetched": "2026-05-10T10:58:48.355444+00:00",
+    "broken": true
+  },
+  "DOV": {
+    "symbol": "DOV",
+    "fetched": "2026-05-10T10:58:48.415819+00:00",
+    "broken": true
+  },
+  "DOW": {
+    "symbol": "DOW",
+    "fetched": "2026-05-10T10:58:48.473083+00:00",
+    "broken": true
+  },
+  "DHI": {
+    "symbol": "DHI",
+    "fetched": "2026-05-10T10:58:48.527509+00:00",
+    "broken": true
+  },
+  "DTE": {
+    "symbol": "DTE",
+    "fetched": "2026-05-10T10:58:48.583093+00:00",
+    "broken": true
+  },
+  "DUK": {
+    "symbol": "DUK",
+    "fetched": "2026-05-10T10:58:48.640232+00:00",
+    "broken": true
+  },
+  "DD": {
+    "symbol": "DD",
+    "fetched": "2026-05-10T10:58:48.696123+00:00",
+    "broken": true
+  },
+  "ETN": {
+    "symbol": "ETN",
+    "fetched": "2026-05-10T10:58:48.752410+00:00",
+    "broken": true
+  },
+  "EBAY": {
+    "symbol": "EBAY",
+    "fetched": "2026-05-10T10:58:48.855235+00:00",
+    "broken": true
+  },
+  "SATS": {
+    "symbol": "SATS",
+    "fetched": "2026-05-10T10:58:48.910427+00:00",
+    "broken": true
+  },
+  "ECL": {
+    "symbol": "ECL",
+    "fetched": "2026-05-10T10:58:48.968767+00:00",
+    "broken": true
+  },
+  "EIX": {
+    "symbol": "EIX",
+    "fetched": "2026-05-10T10:58:49.024957+00:00",
+    "broken": true
+  },
+  "EW": {
+    "symbol": "EW",
+    "fetched": "2026-05-10T10:58:49.086994+00:00",
+    "broken": true
+  },
+  "EA": {
+    "symbol": "EA",
+    "fetched": "2026-05-10T10:58:49.142892+00:00",
+    "broken": true
+  },
+  "ELV": {
+    "symbol": "ELV",
+    "fetched": "2026-05-10T10:58:49.200496+00:00",
+    "broken": true
+  },
+  "EME": {
+    "symbol": "EME",
+    "fetched": "2026-05-10T10:58:49.258890+00:00",
+    "broken": true
+  },
+  "EMR": {
+    "symbol": "EMR",
+    "fetched": "2026-05-10T10:58:49.315285+00:00",
+    "broken": true
+  },
+  "ETR": {
+    "symbol": "ETR",
+    "fetched": "2026-05-10T10:58:49.370755+00:00",
+    "broken": true
+  },
+  "EOG": {
+    "symbol": "EOG",
+    "fetched": "2026-05-10T10:58:49.430475+00:00",
+    "broken": true
+  },
+  "EPAM": {
+    "symbol": "EPAM",
+    "fetched": "2026-05-10T10:58:49.487056+00:00",
+    "broken": true
+  },
+  "EQT": {
+    "symbol": "EQT",
+    "fetched": "2026-05-10T10:58:49.608976+00:00",
+    "broken": true
+  },
+  "EFX": {
+    "symbol": "EFX",
+    "fetched": "2026-05-10T10:58:49.666988+00:00",
+    "broken": true
+  },
+  "EQIX": {
+    "symbol": "EQIX",
+    "fetched": "2026-05-10T10:58:49.725499+00:00",
+    "broken": true
+  },
+  "EQR": {
+    "symbol": "EQR",
+    "fetched": "2026-05-10T10:58:49.781793+00:00",
+    "broken": true
+  },
+  "ERIE": {
+    "symbol": "ERIE",
+    "fetched": "2026-05-10T10:58:49.838932+00:00",
+    "broken": true
+  },
+  "ESS": {
+    "symbol": "ESS",
+    "fetched": "2026-05-10T10:58:49.895190+00:00",
+    "broken": true
+  },
+  "EL": {
+    "symbol": "EL",
+    "fetched": "2026-05-10T10:58:49.949599+00:00",
+    "broken": true
+  },
+  "EG": {
+    "symbol": "EG",
+    "fetched": "2026-05-10T10:58:50.006032+00:00",
+    "broken": true
+  },
+  "EVRG": {
+    "symbol": "EVRG",
+    "fetched": "2026-05-10T10:58:50.063504+00:00",
+    "broken": true
+  },
+  "ES": {
+    "symbol": "ES",
+    "fetched": "2026-05-10T10:58:50.123112+00:00",
+    "broken": true
+  },
+  "EXC": {
+    "symbol": "EXC",
+    "fetched": "2026-05-10T10:58:50.184624+00:00",
+    "broken": true
+  },
+  "EXE": {
+    "symbol": "EXE",
+    "fetched": "2026-05-10T10:58:50.243647+00:00",
+    "broken": true
+  },
+  "EXPE": {
+    "symbol": "EXPE",
+    "fetched": "2026-05-10T10:58:50.305245+00:00",
+    "broken": true
+  },
+  "EXPD": {
+    "symbol": "EXPD",
+    "fetched": "2026-05-10T10:58:50.364976+00:00",
+    "broken": true
+  },
+  "EXR": {
+    "symbol": "EXR",
+    "fetched": "2026-05-10T10:58:50.422595+00:00",
+    "broken": true
+  },
+  "XOM": {
+    "symbol": "XOM",
+    "fetched": "2026-05-10T10:58:50.478135+00:00",
+    "broken": true
+  },
+  "FFIV": {
+    "symbol": "FFIV",
+    "fetched": "2026-05-10T10:58:50.534188+00:00",
+    "broken": true
+  },
+  "FDS": {
+    "symbol": "FDS",
+    "fetched": "2026-05-10T10:58:50.590625+00:00",
+    "broken": true
+  },
+  "FICO": {
+    "symbol": "FICO",
+    "fetched": "2026-05-10T10:58:50.649427+00:00",
+    "broken": true
+  },
+  "FAST": {
+    "symbol": "FAST",
+    "fetched": "2026-05-10T10:58:50.704693+00:00",
+    "broken": true
+  },
+  "FRT": {
+    "symbol": "FRT",
+    "fetched": "2026-05-10T10:58:50.764387+00:00",
+    "broken": true
+  },
+  "FDX": {
+    "symbol": "FDX",
+    "fetched": "2026-05-10T10:58:50.820920+00:00",
+    "broken": true
+  },
+  "FIS": {
+    "symbol": "FIS",
+    "fetched": "2026-05-10T10:58:50.877037+00:00",
+    "broken": true
+  },
+  "FITB": {
+    "symbol": "FITB",
+    "fetched": "2026-05-10T10:58:50.934233+00:00",
+    "broken": true
+  },
+  "FSLR": {
+    "symbol": "FSLR",
+    "fetched": "2026-05-10T10:58:50.993426+00:00",
+    "broken": true
+  },
+  "FE": {
+    "symbol": "FE",
+    "fetched": "2026-05-10T10:58:51.061231+00:00",
+    "broken": true
+  },
+  "FISV": {
+    "symbol": "FISV",
+    "fetched": "2026-05-10T10:58:51.117096+00:00",
+    "broken": true
+  },
+  "F": {
+    "symbol": "F",
+    "fetched": "2026-05-10T10:58:51.178840+00:00",
+    "broken": true
+  },
+  "FTNT": {
+    "symbol": "FTNT",
+    "fetched": "2026-05-10T10:58:51.234363+00:00",
+    "broken": true
+  },
+  "FTV": {
+    "symbol": "FTV",
+    "fetched": "2026-05-10T10:58:51.327735+00:00",
+    "broken": true
+  },
+  "FOXA": {
+    "symbol": "FOXA",
+    "fetched": "2026-05-10T10:58:51.386816+00:00",
+    "broken": true
+  },
+  "FOX": {
+    "symbol": "FOX",
+    "fetched": "2026-05-10T10:58:51.443106+00:00",
+    "broken": true
+  },
+  "BEN": {
+    "symbol": "BEN",
+    "fetched": "2026-05-10T10:58:51.502558+00:00",
+    "broken": true
+  },
+  "FCX": {
+    "symbol": "FCX",
+    "fetched": "2026-05-10T10:58:51.557685+00:00",
+    "broken": true
+  },
+  "GRMN": {
+    "symbol": "GRMN",
+    "fetched": "2026-05-10T10:58:51.651062+00:00",
+    "broken": true
+  },
+  "IT": {
+    "symbol": "IT",
+    "fetched": "2026-05-10T10:58:51.710935+00:00",
+    "broken": true
+  },
+  "GE": {
+    "symbol": "GE",
+    "fetched": "2026-05-10T10:58:51.770169+00:00",
+    "broken": true
+  },
+  "GEHC": {
+    "symbol": "GEHC",
+    "fetched": "2026-05-10T10:58:51.826601+00:00",
+    "broken": true
+  },
+  "GEV": {
+    "symbol": "GEV",
+    "fetched": "2026-05-10T10:58:51.888604+00:00",
+    "broken": true
+  },
+  "GEN": {
+    "symbol": "GEN",
+    "fetched": "2026-05-10T10:58:51.954864+00:00",
+    "broken": true
+  },
+  "GNRC": {
+    "symbol": "GNRC",
+    "fetched": "2026-05-10T10:58:52.079157+00:00",
+    "broken": true
+  },
+  "GD": {
+    "symbol": "GD",
+    "fetched": "2026-05-10T10:58:52.138780+00:00",
+    "broken": true
+  },
+  "GIS": {
+    "symbol": "GIS",
+    "fetched": "2026-05-10T10:58:52.198951+00:00",
+    "broken": true
+  },
+  "GM": {
+    "symbol": "GM",
+    "fetched": "2026-05-10T10:58:52.259671+00:00",
+    "broken": true
+  },
+  "GPC": {
+    "symbol": "GPC",
+    "fetched": "2026-05-10T10:58:52.598248+00:00",
+    "broken": true
+  },
+  "GILD": {
+    "symbol": "GILD",
+    "fetched": "2026-05-10T10:58:52.656974+00:00",
+    "broken": true
+  },
+  "GPN": {
+    "symbol": "GPN",
+    "fetched": "2026-05-10T10:58:52.716480+00:00",
+    "broken": true
+  },
+  "GL": {
+    "symbol": "GL",
+    "fetched": "2026-05-10T10:58:52.775598+00:00",
+    "broken": true
+  },
+  "GDDY": {
+    "symbol": "GDDY",
+    "fetched": "2026-05-10T10:58:52.833049+00:00",
+    "broken": true
+  },
+  "GS": {
+    "symbol": "GS",
+    "fetched": "2026-05-10T10:58:52.889075+00:00",
+    "broken": true
+  },
+  "HAL": {
+    "symbol": "HAL",
+    "fetched": "2026-05-10T10:58:52.944582+00:00",
+    "broken": true
+  },
+  "HIG": {
+    "symbol": "HIG",
+    "fetched": "2026-05-10T10:58:53.000544+00:00",
+    "broken": true
+  },
+  "HAS": {
+    "symbol": "HAS",
+    "fetched": "2026-05-10T10:58:53.056791+00:00",
+    "broken": true
+  },
+  "HCA": {
+    "symbol": "HCA",
+    "fetched": "2026-05-10T10:58:53.115182+00:00",
+    "broken": true
+  },
+  "DOC": {
+    "symbol": "DOC",
+    "fetched": "2026-05-10T10:58:53.175303+00:00",
+    "broken": true
+  },
+  "HSIC": {
+    "symbol": "HSIC",
+    "fetched": "2026-05-10T10:58:53.230309+00:00",
+    "broken": true
+  },
+  "HSY": {
+    "symbol": "HSY",
+    "fetched": "2026-05-10T10:58:53.288558+00:00",
+    "broken": true
+  },
+  "HPE": {
+    "symbol": "HPE",
+    "fetched": "2026-05-10T10:58:53.346145+00:00",
+    "broken": true
+  },
+  "HLT": {
+    "symbol": "HLT",
+    "fetched": "2026-05-10T10:58:53.402764+00:00",
+    "broken": true
+  },
+  "HD": {
+    "symbol": "HD",
+    "fetched": "2026-05-10T10:58:53.459385+00:00",
+    "broken": true
+  },
+  "HON": {
+    "symbol": "HON",
+    "fetched": "2026-05-10T10:58:53.517828+00:00",
+    "broken": true
+  },
+  "HRL": {
+    "symbol": "HRL",
+    "fetched": "2026-05-10T10:58:53.577027+00:00",
+    "broken": true
+  },
+  "HST": {
+    "symbol": "HST",
+    "fetched": "2026-05-10T10:58:53.634586+00:00",
+    "broken": true
+  },
+  "HWM": {
+    "symbol": "HWM",
+    "fetched": "2026-05-10T10:58:53.690378+00:00",
+    "broken": true
+  },
+  "HPQ": {
+    "symbol": "HPQ",
+    "fetched": "2026-05-10T10:58:53.749435+00:00",
+    "broken": true
+  },
+  "HUBB": {
+    "symbol": "HUBB",
+    "fetched": "2026-05-10T10:58:53.805766+00:00",
+    "broken": true
+  },
+  "HUM": {
+    "symbol": "HUM",
+    "fetched": "2026-05-10T10:58:53.863643+00:00",
+    "broken": true
+  },
+  "HBAN": {
+    "symbol": "HBAN",
+    "fetched": "2026-05-10T10:58:53.919404+00:00",
+    "broken": true
+  },
+  "HII": {
+    "symbol": "HII",
+    "fetched": "2026-05-10T10:58:53.981708+00:00",
+    "broken": true
+  },
+  "IBM": {
+    "symbol": "IBM",
+    "fetched": "2026-05-10T10:58:54.035436+00:00",
+    "broken": true
+  },
+  "IEX": {
+    "symbol": "IEX",
+    "fetched": "2026-05-10T10:58:54.094052+00:00",
+    "broken": true
+  },
+  "IDXX": {
+    "symbol": "IDXX",
+    "fetched": "2026-05-10T10:58:54.155300+00:00",
+    "broken": true
+  },
+  "ITW": {
+    "symbol": "ITW",
+    "fetched": "2026-05-10T10:58:54.212443+00:00",
+    "broken": true
+  },
+  "INCY": {
+    "symbol": "INCY",
+    "fetched": "2026-05-10T10:58:54.270996+00:00",
+    "broken": true
+  },
+  "IR": {
+    "symbol": "IR",
+    "fetched": "2026-05-10T10:58:54.331879+00:00",
+    "broken": true
+  },
+  "PODD": {
+    "symbol": "PODD",
+    "fetched": "2026-05-10T10:58:54.388391+00:00",
+    "broken": true
+  },
+  "INTC": {
+    "symbol": "INTC",
+    "fetched": "2026-05-10T10:58:54.443838+00:00",
+    "broken": true
+  },
+  "IBKR": {
+    "symbol": "IBKR",
+    "fetched": "2026-05-10T10:58:54.499886+00:00",
+    "broken": true
+  },
+  "ICE": {
+    "symbol": "ICE",
+    "fetched": "2026-05-10T10:58:54.556407+00:00",
+    "broken": true
+  },
+  "IFF": {
+    "symbol": "IFF",
+    "fetched": "2026-05-10T10:58:54.779380+00:00",
+    "broken": true
+  },
+  "IP": {
+    "symbol": "IP",
+    "fetched": "2026-05-10T10:58:54.837284+00:00",
+    "broken": true
+  },
+  "INTU": {
+    "symbol": "INTU",
+    "fetched": "2026-05-10T10:58:54.904537+00:00",
+    "broken": true
+  },
+  "ISRG": {
+    "symbol": "ISRG",
+    "fetched": "2026-05-10T10:58:54.960702+00:00",
+    "broken": true
+  },
+  "IVZ": {
+    "symbol": "IVZ",
+    "fetched": "2026-05-10T10:58:55.019480+00:00",
+    "broken": true
+  },
+  "INVH": {
+    "symbol": "INVH",
+    "fetched": "2026-05-10T10:58:55.076818+00:00",
+    "broken": true
+  },
+  "IQV": {
+    "symbol": "IQV",
+    "fetched": "2026-05-10T10:58:55.139398+00:00",
+    "broken": true
+  },
+  "IRM": {
+    "symbol": "IRM",
+    "fetched": "2026-05-10T10:58:55.197056+00:00",
+    "broken": true
+  },
+  "JBHT": {
+    "symbol": "JBHT",
+    "fetched": "2026-05-10T10:58:55.256566+00:00",
+    "broken": true
+  },
+  "JBL": {
+    "symbol": "JBL",
+    "fetched": "2026-05-10T10:58:55.313969+00:00",
+    "broken": true
+  },
+  "JKHY": {
+    "symbol": "JKHY",
+    "fetched": "2026-05-10T10:58:55.449338+00:00",
+    "broken": true
+  },
+  "J": {
+    "symbol": "J",
+    "fetched": "2026-05-10T10:58:55.507536+00:00",
+    "broken": true
+  },
+  "JNJ": {
+    "symbol": "JNJ",
+    "fetched": "2026-05-10T10:58:55.565147+00:00",
+    "broken": true
+  },
+  "JCI": {
+    "symbol": "JCI",
+    "fetched": "2026-05-10T10:58:55.622308+00:00",
+    "broken": true
+  },
+  "JPM": {
+    "symbol": "JPM",
+    "fetched": "2026-05-10T10:58:55.682651+00:00",
+    "broken": true
+  },
+  "KVUE": {
+    "symbol": "KVUE",
+    "fetched": "2026-05-10T10:58:55.739480+00:00",
+    "broken": true
+  },
+  "KDP": {
+    "symbol": "KDP",
+    "fetched": "2026-05-10T10:58:55.797060+00:00",
+    "broken": true
+  },
+  "KEY": {
+    "symbol": "KEY",
+    "fetched": "2026-05-10T10:58:55.852029+00:00",
+    "broken": true
+  },
+  "KEYS": {
+    "symbol": "KEYS",
+    "fetched": "2026-05-10T10:58:55.908796+00:00",
+    "broken": true
+  },
+  "KMB": {
+    "symbol": "KMB",
+    "fetched": "2026-05-10T10:58:55.964789+00:00",
+    "broken": true
+  },
+  "KIM": {
+    "symbol": "KIM",
+    "fetched": "2026-05-10T10:58:56.022249+00:00",
+    "broken": true
+  },
+  "KMI": {
+    "symbol": "KMI",
+    "fetched": "2026-05-10T10:58:56.081427+00:00",
+    "broken": true
+  },
+  "KKR": {
+    "symbol": "KKR",
+    "fetched": "2026-05-10T10:58:56.135558+00:00",
+    "broken": true
+  },
+  "KLAC": {
+    "symbol": "KLAC",
+    "fetched": "2026-05-10T10:58:56.192408+00:00",
+    "broken": true
+  },
+  "KHC": {
+    "symbol": "KHC",
+    "fetched": "2026-05-10T10:58:56.250051+00:00",
+    "broken": true
+  },
+  "KR": {
+    "symbol": "KR",
+    "fetched": "2026-05-10T10:58:56.307729+00:00",
+    "broken": true
+  },
+  "LHX": {
+    "symbol": "LHX",
+    "fetched": "2026-05-10T10:58:56.370489+00:00",
+    "broken": true
+  },
+  "LH": {
+    "symbol": "LH",
+    "fetched": "2026-05-10T10:58:56.426577+00:00",
+    "broken": true
+  },
+  "LRCX": {
+    "symbol": "LRCX",
+    "fetched": "2026-05-10T10:58:56.482226+00:00",
+    "broken": true
+  },
+  "LVS": {
+    "symbol": "LVS",
+    "fetched": "2026-05-10T10:58:56.540755+00:00",
+    "broken": true
+  },
+  "LDOS": {
+    "symbol": "LDOS",
+    "fetched": "2026-05-10T10:58:56.596987+00:00",
+    "broken": true
+  },
+  "LEN": {
+    "symbol": "LEN",
+    "fetched": "2026-05-10T10:58:56.654188+00:00",
+    "broken": true
+  },
+  "LII": {
+    "symbol": "LII",
+    "fetched": "2026-05-10T10:58:56.710490+00:00",
+    "broken": true
+  },
+  "LLY": {
+    "symbol": "LLY",
+    "fetched": "2026-05-10T10:58:56.766505+00:00",
+    "broken": true
+  },
+  "LIN": {
+    "symbol": "LIN",
+    "fetched": "2026-05-10T10:58:56.823840+00:00",
+    "broken": true
+  },
+  "LYV": {
+    "symbol": "LYV",
+    "fetched": "2026-05-10T10:58:56.879891+00:00",
+    "broken": true
+  },
+  "LMT": {
+    "symbol": "LMT",
+    "fetched": "2026-05-10T10:58:56.936110+00:00",
+    "broken": true
+  },
+  "L": {
+    "symbol": "L",
+    "fetched": "2026-05-10T10:58:56.993792+00:00",
+    "broken": true
+  },
+  "LOW": {
+    "symbol": "LOW",
+    "fetched": "2026-05-10T10:58:57.047962+00:00",
+    "broken": true
+  },
+  "LULU": {
+    "symbol": "LULU",
+    "fetched": "2026-05-10T10:58:57.104072+00:00",
+    "broken": true
+  },
+  "LITE": {
+    "symbol": "LITE",
+    "fetched": "2026-05-10T10:58:57.161127+00:00",
+    "broken": true
+  },
+  "LYB": {
+    "symbol": "LYB",
+    "fetched": "2026-05-10T10:58:57.220398+00:00",
+    "broken": true
+  },
+  "MTB": {
+    "symbol": "MTB",
+    "fetched": "2026-05-10T10:58:57.278301+00:00",
+    "broken": true
+  },
+  "MPC": {
+    "symbol": "MPC",
+    "fetched": "2026-05-10T10:58:57.333510+00:00",
+    "broken": true
+  },
+  "MAR": {
+    "symbol": "MAR",
+    "fetched": "2026-05-10T10:58:57.390440+00:00",
+    "broken": true
+  },
+  "MRSH": {
+    "symbol": "MRSH",
+    "fetched": "2026-05-10T10:58:57.445879+00:00",
+    "broken": true
+  },
+  "MLM": {
+    "symbol": "MLM",
+    "fetched": "2026-05-10T10:58:57.506191+00:00",
+    "broken": true
+  },
+  "MAS": {
+    "symbol": "MAS",
+    "fetched": "2026-05-10T10:58:57.563914+00:00",
+    "broken": true
+  },
+  "MA": {
+    "symbol": "MA",
+    "fetched": "2026-05-10T10:58:57.621087+00:00",
+    "broken": true
+  },
+  "MKC": {
+    "symbol": "MKC",
+    "fetched": "2026-05-10T10:58:57.681070+00:00",
+    "broken": true
+  },
+  "MCD": {
+    "symbol": "MCD",
+    "fetched": "2026-05-10T10:58:57.738030+00:00",
+    "broken": true
+  },
+  "MCK": {
+    "symbol": "MCK",
+    "fetched": "2026-05-10T10:58:57.795289+00:00",
+    "broken": true
+  },
+  "MDT": {
+    "symbol": "MDT",
+    "fetched": "2026-05-10T10:58:57.854326+00:00",
+    "broken": true
+  },
+  "MRK": {
+    "symbol": "MRK",
+    "fetched": "2026-05-10T10:58:57.912505+00:00",
+    "broken": true
+  },
+  "META": {
+    "symbol": "META",
+    "fetched": "2026-05-10T10:58:57.967883+00:00",
+    "broken": true
+  },
+  "MET": {
+    "symbol": "MET",
+    "fetched": "2026-05-10T10:58:58.043158+00:00",
+    "broken": true
+  },
+  "MTD": {
+    "symbol": "MTD",
+    "fetched": "2026-05-10T10:58:58.099899+00:00",
+    "broken": true
+  },
+  "MGM": {
+    "symbol": "MGM",
+    "fetched": "2026-05-10T10:58:58.156072+00:00",
+    "broken": true
+  },
+  "MCHP": {
+    "symbol": "MCHP",
+    "fetched": "2026-05-10T10:58:58.213632+00:00",
+    "broken": true
+  },
+  "MU": {
+    "symbol": "MU",
+    "fetched": "2026-05-10T10:58:58.272212+00:00",
+    "broken": true
+  },
+  "MSFT": {
+    "symbol": "MSFT",
+    "fetched": "2026-05-10T10:58:58.332100+00:00",
+    "broken": true
+  },
+  "MAA": {
+    "symbol": "MAA",
+    "fetched": "2026-05-10T10:58:58.387378+00:00",
+    "broken": true
+  },
+  "MRNA": {
+    "symbol": "MRNA",
+    "fetched": "2026-05-10T10:58:58.445418+00:00",
+    "broken": true
+  },
+  "TAP": {
+    "symbol": "TAP",
+    "fetched": "2026-05-10T10:58:58.502240+00:00",
+    "broken": true
+  },
+  "MDLZ": {
+    "symbol": "MDLZ",
+    "fetched": "2026-05-10T10:58:58.559107+00:00",
+    "broken": true
+  },
+  "MPWR": {
+    "symbol": "MPWR",
+    "fetched": "2026-05-10T10:58:58.625509+00:00",
+    "broken": true
+  },
+  "MNST": {
+    "symbol": "MNST",
+    "fetched": "2026-05-10T10:58:58.687195+00:00",
+    "broken": true
+  },
+  "MCO": {
+    "symbol": "MCO",
+    "fetched": "2026-05-10T10:58:58.744149+00:00",
+    "broken": true
+  },
+  "MS": {
+    "symbol": "MS",
+    "fetched": "2026-05-10T10:58:58.810887+00:00",
+    "broken": true
+  },
+  "MOS": {
+    "symbol": "MOS",
+    "fetched": "2026-05-10T10:58:58.869199+00:00",
+    "broken": true
+  },
+  "MSI": {
+    "symbol": "MSI",
+    "fetched": "2026-05-10T10:58:58.925835+00:00",
+    "broken": true
+  },
+  "MSCI": {
+    "symbol": "MSCI",
+    "fetched": "2026-05-10T10:58:58.982169+00:00",
+    "broken": true
+  },
+  "NDAQ": {
+    "symbol": "NDAQ",
+    "fetched": "2026-05-10T10:58:59.043764+00:00",
+    "broken": true
+  },
+  "NTAP": {
+    "symbol": "NTAP",
+    "fetched": "2026-05-10T10:58:59.102140+00:00",
+    "broken": true
+  },
+  "NFLX": {
+    "symbol": "NFLX",
+    "fetched": "2026-05-10T10:58:59.161153+00:00",
+    "broken": true
+  },
+  "NEM": {
+    "symbol": "NEM",
+    "fetched": "2026-05-10T10:58:59.219758+00:00",
+    "broken": true
+  },
+  "NWSA": {
+    "symbol": "NWSA",
+    "fetched": "2026-05-10T10:58:59.277136+00:00",
+    "broken": true
+  },
+  "NWS": {
+    "symbol": "NWS",
+    "fetched": "2026-05-10T10:58:59.334900+00:00",
+    "broken": true
+  },
+  "NEE": {
+    "symbol": "NEE",
+    "fetched": "2026-05-10T10:58:59.392137+00:00",
+    "broken": true
+  },
+  "NKE": {
+    "symbol": "NKE",
+    "fetched": "2026-05-10T10:58:59.447533+00:00",
+    "broken": true
+  },
+  "NI": {
+    "symbol": "NI",
+    "fetched": "2026-05-10T10:58:59.503125+00:00",
+    "broken": true
+  },
+  "NDSN": {
+    "symbol": "NDSN",
+    "fetched": "2026-05-10T10:58:59.558238+00:00",
+    "broken": true
+  },
+  "NSC": {
+    "symbol": "NSC",
+    "fetched": "2026-05-10T10:58:59.617164+00:00",
+    "broken": true
+  },
+  "NTRS": {
+    "symbol": "NTRS",
+    "fetched": "2026-05-10T10:58:59.677568+00:00",
+    "broken": true
+  },
+  "NOC": {
+    "symbol": "NOC",
+    "fetched": "2026-05-10T10:58:59.733193+00:00",
+    "broken": true
+  },
+  "NCLH": {
+    "symbol": "NCLH",
+    "fetched": "2026-05-10T10:58:59.792911+00:00",
+    "broken": true
+  },
+  "NRG": {
+    "symbol": "NRG",
+    "fetched": "2026-05-10T10:58:59.850879+00:00",
+    "broken": true
+  },
+  "NUE": {
+    "symbol": "NUE",
+    "fetched": "2026-05-10T10:58:59.910003+00:00",
+    "broken": true
+  },
+  "NVDA": {
+    "symbol": "NVDA",
+    "fetched": "2026-05-10T10:58:59.964834+00:00",
+    "broken": true
+  },
+  "NVR": {
+    "symbol": "NVR",
+    "fetched": "2026-05-10T10:59:00.041802+00:00",
+    "broken": true
+  },
+  "NXPI": {
+    "symbol": "NXPI",
+    "fetched": "2026-05-10T10:59:00.103057+00:00",
+    "broken": true
+  },
+  "ORLY": {
+    "symbol": "ORLY",
+    "fetched": "2026-05-10T10:59:00.161852+00:00",
+    "broken": true
+  },
+  "OXY": {
+    "symbol": "OXY",
+    "fetched": "2026-05-10T10:59:00.218088+00:00",
+    "broken": true
+  },
+  "ODFL": {
+    "symbol": "ODFL",
+    "fetched": "2026-05-10T10:59:00.274198+00:00",
+    "broken": true
+  },
+  "OMC": {
+    "symbol": "OMC",
+    "fetched": "2026-05-10T10:59:00.335750+00:00",
+    "broken": true
+  },
+  "ON": {
+    "symbol": "ON",
+    "fetched": "2026-05-10T10:59:00.394868+00:00",
+    "broken": true
+  },
+  "OKE": {
+    "symbol": "OKE",
+    "fetched": "2026-05-10T10:59:00.455414+00:00",
+    "broken": true
+  },
+  "ORCL": {
+    "symbol": "ORCL",
+    "fetched": "2026-05-10T10:59:00.512866+00:00",
+    "broken": true
+  },
+  "OTIS": {
+    "symbol": "OTIS",
+    "fetched": "2026-05-10T10:59:00.600385+00:00",
+    "broken": true
+  },
+  "PCAR": {
+    "symbol": "PCAR",
+    "fetched": "2026-05-10T10:59:00.658601+00:00",
+    "broken": true
+  },
+  "PKG": {
+    "symbol": "PKG",
+    "fetched": "2026-05-10T10:59:00.716170+00:00",
+    "broken": true
+  },
+  "PLTR": {
+    "symbol": "PLTR",
+    "fetched": "2026-05-10T10:59:00.777694+00:00",
+    "broken": true
+  },
+  "PANW": {
+    "symbol": "PANW",
+    "fetched": "2026-05-10T10:59:00.835825+00:00",
+    "broken": true
+  },
+  "PSKY": {
+    "symbol": "PSKY",
+    "fetched": "2026-05-10T10:59:00.903222+00:00",
+    "broken": true
+  },
+  "PH": {
+    "symbol": "PH",
+    "fetched": "2026-05-10T10:59:00.957528+00:00",
+    "broken": true
+  },
+  "PAYX": {
+    "symbol": "PAYX",
+    "fetched": "2026-05-10T10:59:01.064413+00:00",
+    "broken": true
+  },
+  "PYPL": {
+    "symbol": "PYPL",
+    "fetched": "2026-05-10T10:59:01.123583+00:00",
+    "broken": true
+  },
+  "PNR": {
+    "symbol": "PNR",
+    "fetched": "2026-05-10T10:59:01.188638+00:00",
+    "broken": true
+  },
+  "PEP": {
+    "symbol": "PEP",
+    "fetched": "2026-05-10T10:59:01.484217+00:00",
+    "broken": true
+  },
+  "PFE": {
+    "symbol": "PFE",
+    "fetched": "2026-05-10T10:59:01.546790+00:00",
+    "broken": true
+  },
+  "PCG": {
+    "symbol": "PCG",
+    "fetched": "2026-05-10T10:59:01.607190+00:00",
+    "broken": true
+  },
+  "PM": {
+    "symbol": "PM",
+    "fetched": "2026-05-10T10:59:01.688628+00:00",
+    "broken": true
+  },
+  "PSX": {
+    "symbol": "PSX",
+    "fetched": "2026-05-10T10:59:01.840723+00:00",
+    "broken": true
+  },
+  "PNW": {
+    "symbol": "PNW",
+    "fetched": "2026-05-10T10:59:01.931381+00:00",
+    "broken": true
+  },
+  "PNC": {
+    "symbol": "PNC",
+    "fetched": "2026-05-10T10:59:02.019421+00:00",
+    "broken": true
+  },
+  "POOL": {
+    "symbol": "POOL",
+    "fetched": "2026-05-10T10:59:02.114272+00:00",
+    "broken": true
+  },
+  "PPG": {
+    "symbol": "PPG",
+    "fetched": "2026-05-10T10:59:02.170641+00:00",
+    "broken": true
+  },
+  "PPL": {
+    "symbol": "PPL",
+    "fetched": "2026-05-10T10:59:02.227461+00:00",
+    "broken": true
+  },
+  "PFG": {
+    "symbol": "PFG",
+    "fetched": "2026-05-10T10:59:02.286895+00:00",
+    "broken": true
+  },
+  "PG": {
+    "symbol": "PG",
+    "fetched": "2026-05-10T10:59:02.343550+00:00",
+    "broken": true
+  },
+  "PGR": {
+    "symbol": "PGR",
+    "fetched": "2026-05-10T10:59:02.403417+00:00",
+    "broken": true
+  },
+  "PLD": {
+    "symbol": "PLD",
+    "fetched": "2026-05-10T10:59:02.496235+00:00",
+    "broken": true
+  },
+  "PRU": {
+    "symbol": "PRU",
+    "fetched": "2026-05-10T10:59:02.552536+00:00",
+    "broken": true
+  },
+  "PEG": {
+    "symbol": "PEG",
+    "fetched": "2026-05-10T10:59:02.612605+00:00",
+    "broken": true
+  },
+  "PTC": {
+    "symbol": "PTC",
+    "fetched": "2026-05-10T10:59:02.670411+00:00",
+    "broken": true
+  },
+  "PSA": {
+    "symbol": "PSA",
+    "fetched": "2026-05-10T10:59:02.839666+00:00",
+    "broken": true
+  },
+  "PHM": {
+    "symbol": "PHM",
+    "fetched": "2026-05-10T10:59:02.895032+00:00",
+    "broken": true
+  },
+  "PWR": {
+    "symbol": "PWR",
+    "fetched": "2026-05-10T10:59:03.011105+00:00",
+    "broken": true
+  },
+  "QCOM": {
+    "symbol": "QCOM",
+    "fetched": "2026-05-10T10:59:03.068842+00:00",
+    "broken": true
+  },
+  "DGX": {
+    "symbol": "DGX",
+    "fetched": "2026-05-10T10:59:03.127197+00:00",
+    "broken": true
+  },
+  "Q": {
+    "symbol": "Q",
+    "fetched": "2026-05-10T10:59:03.225038+00:00",
+    "broken": true
+  },
+  "RL": {
+    "symbol": "RL",
+    "fetched": "2026-05-10T10:59:03.284017+00:00",
+    "broken": true
+  },
+  "RJF": {
+    "symbol": "RJF",
+    "fetched": "2026-05-10T10:59:03.339774+00:00",
+    "broken": true
+  },
+  "RTX": {
+    "symbol": "RTX",
+    "fetched": "2026-05-10T10:59:03.435517+00:00",
+    "broken": true
+  },
+  "O": {
+    "symbol": "O",
+    "fetched": "2026-05-10T10:59:03.493952+00:00",
+    "broken": true
+  },
+  "REG": {
+    "symbol": "REG",
+    "fetched": "2026-05-10T10:59:03.554104+00:00",
+    "broken": true
+  },
+  "REGN": {
+    "symbol": "REGN",
+    "fetched": "2026-05-10T10:59:03.610687+00:00",
+    "broken": true
+  },
+  "RF": {
+    "symbol": "RF",
+    "fetched": "2026-05-10T10:59:03.666565+00:00",
+    "broken": true
+  },
+  "RSG": {
+    "symbol": "RSG",
+    "fetched": "2026-05-10T10:59:03.723717+00:00",
+    "broken": true
+  },
+  "RMD": {
+    "symbol": "RMD",
+    "fetched": "2026-05-10T10:59:03.781420+00:00",
+    "broken": true
+  },
+  "RVTY": {
+    "symbol": "RVTY",
+    "fetched": "2026-05-10T10:59:03.839898+00:00",
+    "broken": true
+  },
+  "HOOD": {
+    "symbol": "HOOD",
+    "fetched": "2026-05-10T10:59:03.900695+00:00",
+    "broken": true
+  },
+  "ROK": {
+    "symbol": "ROK",
+    "fetched": "2026-05-10T10:59:03.959013+00:00",
+    "broken": true
+  },
+  "ROL": {
+    "symbol": "ROL",
+    "fetched": "2026-05-10T10:59:04.020086+00:00",
+    "broken": true
+  },
+  "ROP": {
+    "symbol": "ROP",
+    "fetched": "2026-05-10T10:59:04.078482+00:00",
+    "broken": true
+  },
+  "ROST": {
+    "symbol": "ROST",
+    "fetched": "2026-05-10T10:59:04.136293+00:00",
+    "broken": true
+  },
+  "RCL": {
+    "symbol": "RCL",
+    "fetched": "2026-05-10T10:59:04.192250+00:00",
+    "broken": true
+  },
+  "SPGI": {
+    "symbol": "SPGI",
+    "fetched": "2026-05-10T10:59:04.250212+00:00",
+    "broken": true
+  },
+  "CRM": {
+    "symbol": "CRM",
+    "fetched": "2026-05-10T10:59:04.312028+00:00",
+    "broken": true
+  },
+  "SNDK": {
+    "symbol": "SNDK",
+    "fetched": "2026-05-10T10:59:04.372028+00:00",
+    "broken": true
+  },
+  "SBAC": {
+    "symbol": "SBAC",
+    "fetched": "2026-05-10T10:59:04.501265+00:00",
+    "broken": true
+  },
+  "SLB": {
+    "symbol": "SLB",
+    "fetched": "2026-05-10T10:59:04.556450+00:00",
+    "broken": true
+  },
+  "STX": {
+    "symbol": "STX",
+    "fetched": "2026-05-10T10:59:04.654700+00:00",
+    "broken": true
+  },
+  "SRE": {
+    "symbol": "SRE",
+    "fetched": "2026-05-10T10:59:04.711415+00:00",
+    "broken": true
+  },
+  "NOW": {
+    "symbol": "NOW",
+    "fetched": "2026-05-10T10:59:04.817200+00:00",
+    "broken": true
+  },
+  "SHW": {
+    "symbol": "SHW",
+    "fetched": "2026-05-10T10:59:04.873326+00:00",
+    "broken": true
+  },
+  "SPG": {
+    "symbol": "SPG",
+    "fetched": "2026-05-10T10:59:04.931624+00:00",
+    "broken": true
+  },
+  "SWKS": {
+    "symbol": "SWKS",
+    "fetched": "2026-05-10T10:59:04.988133+00:00",
+    "broken": true
+  },
+  "SJM": {
+    "symbol": "SJM",
+    "fetched": "2026-05-10T10:59:05.078796+00:00",
+    "broken": true
+  },
+  "SW": {
+    "symbol": "SW",
+    "fetched": "2026-05-10T10:59:05.136872+00:00",
+    "broken": true
+  },
+  "SNA": {
+    "symbol": "SNA",
+    "fetched": "2026-05-10T10:59:05.194382+00:00",
+    "broken": true
+  },
+  "SOLV": {
+    "symbol": "SOLV",
+    "fetched": "2026-05-10T10:59:05.252248+00:00",
+    "broken": true
+  },
+  "SO": {
+    "symbol": "SO",
+    "fetched": "2026-05-10T10:59:05.308163+00:00",
+    "broken": true
+  },
+  "LUV": {
+    "symbol": "LUV",
+    "fetched": "2026-05-10T10:59:05.363639+00:00",
+    "broken": true
+  },
+  "SWK": {
+    "symbol": "SWK",
+    "fetched": "2026-05-10T10:59:05.478082+00:00",
+    "broken": true
+  },
+  "SBUX": {
+    "symbol": "SBUX",
+    "fetched": "2026-05-10T10:59:05.546848+00:00",
+    "broken": true
+  },
+  "STT": {
+    "symbol": "STT",
+    "fetched": "2026-05-10T10:59:05.607894+00:00",
+    "broken": true
+  },
+  "STLD": {
+    "symbol": "STLD",
+    "fetched": "2026-05-10T10:59:05.665260+00:00",
+    "broken": true
+  },
+  "STE": {
+    "symbol": "STE",
+    "fetched": "2026-05-10T10:59:05.723949+00:00",
+    "broken": true
+  },
+  "SYK": {
+    "symbol": "SYK",
+    "fetched": "2026-05-10T10:59:05.780717+00:00",
+    "broken": true
+  },
+  "SMCI": {
+    "symbol": "SMCI",
+    "fetched": "2026-05-10T10:59:05.835864+00:00",
+    "broken": true
+  },
+  "SYF": {
+    "symbol": "SYF",
+    "fetched": "2026-05-10T10:59:05.896219+00:00",
+    "broken": true
+  },
+  "SNPS": {
+    "symbol": "SNPS",
+    "fetched": "2026-05-10T10:59:05.999885+00:00",
+    "broken": true
+  },
+  "SYY": {
+    "symbol": "SYY",
+    "fetched": "2026-05-10T10:59:06.057281+00:00",
+    "broken": true
+  },
+  "TMUS": {
+    "symbol": "TMUS",
+    "fetched": "2026-05-10T10:59:06.115271+00:00",
+    "broken": true
+  },
+  "TROW": {
+    "symbol": "TROW",
+    "fetched": "2026-05-10T10:59:06.170496+00:00",
+    "broken": true
+  },
+  "TTWO": {
+    "symbol": "TTWO",
+    "fetched": "2026-05-10T10:59:06.713251+00:00",
+    "broken": true
+  },
+  "TPR": {
+    "symbol": "TPR",
+    "fetched": "2026-05-10T10:59:06.768594+00:00",
+    "broken": true
+  },
+  "TRGP": {
+    "symbol": "TRGP",
+    "fetched": "2026-05-10T10:59:06.824323+00:00",
+    "broken": true
+  },
+  "TGT": {
+    "symbol": "TGT",
+    "fetched": "2026-05-10T10:59:06.887313+00:00",
+    "broken": true
+  },
+  "TEL": {
+    "symbol": "TEL",
+    "fetched": "2026-05-10T10:59:06.948096+00:00",
+    "broken": true
+  },
+  "TDY": {
+    "symbol": "TDY",
+    "fetched": "2026-05-10T10:59:07.046975+00:00",
+    "broken": true
+  },
+  "TER": {
+    "symbol": "TER",
+    "fetched": "2026-05-10T10:59:07.102591+00:00",
+    "broken": true
+  },
+  "TSLA": {
+    "symbol": "TSLA",
+    "fetched": "2026-05-10T10:59:07.158289+00:00",
+    "broken": true
+  },
+  "TXN": {
+    "symbol": "TXN",
+    "fetched": "2026-05-10T10:59:07.216286+00:00",
+    "broken": true
+  },
+  "TPL": {
+    "symbol": "TPL",
+    "fetched": "2026-05-10T10:59:07.275156+00:00",
+    "broken": true
+  },
+  "TXT": {
+    "symbol": "TXT",
+    "fetched": "2026-05-10T10:59:07.330424+00:00",
+    "broken": true
+  },
+  "TMO": {
+    "symbol": "TMO",
+    "fetched": "2026-05-10T10:59:07.385643+00:00",
+    "broken": true
+  },
+  "TJX": {
+    "symbol": "TJX",
+    "fetched": "2026-05-10T10:59:07.445812+00:00",
+    "broken": true
+  },
+  "TKO": {
+    "symbol": "TKO",
+    "fetched": "2026-05-10T10:59:07.502695+00:00",
+    "broken": true
+  },
+  "TTD": {
+    "symbol": "TTD",
+    "fetched": "2026-05-10T10:59:07.560968+00:00",
+    "broken": true
+  },
+  "TSCO": {
+    "symbol": "TSCO",
+    "fetched": "2026-05-10T10:59:07.620602+00:00",
+    "broken": true
+  },
+  "TT": {
+    "symbol": "TT",
+    "fetched": "2026-05-10T10:59:07.681873+00:00",
+    "broken": true
+  },
+  "TDG": {
+    "symbol": "TDG",
+    "fetched": "2026-05-10T10:59:07.740867+00:00",
+    "broken": true
+  },
+  "TRV": {
+    "symbol": "TRV",
+    "fetched": "2026-05-10T10:59:07.796710+00:00",
+    "broken": true
+  },
+  "TRMB": {
+    "symbol": "TRMB",
+    "fetched": "2026-05-10T10:59:07.850276+00:00",
+    "broken": true
+  },
+  "TFC": {
+    "symbol": "TFC",
+    "fetched": "2026-05-10T10:59:07.908091+00:00",
+    "broken": true
+  },
+  "TYL": {
+    "symbol": "TYL",
+    "fetched": "2026-05-10T10:59:07.964769+00:00",
+    "broken": true
+  },
+  "TSN": {
+    "symbol": "TSN",
+    "fetched": "2026-05-10T10:59:08.023479+00:00",
+    "broken": true
+  },
+  "USB": {
+    "symbol": "USB",
+    "fetched": "2026-05-10T10:59:08.079724+00:00",
+    "broken": true
+  },
+  "UBER": {
+    "symbol": "UBER",
+    "fetched": "2026-05-10T10:59:08.138418+00:00",
+    "broken": true
+  },
+  "UDR": {
+    "symbol": "UDR",
+    "fetched": "2026-05-10T10:59:08.193183+00:00",
+    "broken": true
+  },
+  "ULTA": {
+    "symbol": "ULTA",
+    "fetched": "2026-05-10T10:59:08.251238+00:00",
+    "broken": true
+  },
+  "UNP": {
+    "symbol": "UNP",
+    "fetched": "2026-05-10T10:59:08.316959+00:00",
+    "broken": true
+  },
+  "UAL": {
+    "symbol": "UAL",
+    "fetched": "2026-05-10T10:59:08.375380+00:00",
+    "broken": true
+  },
+  "UPS": {
+    "symbol": "UPS",
+    "fetched": "2026-05-10T10:59:08.430439+00:00",
+    "broken": true
+  },
+  "URI": {
+    "symbol": "URI",
+    "fetched": "2026-05-10T10:59:08.487625+00:00",
+    "broken": true
+  },
+  "UNH": {
+    "symbol": "UNH",
+    "fetched": "2026-05-10T10:59:08.544629+00:00",
+    "broken": true
+  },
+  "UHS": {
+    "symbol": "UHS",
+    "fetched": "2026-05-10T10:59:08.601799+00:00",
+    "broken": true
+  },
+  "VLO": {
+    "symbol": "VLO",
+    "fetched": "2026-05-10T10:59:08.662680+00:00",
+    "broken": true
+  },
+  "VEEV": {
+    "symbol": "VEEV",
+    "fetched": "2026-05-10T10:59:08.719090+00:00",
+    "broken": true
+  },
+  "VTR": {
+    "symbol": "VTR",
+    "fetched": "2026-05-10T10:59:08.774680+00:00",
+    "broken": true
+  },
+  "VLTO": {
+    "symbol": "VLTO",
+    "fetched": "2026-05-10T10:59:08.831140+00:00",
+    "broken": true
+  },
+  "VRSN": {
+    "symbol": "VRSN",
+    "fetched": "2026-05-10T10:59:08.888201+00:00",
+    "broken": true
+  },
+  "VRSK": {
+    "symbol": "VRSK",
+    "fetched": "2026-05-10T10:59:08.949141+00:00",
+    "broken": true
+  },
+  "VZ": {
+    "symbol": "VZ",
+    "fetched": "2026-05-10T10:59:09.007638+00:00",
+    "broken": true
+  },
+  "VRTX": {
+    "symbol": "VRTX",
+    "fetched": "2026-05-10T10:59:09.066292+00:00",
+    "broken": true
+  },
+  "VRT": {
+    "symbol": "VRT",
+    "fetched": "2026-05-10T10:59:09.123629+00:00",
+    "broken": true
+  },
+  "VTRS": {
+    "symbol": "VTRS",
+    "fetched": "2026-05-10T10:59:09.179610+00:00",
+    "broken": true
+  },
+  "VICI": {
+    "symbol": "VICI",
+    "fetched": "2026-05-10T10:59:09.240648+00:00",
+    "broken": true
+  },
+  "V": {
+    "symbol": "V",
+    "fetched": "2026-05-10T10:59:09.299327+00:00",
+    "broken": true
+  },
+  "VST": {
+    "symbol": "VST",
+    "fetched": "2026-05-10T10:59:09.366805+00:00",
+    "broken": true
+  },
+  "VMC": {
+    "symbol": "VMC",
+    "fetched": "2026-05-10T10:59:09.422827+00:00",
+    "broken": true
+  },
+  "WRB": {
+    "symbol": "WRB",
+    "fetched": "2026-05-10T10:59:09.488584+00:00",
+    "broken": true
+  },
+  "GWW": {
+    "symbol": "GWW",
+    "fetched": "2026-05-10T10:59:09.545120+00:00",
+    "broken": true
+  },
+  "WAB": {
+    "symbol": "WAB",
+    "fetched": "2026-05-10T10:59:09.605194+00:00",
+    "broken": true
+  },
+  "WMT": {
+    "symbol": "WMT",
+    "fetched": "2026-05-10T10:59:09.662774+00:00",
+    "broken": true
+  },
+  "DIS": {
+    "symbol": "DIS",
+    "fetched": "2026-05-10T10:59:09.720119+00:00",
+    "broken": true
+  },
+  "WBD": {
+    "symbol": "WBD",
+    "fetched": "2026-05-10T10:59:09.776982+00:00",
+    "broken": true
+  },
+  "WM": {
+    "symbol": "WM",
+    "fetched": "2026-05-10T10:59:09.834109+00:00",
+    "broken": true
+  },
+  "WAT": {
+    "symbol": "WAT",
+    "fetched": "2026-05-10T10:59:09.888247+00:00",
+    "broken": true
+  },
+  "WEC": {
+    "symbol": "WEC",
+    "fetched": "2026-05-10T10:59:09.943858+00:00",
+    "broken": true
+  },
+  "WFC": {
+    "symbol": "WFC",
+    "fetched": "2026-05-10T10:59:10.002043+00:00",
+    "broken": true
+  },
+  "WELL": {
+    "symbol": "WELL",
+    "fetched": "2026-05-10T10:59:10.058189+00:00",
+    "broken": true
+  },
+  "WST": {
+    "symbol": "WST",
+    "fetched": "2026-05-10T10:59:10.114497+00:00",
+    "broken": true
+  },
+  "WDC": {
+    "symbol": "WDC",
+    "fetched": "2026-05-10T10:59:10.172582+00:00",
+    "broken": true
+  },
+  "WY": {
+    "symbol": "WY",
+    "fetched": "2026-05-10T10:59:10.229283+00:00",
+    "broken": true
+  },
+  "WSM": {
+    "symbol": "WSM",
+    "fetched": "2026-05-10T10:59:10.287767+00:00",
+    "broken": true
+  },
+  "WMB": {
+    "symbol": "WMB",
+    "fetched": "2026-05-10T10:59:10.341918+00:00",
+    "broken": true
+  },
+  "WTW": {
+    "symbol": "WTW",
+    "fetched": "2026-05-10T10:59:10.397208+00:00",
+    "broken": true
+  },
+  "WDAY": {
+    "symbol": "WDAY",
+    "fetched": "2026-05-10T10:59:10.451879+00:00",
+    "broken": true
+  },
+  "WYNN": {
+    "symbol": "WYNN",
+    "fetched": "2026-05-10T10:59:10.507890+00:00",
+    "broken": true
+  },
+  "XEL": {
+    "symbol": "XEL",
+    "fetched": "2026-05-10T10:59:10.564331+00:00",
+    "broken": true
+  },
+  "XYL": {
+    "symbol": "XYL",
+    "fetched": "2026-05-10T10:59:10.620534+00:00",
+    "broken": true
+  },
+  "YUM": {
+    "symbol": "YUM",
+    "fetched": "2026-05-10T10:59:10.678993+00:00",
+    "broken": true
+  },
+  "ZBRA": {
+    "symbol": "ZBRA",
+    "fetched": "2026-05-10T10:59:10.734641+00:00",
+    "broken": true
+  },
+  "ZBH": {
+    "symbol": "ZBH",
+    "fetched": "2026-05-10T10:59:10.796329+00:00",
+    "broken": true
+  },
+  "ZTS": {
+    "symbol": "ZTS",
+    "fetched": "2026-05-10T10:59:10.851679+00:00",
+    "broken": true
+  }
+}
