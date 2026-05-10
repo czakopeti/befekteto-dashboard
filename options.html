@@ -1,141 +1,38 @@
-<!DOCTYPE html>
-<html lang="hu"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Opciós Dashboard – 2026. May 10.</title>
-<style>
-:root{--bg:#0d0f14;--card:#151820;--c2:#1e2230;--brd:#2a2e3d;
-      --fg:#e8ecf5;--sub:#8b91a8;--mut:#555b72;
-      --mono:'JetBrains Mono','Courier New',monospace}
+<!DOCTYPE html><html lang="hu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Opciós Dashboard – 2026. May 10.</title><style>:root{
+  --bg:#0b1525;--bg2:#0e1b30;--card:#121f38;--c2:#172542;
+  --brd:#1d2f4a;--brd2:#243860;
+  --text:#dce8f5;--sub:#8aabcc;--mut:#4e6f8f;
+  --bull:#00d488;--bear:#f04060;--neu:#f0a500;--info:#4da6ff;
+  --mono:"JetBrains Mono",monospace;--sans:"Inter",sans-serif;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--fg);
-     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:20px 16px}
-h2{font-size:10px;font-family:var(--mono);color:var(--mut);letter-spacing:2px;
-    text-transform:uppercase;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--brd)}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;padding:14px;min-height:100vh}
+.sbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sp{font-family:var(--mono);font-size:9.5px;padding:3px 10px;border-radius:99px;border:1px solid}
+.sp-ok{color:var(--bull);border-color:#00d48830;background:#00d48810}
+.sp-info{color:var(--sub);border-color:var(--brd);background:var(--card)}
+.sp-warn{color:var(--neu);border-color:#f0a50030;background:#f0a50010}
+.sbar-r{margin-left:auto;font-size:10px;color:var(--mut);font-family:var(--mono)}
+.sec{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:15px;margin-bottom:12px}
+.sec-title{font-size:10px;font-family:var(--mono);color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
-.card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px}
-.nav{display:flex;gap:10px;margin-bottom:20px}
-.nav a{font-size:10px;font-family:var(--mono);color:var(--mut);text-decoration:none;
-        padding:5px 12px;border:1px solid var(--brd);border-radius:20px}
-.nav .act{color:#4da6ff;border-color:#4da6ff30;background:#4da6ff08}
-table{width:100%;border-collapse:collapse}
-th{font-size:9px;font-family:var(--mono);color:var(--mut);text-align:left;padding:6px 8px;border-bottom:1px solid var(--brd)}
-td{padding:8px 8px;border-bottom:1px solid #1e223080;font-size:11px;color:var(--sub)}
-tr:hover td{background:var(--c2)}
-@media(max-width:600px){.g4{grid-template-columns:1fr 1fr}}
-</style></head><body><div class="wrap">
-
-<div class="nav">
-  <a href="index.html">📊 Fő Dashboard</a>
-  <a href="options.html" class="act">⚡ Opciós Modul</a>
-</div>
-
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
-  <div>
-    <div style="font-size:20px;font-weight:700">Opciós Dashboard</div>
-    <div style="font-size:10px;color:var(--mut);font-family:var(--mono)">2026. May 10.</div>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="font-size:10px;color:var(--mut)">Makro score:</div>
-    <div style="font-size:28px;font-weight:900;color:#f0a500">56</div>
-    <div style="padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--mono);
-                font-weight:600;color:#f0a500;background:#f0a50015;border:1px solid #f0a50030">WAIT</div>
-    <div style="padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--mono);
-                color:#00d488;
-                background:#00d48812;
-                border:1px solid #00d48830">
-      GEX +</div>
-  </div>
-</div>
-
-
-
-<h2>Volatilitás Rezsim</h2>
-<div class="g4">
-  <div class="card" style="border-color:#f0a50025">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">IV PERCENTILE (52 HÉT)</div>
-    <div style="font-size:30px;font-weight:900;color:#f0a500">48%</div>
-    <div style="height:4px;background:var(--c2);border-radius:2px;margin:6px 0">
-      <div style="height:4px;width:48%;background:#f0a500;border-radius:2px"></div></div>
-    <div style="font-size:10px;color:var(--sub)">
-      Normál IV szint</div>
-    <div style="font-size:8px;color:var(--mut);margin-top:4px;font-family:var(--mono)">VIX Rank: 21%</div>
-  </div>
-  <div class="card" style="border-color:#f0a50025">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">SKEW INDEX</div>
-    <div style="font-size:30px;font-weight:900;color:#f0a500">138.2</div>
-    <div style="font-size:10px;color:var(--sub);margin-top:6px;line-height:1.4">Magas (138.2) – tail risk nőtt, a put védelmi prémium megemelkedett</div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px;font-family:var(--mono)">
-      Magas put prémium → Covered Put eladás/Credit spread mérlegelhető</div>
-  </div>
-  <div class="card" style="border-color:#00d48825">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX TERM STRUCTURE</div>
-    <div style="font-size:11px;font-weight:700;color:#00d488;margin-bottom:8px">
-      🟢 Contango</div>
-    <div style="display:flex;gap:8px;align-items:flex-end;height:65px"><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div style="font-size:14px;font-weight:700;color:#00d488">17.19</div>
-          <div style="width:100%;height:55px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden">
-            <div style="position:absolute;bottom:0;width:100%;height:63%;background:#00d48825;border-top:2px solid #00d488"></div>
-          </div>
-          <div style="font-size:9px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX
-30n</div>
-        </div><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div style="font-size:14px;font-weight:700;color:#f0a500">20.5</div>
-          <div style="width:100%;height:55px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden">
-            <div style="position:absolute;bottom:0;width:100%;height:76%;background:#f0a50025;border-top:2px solid #f0a500"></div>
-          </div>
-          <div style="font-size:9px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX3M
-3hó</div>
-        </div><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div style="font-size:14px;font-weight:700;color:#f0a500">22.59</div>
-          <div style="width:100%;height:55px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden">
-            <div style="position:absolute;bottom:0;width:100%;height:83%;background:#f0a50025;border-top:2px solid #f0a500"></div>
-          </div>
-          <div style="font-size:9px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX6M
-6hó</div>
-        </div></div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px">Erős Contango (0.839) – piac teljesen nyugodt</div>
-  </div>
-  <div class="card">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">VIX / VIX3M ARÁNY</div>
-    <div style="font-size:30px;font-weight:900;color:#00d488">0.839</div>
-    <div style="font-size:10px;color:var(--sub);margin-top:6px">
-      Kritikus szint: <strong>1.0</strong> felett = Backwardation</div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px;font-family:var(--mono)">
-      ✓ Normál tartomány</div>
-  </div>
-</div>
-
-<h2>Stratégia Javaslat</h2>
-<div style="padding:10px 14px;background:var(--c2);border-radius:8px;margin-bottom:12px;
-            font-size:9px;color:var(--mut);font-family:var(--mono)">
-  Bemenet: Score <strong style="color:#f0a500">56</strong> · 
-  IV Pct <strong style="color:#f0a500">48%</strong> · 
-  SKEW <strong style="color:#f0a500">138.2</strong> · 
-  Term: <strong style="color:#00d488">Contango</strong> · 
-  GEX: <strong style="color:#00d488">Pozitív</strong>
-</div>
-<div style="background:var(--card);border:1px solid #7dd3fc25;
-            border-left:3px solid #7dd3fc;border-radius:10px;
-            padding:14px 16px;margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-            <div style="font-size:12px;font-weight:700;color:#7dd3fc;font-family:var(--mono)">Bull Put Spread (Credit Spread)</div>
-            <div style="color:#7dd3fc;font-size:11px;opacity:0.7">★★★★☆</div>
-          </div>
-          <div style="font-size:10.5px;color:var(--sub);margin-bottom:7px;line-height:1.5">SKEW elevated: az OTM put prémium magas. Sell OTM put, buy mélyebb OTM put → net credit. Bullish/semleges fogadás magas prémiummal.</div>
-          <div style="display:flex;gap:20px;font-size:9px;font-family:var(--mono)">
-            <span>Kockázat: <span style="color:#f04060">Spread width – prémium</span></span>
-            <span>Hozam: <span style="color:#00d488">Net credit</span></span>
-          </div></div>
-
-<h2>Döntési Mátrix – Pontosan Mit, Mikor, Hogyan</h2>
-<div class="card">
-  <table>
-    <thead><tr>
-      <th>Score</th><th>IV</th><th>Stratégia</th>
-      <th>Időzítés / Lejárat</th><th>Pozícióméret / Exit</th>
-    </tr></thead>
-    <tbody>
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{font-size:10px;font-family:var(--mono);color:var(--mut);text-decoration:none;padding:4px 12px;border:1px solid var(--brd);border-radius:99px}
+.nav a:hover{color:var(--text)}
+.nav .act{color:var(--info);border-color:#4da6ff30;background:#4da6ff08}
+.dm-table{width:100%;border-collapse:collapse;font-size:10px}
+.dm-table th{font-size:8px;font-family:var(--mono);color:var(--mut);text-align:left;padding:6px 8px;border-bottom:1px solid var(--brd);white-space:nowrap}
+.dm-table td{padding:7px 8px;border-bottom:1px solid #1d2f4a50;color:var(--sub);vertical-align:top;font-size:10px}
+.dm-table tr.active td{background:#00d48808;color:var(--text)}
+.dm-table tr.active td:nth-child(3){color:#00d488;font-weight:700}
+@media(max-width:640px){
+  .g4{grid-template-columns:1fr 1fr}
+  .dm-table{font-size:9px}
+  .dm-table th,.dm-table td{padding:5px 6px}
+}</style></head><body><div class="nav"><a href="index.html">📊 Fő Dashboard</a><a href="options.html" class="act">⚡ Opciós Modul</a></div><div class="sbar"><span class="sp sp-ok">⬤ Opciós Dashboard</span><span class="sp sp-info">2026. May 10.</span><span class="sp sp-info">Score: 56 – WAIT</span><span class="sp sp-ok">GEX +</span><div class="sbar-r">Heti frissítés · Péntek 17:30</div></div><div class="sec"><div class="sec-title">Volatilitás Rezsim<span style="background:#4da6ff12;color:var(--info);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid #4da6ff25">SPX opciós piac</span></div><div class="g4"><div style="background:var(--c2);border:1px solid #f0a50025;border-radius:9px;padding:12px"><div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">IV PERCENTILE</div><div style="font-size:26px;font-weight:700;color:#f0a500;font-family:var(--mono)">48%</div><div style="display:flex;gap:3px;margin:6px 0"><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div></div><div style="font-size:9px;color:var(--sub)">Normál</div><div style="height:3px;background:var(--brd2);border-radius:2px;margin-top:6px"><div style="height:3px;width:48%;background:#f0a500;border-radius:2px"></div></div><div style="font-size:8px;color:var(--mut);margin-top:3px;font-family:var(--mono)">VIX Rank: 21%</div></div><div style="background:var(--c2);border:1px solid #f0a50025;border-radius:9px;padding:12px"><div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">SKEW INDEX</div><div style="font-size:26px;font-weight:700;color:#f0a500;font-family:var(--mono)">138.2</div><div style="display:flex;gap:3px;margin:6px 0"><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div></div><div style="font-size:9px;color:var(--sub);line-height:1.4">Magas (138.2) – tail risk nőtt, a put védelmi prémium megemelkedett</div><div style="font-size:8px;color:var(--mut);margin-top:6px;font-family:var(--mono)">Magas put prémium → Covered Put eladás/Credit spread mérlegelhető</div></div><div style="background:var(--c2);border:1px solid #00d48825;border-radius:9px;padding:12px"><div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX TERM STRUCTURE</div><div style="font-size:11px;font-weight:700;color:#00d488;margin-bottom:8px">🟢 Contango</div><div style="display:flex;gap:6px;align-items:flex-end;height:60px"><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font-size:13px;font-weight:700;color:#00d488;font-family:var(--mono)">17.19</div><div style="width:100%;height:50px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;bottom:0;width:100%;height:63%;background:#00d48822;border-top:2px solid #00d488"></div></div><div style="font-size:8px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX
+30n</div></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font-size:13px;font-weight:700;color:#f0a500;font-family:var(--mono)">20.5</div><div style="width:100%;height:50px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;bottom:0;width:100%;height:76%;background:#f0a50022;border-top:2px solid #f0a500"></div></div><div style="font-size:8px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX3M
+3hó</div></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px"><div style="font-size:13px;font-weight:700;color:#f0a500;font-family:var(--mono)">22.59</div><div style="width:100%;height:50px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden"><div style="position:absolute;bottom:0;width:100%;height:83%;background:#f0a50022;border-top:2px solid #f0a500"></div></div><div style="font-size:8px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">VIX6M
+6hó</div></div></div><div style="font-size:8px;color:var(--mut);margin-top:6px">Erős Contango (0.839) – piac teljesen nyugodt</div></div><div style="background:var(--c2);border:1px solid #00d48825;border-radius:9px;padding:12px"><div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX/VIX3M ARÁNY</div><div style="font-size:26px;font-weight:700;color:#00d488;font-family:var(--mono)">0.839</div><div style="display:flex;gap:3px;margin:6px 0"><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:#00d488"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div><div style="width:8px;height:8px;border-radius:50%;background:var(--brd2)"></div></div><div style="font-size:9px;color:var(--sub)">Kritikus: <strong>1.0</strong> felett = Backwardation</div><div style="font-size:8px;color:#00d488;margin-top:6px;font-family:var(--mono)">✓ Normál</div></div></div></div><div class="sec"><div class="sec-title">Stratégia Javaslat<span style="background:var(--c2);color:var(--mut);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid var(--brd)">Score 56 · IV 48% · SKEW 138.2 · Contango · GEX +</span></div><div style="background:var(--c2);border:1px solid var(--brd);border-left:3px solid #7dd3fc;border-radius:9px;padding:12px 14px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap"><div style="font-size:12px;font-weight:700;color:#7dd3fc;font-family:var(--mono)">Bull Put Spread (Credit Spread)</div><div style="color:#7dd3fc;font-size:10px;opacity:0.6">★★★★☆</div><span style="background:#7dd3fc20;color:#7dd3fc;font-size:8px;padding:2px 7px;border-radius:99px;font-family:var(--mono);border:1px solid #7dd3fc40">▶ LEGJOBB MOST</span></div><div style="font-size:10px;color:var(--sub);margin-bottom:6px;line-height:1.5">SKEW magas → OTM put prémium magas. Net credit fogadás hogy piac nem esik.</div><div style="background:var(--bg2);border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:9px;font-family:var(--mono);color:var(--sub);line-height:1.5"><span style="color:var(--mut)">📋 </span>Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5% portfólió</div><div style="display:flex;gap:16px;font-size:9px;font-family:var(--mono);flex-wrap:wrap"><span style="color:var(--mut)">Kockázat: <span style="color:#f04060">Spread szélessége – prémium</span></span><span style="color:var(--mut)">Hozam: <span style="color:#00d488">Net credit</span></span></div><div style="margin-top:5px;font-size:9px;color:var(--mut);font-family:var(--mono)">⏱ Zárd 50% profit · Ha alá kerül az eladott put: zárj</div></div></div><div class="sec"><div class="sec-title">Döntési Mátrix<span style="background:#00d48812;color:#00d488;font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid #00d48830">▶ Zöld = aktuális</span></div><div style="overflow-x:auto"><table class="dm-table"><thead><tr><th>Score</th><th>IV</th><th>Stratégia</th><th>Lejárat</th><th>Exit</th></tr></thead><tbody>
         <tr style="">
           <td style="font-size:10px;color:var(--mut);font-family:var(--mono)">75–100</td>
           <td style="font-size:10px;color:var(--mut)">Olcsó</td>
@@ -191,160 +88,4 @@ tr:hover td{background:var(--c2)}
           <td style="font-size:10px;color:#00d488;font-weight:700">NEM nyitunk új pozíciót<span style="background:#00d48820;color:#00d488;font-size:8px;padding:2px 6px;border-radius:10px;margin-left:6px;font-family:var(--mono)">▶ AKTÍV</span></td>
           <td style="font-size:9px;color:var(--mut)">Backwardation idején: várj amíg VIX/VIX3M visszamegy 1.0 alá</td>
           <td style="font-size:9px;color:var(--mut)">Ha van nyitott pozíció: szoros stop-loss vagy azonnali zárás</td>
-        </tr></tbody>
-  </table>
-  <div style="margin-top:10px;padding:10px;background:var(--c2);border-radius:6px;
-              font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.7">
-    ★ Zöld sor = jelenlegi piaci állapothoz legjobb stratégia · 
-    Lejárat: 30-45 nap optimális a theta-decay szempontjából · 
-    Méretezés: max 5% portfólióból egy opciós pozícióra · 
-    Általános exit: 50% profit VAGY 21 nap a lejárat előtt
-  </div>
-</div>
-
-<h2>Implied Move – Közelgő Earnings</h2>
-<div class="card">
-  <table>
-    <thead><tr><th>Ticker</th><th>Ár</th><th>Implied ±%</th>
-    <th>Earnings</th><th>ATM IV</th><th>Straddle ár</th></tr></thead>
-    <tbody><tr><td colspan="6" style="color:var(--mut);text-align:center;padding:14px">Nincs közelgő earnings a watchlisten (30 napon belül)</td></tr></tbody>
-  </table>
-  <div style="margin-top:8px;font-size:9px;color:var(--mut);font-family:var(--mono)">
-    Implied Move = ATM Straddle / Részvény ár. Ha a részvény historikusan többet mozog → opció alulárazott (venni jobb).
-  </div>
-</div>
-
-<h2>IV Percentile Tracker</h2>
-<div class="card">
-  <div style="font-size:9px;color:var(--mut);margin-bottom:10px;font-family:var(--mono)">
-    IV Percentile: az idő hány %-ában volt alacsonyabb az IV a mostaninál. 
-    8+ hét után megbízható. Jelenleg elegendő adat: 0 részvény.
-  </div>
-  <table>
-    <thead><tr><th>Ticker</th><th>Aktuális IV</th><th>IV Percentile</th><th>Javaslat</th></tr></thead>
-    <tbody><tr>
-          <td style="font-weight:700;color:var(--fg)">AAPL</td>
-          <td style="color:var(--sub)">19%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">ADBE</td>
-          <td style="color:var(--sub)">45%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">AMD</td>
-          <td style="color:var(--sub)">76%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">AMZN</td>
-          <td style="color:var(--sub)">26%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">AVGO</td>
-          <td style="color:var(--sub)">40%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">CRM</td>
-          <td style="color:var(--sub)">45%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">CRWD</td>
-          <td style="color:var(--sub)">52%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">DDOG</td>
-          <td style="color:var(--sub)">67%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">FTNT</td>
-          <td style="color:var(--sub)">45%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">GOOGL</td>
-          <td style="color:var(--sub)">24%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">INTC</td>
-          <td style="color:var(--sub)">112%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">IONQ</td>
-          <td style="color:var(--sub)">106%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">LLY</td>
-          <td style="color:var(--sub)">37%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">MA</td>
-          <td style="color:var(--sub)">32%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">META</td>
-          <td style="color:var(--sub)">25%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">MSFT</td>
-          <td style="color:var(--sub)">25%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">MSTR</td>
-          <td style="color:var(--sub)">69%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">MU</td>
-          <td style="color:var(--sub)">97%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">NFLX</td>
-          <td style="color:var(--sub)">32%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">NOW</td>
-          <td style="color:var(--sub)">56%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">NVDA</td>
-          <td style="color:var(--sub)">32%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">ORCL</td>
-          <td style="color:var(--sub)">63%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">PANW</td>
-          <td style="color:var(--sub)">49%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">PLTR</td>
-          <td style="color:var(--sub)">51%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">RKLB</td>
-          <td style="color:var(--sub)">104%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">TJX</td>
-          <td style="color:var(--sub)">24%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">TMO</td>
-          <td style="color:var(--sub)">35%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">TSLA</td>
-          <td style="color:var(--sub)">40%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr><tr>
-          <td style="font-weight:700;color:var(--fg)">ZS</td>
-          <td style="color:var(--sub)">67%</td>
-          <td><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></td>
-          <td style="color:var(--mut);font-size:10px">–</td></tr></tbody>
-  </table>
-</div>
-
-<div style="margin-top:20px;padding:12px;background:var(--c2);border-radius:8px;
-            font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.8">
-  Adatforrások: CBOE (^SKEW, ^VIX via yfinance) · Options chains: yfinance · GEX: SqueezeMetrics<br>
-  ⚠ Nem befektetési tanács. Az opciók tőkeáttétes, komplex instrumentumok. Értsd meg a kockázatot mielőtt kereskedsz.
-</div>
-</div></body></html>
+        </tr></tbody></table></div><div style="margin-top:8px;padding:8px 10px;background:var(--c2);border-radius:6px;font-size:9px;color:var(--mut);font-family:var(--mono)">Max 5% portfólió / pozíció · Exit: 50% profit VAGY 21 DTE</div></div><div class="sec"><div class="sec-title">Implied Move – Közelgő Earnings</div><div style="background:var(--c2);border:1px solid var(--brd);border-radius:8px;overflow:hidden"><div style="display:grid;grid-template-columns:60px 70px 70px 60px 55px 70px;gap:6px;padding:7px 10px;border-bottom:1px solid var(--brd)"><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">TICKER</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">ÁR</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IMPLIED ±%</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">NAPOK</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">ATM IV</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">STRADDLE</div></div><div style="padding:16px;text-align:center;color:var(--mut);font-size:11px">Nincs közelgő earnings (30 napon belül)</div></div><div style="margin-top:8px;font-size:9px;color:var(--mut);font-family:var(--mono)">ATM Straddle / Ár = piaci várható mozgás ±irányban</div></div><div class="sec"><div class="sec-title">IV Percentile Tracker<span style="background:var(--c2);color:var(--mut);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid var(--brd)">0 elegendő adat (8+ hét)</span></div><div style="background:var(--c2);border:1px solid var(--brd);border-radius:8px;overflow:hidden"><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd)"><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">TICKER</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IV</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IV PERCENTILE</div><div style="font-size:8px;color:var(--mut);font-family:var(--mono)">JAVASLAT</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">AAPL</div><div style="color:var(--sub);font-family:var(--mono)">19%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">ADBE</div><div style="color:var(--sub);font-family:var(--mono)">45%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">AMD</div><div style="color:var(--sub);font-family:var(--mono)">76%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">AMZN</div><div style="color:var(--sub);font-family:var(--mono)">26%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">AVGO</div><div style="color:var(--sub);font-family:var(--mono)">40%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">CRM</div><div style="color:var(--sub);font-family:var(--mono)">45%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">CRWD</div><div style="color:var(--sub);font-family:var(--mono)">52%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">DDOG</div><div style="color:var(--sub);font-family:var(--mono)">67%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">FTNT</div><div style="color:var(--sub);font-family:var(--mono)">45%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">GOOGL</div><div style="color:var(--sub);font-family:var(--mono)">24%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">INTC</div><div style="color:var(--sub);font-family:var(--mono)">112%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">IONQ</div><div style="color:var(--sub);font-family:var(--mono)">106%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">LLY</div><div style="color:var(--sub);font-family:var(--mono)">37%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">MA</div><div style="color:var(--sub);font-family:var(--mono)">32%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">META</div><div style="color:var(--sub);font-family:var(--mono)">25%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">MSFT</div><div style="color:var(--sub);font-family:var(--mono)">25%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">MSTR</div><div style="color:var(--sub);font-family:var(--mono)">69%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">MU</div><div style="color:var(--sub);font-family:var(--mono)">97%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">NFLX</div><div style="color:var(--sub);font-family:var(--mono)">32%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">NOW</div><div style="color:var(--sub);font-family:var(--mono)">56%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">NVDA</div><div style="color:var(--sub);font-family:var(--mono)">32%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">ORCL</div><div style="color:var(--sub);font-family:var(--mono)">63%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">PANW</div><div style="color:var(--sub);font-family:var(--mono)">49%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">PLTR</div><div style="color:var(--sub);font-family:var(--mono)">51%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">RKLB</div><div style="color:var(--sub);font-family:var(--mono)">104%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">TJX</div><div style="color:var(--sub);font-family:var(--mono)">24%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">TMO</div><div style="color:var(--sub);font-family:var(--mono)">35%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">TSLA</div><div style="color:var(--sub);font-family:var(--mono)">40%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div><div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center"><div style="font-weight:700;color:var(--text);font-family:var(--mono)">ZS</div><div style="color:var(--sub);font-family:var(--mono)">67%</div><div><span style="color:var(--mut);font-size:9px">1 hét – gyűlik</span></div><div style="color:var(--mut);font-size:9px;font-family:var(--mono)">–</div></div></div></div><div style="padding:10px 12px;background:var(--card);border:1px solid var(--brd);border-radius:8px;font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.7">Adatforrás: CBOE ^SKEW ^VIX ^VIX3M ^VIX6M via yfinance · GEX: dashboard history.json<br>⚠ Nem befektetési tanács. Az opciók komplex instrumentumok.</div></body></html>
