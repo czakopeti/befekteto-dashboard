@@ -220,50 +220,82 @@ def fetch_pcr():
 # ══════════════════════════════════════════════════════════════
 def fetch_yield_deinversion():
     """
-    A profi indikátor: nem csak az inverzió, hanem a RE-STEEPENING sebesség.
-    Ha a görbe gyorsan pozitívba fordul (de-inversion) → Fed pánikszerűen vág
-    → Ez a legveszélyesebb piaci helyzet, nem maga az inverzió.
+    Hozamgörbe – 10Y-2Y + 10Y-3M (Fed által preferált) (v5.5)
+    
+    A 10Y-3M spread a Fed által preferált recessziós indikátor:
+    - 3M = jelenlegi Fed-kamat közvetlen tükre
+    - 2Y = piaci várakozás a jövőbeli kamatokra (zajos lehet)
+    - 10Y-3M inverzió historikusan megbízhatóbb recessziós előjelző
+    
+    Ha mindkét spread negatív → erős recessziós jel
+    Ha csak 10Y-2Y negatív de 10Y-3M nem → lehet fals riasztás
     """
     try:
-        vals = fetch_fred_series("T10Y2Y", n=26)  # 26 hónap
-        cur   = vals[0] * 100   # bp
-        m1    = vals[1] * 100 if len(vals)>1 else cur
-        m3    = vals[3] * 100 if len(vals)>3 else cur
-        m6    = vals[6] * 100 if len(vals)>6 else cur
+        vals_2y = fetch_fred_series("T10Y2Y", n=26)
+        vals_3m = fetch_fred_series("T10Y3M", n=26)
 
-        speed_1m = round(cur - m1, 1)   # bp / hó
-        speed_3m = round(cur - m3, 1)   # bp / 3hó
-        was_inverted = m6 < 0           # 6 hónapja invertált volt?
+        # 10Y-2Y (hagyományos)
+        cur_2y = vals_2y[0] * 100
+        m1_2y  = vals_2y[1] * 100 if len(vals_2y) > 1 else cur_2y
+        m3_2y  = vals_2y[3] * 100 if len(vals_2y) > 3 else cur_2y
+        m6_2y  = vals_2y[6] * 100 if len(vals_2y) > 6 else cur_2y
 
-        # Veszélyes: gyors re-steepening + előtte invertált volt
-        rapid_reinversion = (was_inverted and cur > 0 and speed_3m > 30)
+        # 10Y-3M (Fed által preferált)
+        cur_3m = vals_3m[0] * 100
+        m6_3m  = vals_3m[6] * 100 if len(vals_3m) > 6 else cur_3m
+
+        speed_1m = round(cur_2y - m1_2y, 1)
+        speed_3m = round(cur_2y - m3_2y, 1)
+        was_inverted_2y = m6_2y < 0
+        was_inverted_3m = m6_3m < 0
+
+        # Megerősített recessziós jel: mindkét spread invertált volt
+        both_inverted_before = was_inverted_2y and was_inverted_3m
+        rapid_reinversion    = (both_inverted_before and cur_2y > 0 and speed_3m > 30)
         dangerous = rapid_reinversion
+
+        # Ha csak 10Y-2Y negatív de 10Y-3M nem → lehetséges fals riasztás
+        possible_false = (cur_2y < 0 and cur_3m > 0)
 
         if dangerous:
             yi_sig  = "bear"
-            yi_desc = f"⚠ GYORS RE-STEEPENING! ({speed_3m:+.0f}bp/3hó) – Fed pánikkamata vágás jele"
-        elif cur < -25:
+            yi_desc = (f"GYORS RE-STEEPENING! ({speed_3m:+.0f}bp/3hó) – "
+                      f"2Y: {cur_2y:+.0f}bp, 3M: {cur_3m:+.0f}bp")
+        elif cur_2y < -25 and cur_3m < -25:
             yi_sig  = "bear"
-            yi_desc = f"Mélyen invertált ({cur:+.0f}bp) – recessziós jel"
-        elif cur < 0:
+            yi_desc = (f"Mélyen invertált MINDKÉT spread – erős recessziós jel "
+                      f"(2Y: {cur_2y:+.0f}bp, 3M: {cur_3m:+.0f}bp)")
+        elif cur_2y < 0 and possible_false:
             yi_sig  = "wait"
-            yi_desc = f"Enyhe inverzió ({cur:+.0f}bp)"
-        elif speed_3m > 20 and was_inverted:
+            yi_desc = (f"10Y-2Y invertált ({cur_2y:+.0f}bp), de 10Y-3M nem "
+                      f"({cur_3m:+.0f}bp) – lehetséges fals riasztás")
+        elif cur_2y < 0:
             yi_sig  = "wait"
-            yi_desc = f"Re-steepening ({cur:+.0f}bp, +{speed_3m:.0f}bp/3hó) – figyelj"
+            yi_desc = (f"Enyhe inverzió (2Y: {cur_2y:+.0f}bp, 3M: {cur_3m:+.0f}bp)")
+        elif speed_3m > 20 and was_inverted_2y:
+            yi_sig  = "wait"
+            yi_desc = (f"Re-steepening (2Y: {cur_2y:+.0f}bp, +{speed_3m:.0f}bp/3hó) – figyelj")
         else:
             yi_sig  = "bull"
-            yi_desc = f"Normál ({cur:+.0f}bp, trend: {speed_1m:+.0f}bp/hó)"
+            yi_desc = (f"Normál ({cur_2y:+.0f}bp, trend: {speed_1m:+.0f}bp/hó) | "
+                      f"Re-steep: {speed_3m:+.0f}bp/3hó")
 
         return {
-            "yieldCurve": round(cur), "yieldTrend": round(speed_1m),
-            "yieldSpeed3m": speed_3m, "yieldWasInv": was_inverted,
-            "yieldDangerous": dangerous,
-            "yieldSignal": yi_sig, "yieldDesc": yi_desc,
+            "yieldCurve":    round(cur_2y),
+            "yieldCurve3m":  round(cur_3m),
+            "yieldTrend":    round(speed_1m),
+            "yieldSpeed3m":  speed_3m,
+            "yieldWasInv":   was_inverted_2y,
+            "yieldWasInv3m": was_inverted_3m,
+            "yieldDangerous":    dangerous,
+            "yieldPossibleFalse": possible_false,
+            "yieldSignal":   yi_sig,
+            "yieldDesc":     yi_desc,
         }
     except Exception as e:
-        return {"yieldCurve": 20, "yieldTrend": 0, "yieldSpeed3m": 0,
-                "yieldWasInv": False, "yieldDangerous": False,
+        return {"yieldCurve": 20, "yieldCurve3m": 20, "yieldTrend": 0,
+                "yieldSpeed3m": 0, "yieldWasInv": False, "yieldWasInv3m": False,
+                "yieldDangerous": False, "yieldPossibleFalse": False,
                 "yieldSignal": "wait", "yieldDesc": "Nincs adat"}
 
 # ══════════════════════════════════════════════════════════════
@@ -272,64 +304,84 @@ def fetch_yield_deinversion():
 # ══════════════════════════════════════════════════════════════
 def fetch_mcclellan():
     """
-    McClellan Summation Index – SAMPLE részvényekből számolva
-    (^ADVN ^DECN GitHub Actions-ből nem elérhető)
+    Piaci szélesség – javított proxy (v5.5)
     
-    50 S&P500 részvény napi advance/decline alapján számolva.
-    Proxy, de megbízható közelítés a valódi NYSE A/D adatokhoz.
+    Az eredeti 50 S&P500 részvényes proxy hibája: a large caps dominálnak,
+    ezért a Magnificent 7 tarthatja a mutatót miközben a maradék 450 esik.
+    
+    Új megközelítés (két réteg):
+    1. Russell 2000 (^RUT) vs S&P500 (^GSPC) relatív erő
+       → Ha RUT underperformál → a kis/közepcégek gyengülnek = bearish breadth
+    2. Equal-Weight S&P500 (RSP) vs Cap-Weight (SPY) relatív erő
+       → Ha RSP underperformál → csak a mega caps tartják a piacot = bearish breadth
+    
+    Ez a profi módszer: nem számolt breadth, hanem mérhető piaci szélességi proxy.
     """
     try:
-        SAMPLE = ["AAPL","MSFT","NVDA","AMZN","META","GOOGL","TSLA","JPM","UNH","V",
-                  "XOM","JNJ","PG","MA","HD","AVGO","CVX","MRK","ABBV","KO",
-                  "PEP","COST","WMT","BAC","TMO","LLY","ORCL","NFLX","AMD","CRM",
-                  "ACN","DHR","TXN","NEE","PM","MDT","HON","QCOM","UPS","AMGN",
-                  "CAT","BMY","LOW","SBUX","GS","BLK","ISRG","SYK","GILD","SPGI"]
+        # RUT, SPY, RSP letöltése
+        data = yf.download(["^RUT", "^GSPC", "RSP", "SPY"],
+                           period="1y", auto_adjust=True,
+                           progress=False, threads=True)["Close"]
 
-        raw = yf.download(SAMPLE, period="1y",
-                          auto_adjust=True, progress=False, threads=True)["Close"]
-        if raw.empty or len(raw) < 40:
-            raise ValueError("Nincs elég adat a McClellan számításhoz")
+        if data.empty or len(data) < 40:
+            raise ValueError("Nincs elég adat")
 
-        # Napi advance/decline különbség
-        chg = raw.pct_change().dropna()
-        adv = (chg > 0).sum(axis=1)
-        dec = (chg < 0).sum(axis=1)
-        ad_net = adv - dec
+        # 1. RUT/SPX relatív erő (20 napos és 60 napos változás)
+        rut = data["^RUT"].dropna()
+        spx = data["^GSPC"].dropna()
+        rut_rel = (rut / spx).dropna()
 
-        # McClellan Oscillator = EMA19 – EMA39
-        ema19 = ad_net.ewm(span=19, adjust=False).mean()
-        ema39 = ad_net.ewm(span=39, adjust=False).mean()
-        oscillator = ema19 - ema39
+        rut_rel_20d = float((rut_rel.iloc[-1] / rut_rel.iloc[-20] - 1) * 100)
+        rut_rel_60d = float((rut_rel.iloc[-1] / rut_rel.iloc[-60] - 1) * 100) if len(rut_rel) >= 60 else rut_rel_20d
 
-        # Summation = kumulatív összeg (utolsó 200 nap)
-        summation = oscillator.rolling(200, min_periods=20).sum()
+        # 2. RSP/SPY relatív erő (equal vs cap weight)
+        rsp = data["RSP"].dropna()
+        spy = data["SPY"].dropna()
+        ew_rel = (rsp / spy).dropna()
 
-        cur  = round(float(summation.iloc[-1]))
-        prev = round(float(summation.iloc[-5])) if len(summation) >= 5 else cur
-        osc  = round(float(oscillator.iloc[-1]), 1)
-        trend = "bull" if cur > prev and cur > 0 else "bear" if cur < 0 else "wait"
+        ew_rel_20d = float((ew_rel.iloc[-1] / ew_rel.iloc[-20] - 1) * 100)
 
-        zero_cross_down = cur < 0 and prev >= 0
-        zero_cross_up   = cur > 0 and prev <= 0
+        # Összesített breadth score (-100 to +100)
+        # RUT rel erő + EW rel erő átlaga, majd skálázva
+        breadth_score = (rut_rel_20d * 0.6 + ew_rel_20d * 0.4)
 
-        if zero_cross_down:
+        # McClellan proxy értékbe konvertálva (régi interfész megőrzése)
+        # -500 .. +500 skála
+        mc_sum = round(breadth_score * 30)
+
+        # Szignál
+        if rut_rel_20d < -3 and ew_rel_20d < -1:
             sig  = "bear"
-            desc = f"⚠ NULLA ALÁ BUKOTT ({cur}) – komoly korrekció jele!"
-        elif zero_cross_up:
+            desc = (f"Gyengülő szélesség – kis cégek esnek "
+                    f"(RUT: {rut_rel_20d:+.1f}%, EW: {ew_rel_20d:+.1f}%)")
+        elif rut_rel_20d > 3 and ew_rel_20d > 1:
             sig  = "bull"
-            desc = f"✓ Nulla fölé emelkedett ({cur}) – bull erő visszatér"
-        elif cur > 200:
-            sig  = "bull"; desc = f"Erős ({cur}) – egészséges szélesség"
-        elif cur > 0:
-            sig  = "bull"; desc = f"Pozitív ({cur}) – bull momentum"
-        elif cur > -200:
-            sig  = "wait"; desc = f"Negatív ({cur}) – gyengülő szélesség"
+            desc = (f"Egészséges szélesség – kis cégek is erők "
+                    f"(RUT: {rut_rel_20d:+.1f}%, EW: {ew_rel_20d:+.1f}%)")
+        elif rut_rel_20d < -1 or ew_rel_20d < -0.5:
+            sig  = "wait"
+            desc = (f"Enyhe szélesség-szűkülés "
+                    f"(RUT: {rut_rel_20d:+.1f}%, EW: {ew_rel_20d:+.1f}%)")
         else:
-            sig  = "bear"; desc = f"Mélyen negatív ({cur}) – medve jelzés"
+            sig  = "wait"
+            desc = (f"Semleges szélesség "
+                    f"(RUT: {rut_rel_20d:+.1f}%, EW: {ew_rel_20d:+.1f}%)")
 
-        return {"mcSum": cur, "mcOsc": osc, "mcSignal": sig,
-                "mcDesc": desc, "mcTrend": trend,
-                "mcZeroCrossDown": zero_cross_down, "mcZeroCrossUp": zero_cross_up}
+        prev_score = breadth_score - (rut_rel_60d - rut_rel_20d) * 0.3
+        zero_cross_down = breadth_score < -5 and prev_score >= -5
+        zero_cross_up   = breadth_score >  5 and prev_score <=  5
+
+        return {
+            "mcSum":          mc_sum,
+            "mcOsc":          round(breadth_score, 1),
+            "mcSignal":       sig,
+            "mcDesc":         desc,
+            "mcTrend":        sig,
+            "mcZeroCrossDown": zero_cross_down,
+            "mcZeroCrossUp":   zero_cross_up,
+            "rutRel20d":      round(rut_rel_20d, 1),
+            "ewRel20d":       round(ew_rel_20d, 1),
+        }
 
     except Exception as e:
         log(f"McClellan hiba: {e}", ok=False)
@@ -583,39 +635,77 @@ def fetch_cot_smart_money():
                 "cotDate": ""}
 
 def fetch_forward_pe(spx_price):
-    pe = round(spx_price / FY26_EPS_EST, 1)
-    val_score = round(max(0, min(30, (PE_FAIR_VALUE+1.5-pe)/6*30)))
-    label = ("ALULÉRTÉKELT" if pe<18 else "FAIR" if pe<21
-             else "TÚLÉRTÉKELT" if pe<25 else "EXTRÉM DRÁGA")
+    """Forward P/E + ERP – dinamikus EPS konszenzussal (v5.5)
 
-    # ERP = Earnings Yield (1/PE) - 10Y Treasury Yield
+    Az FY26 EPS becslést yfinance-ből olvassuk (SPY ETF earnings forecast)
+    ahelyett hogy hardcode-olnánk. Ha nem sikerül, fallback a legutóbbi ismert értékre.
+    """
+    # ── Dinamikus EPS konszenzus ───────────────────────────────
+    eps_forward = None
+    eps_source  = "fallback"
     try:
-        dgs10_v = fetch_fred_series("DGS10", n=5)
+        spy_info = yf.Ticker("SPY").info or {}
+        # SPY forward EPS * 10 ≈ S&P500 forward EPS (SPY = 1/10 arány közelítőleg)
+        spy_eps = spy_info.get("forwardEps")
+        if spy_eps and spy_eps > 20:
+            eps_forward = round(spy_eps * 10, 1)
+            eps_source  = "yfinance/SPY"
+    except Exception:
+        pass
+
+    if not eps_forward:
+        try:
+            # Alternatív: ^GSPC info
+            spx_info = yf.Ticker("^GSPC").info or {}
+            pe_trailing = spx_info.get("trailingPE")
+            if pe_trailing and pe_trailing > 15:
+                eps_trailing = spx_price / pe_trailing
+                eps_forward  = round(eps_trailing * 1.08, 1)  # +8% növekedés becslés
+                eps_source   = "yfinance/^GSPC trailing"
+        except Exception:
+            pass
+
+    if not eps_forward:
+        eps_forward = 338.0  # hardcoded fallback (FactSet 2026 konszenzus)
+        eps_source  = "hardcoded fallback"
+
+    data_quality["EPS_konszenzus"] = (eps_source != "hardcoded fallback")
+    log(f"Forward EPS: {eps_forward} ({eps_source})")
+
+    pe = round(spx_price / eps_forward, 1)
+    label = ("ALULÉRTÉKELT" if pe < 18 else "FAIR" if pe < 21
+             else "TÚLÉRTÉKELT" if pe < 25 else "EXTRÉM DRÁGA")
+
+    # ── ERP = Earnings Yield – 10Y Treasury ────────────────────
+    try:
+        dgs10_v      = fetch_fred_series("DGS10", n=5)
         treasury_10y = round(float(dgs10_v[0]), 2)
     except Exception:
-        treasury_10y = 4.5  # fallback aktuális szint
+        treasury_10y = 4.5
 
     earnings_yield = round(100 / pe, 2) if pe > 0 else 0
-    erp = round(earnings_yield - treasury_10y, 2)
+    erp            = round(earnings_yield - treasury_10y, 2)
 
-    # ERP kategória
-    if erp < 0:      erp_cat = 1; erp_lbl = "Negatív – kötvény vonzóbb!"
+    if erp < 0:      erp_cat = 1; erp_lbl = f"Negatív ({erp:.2f}%) – kötvény vonzóbb!"
     elif erp < 1.0:  erp_cat = 2; erp_lbl = f"Minimális prémium ({erp:.2f}%) – nem éri meg a kockázat"
     elif erp < 2.0:  erp_cat = 3; erp_lbl = f"Semleges ({erp:.2f}%) – historikusan alacsony"
     elif erp < 3.5:  erp_cat = 4; erp_lbl = f"Vonzó ({erp:.2f}%) – részvény prémium megvan"
     else:            erp_cat = 5; erp_lbl = f"Nagyon vonzó ({erp:.2f}%) – historikus vétel"
 
-    # ERP score hatás
-    if erp_cat == 1:   erp_score_adj = -8
-    elif erp_cat == 2: erp_score_adj = -4
-    elif erp_cat == 3: erp_score_adj = 0
-    elif erp_cat == 4: erp_score_adj = 3
-    else:              erp_score_adj = 6
+    erp_score_adj = {1: -8, 2: -4, 3: 0, 4: 3, 5: 6}.get(erp_cat, 0)
 
-    return {"forwardPE": pe, "valScore": val_score, "valLabel": label,
-            "erp": erp, "erpCat": erp_cat, "erpLabel": erp_lbl,
-            "erpScoreAdj": erp_score_adj, "treasury10y": treasury_10y,
-            "earningsYield": earnings_yield}
+    return {
+        "forwardPE":      pe,
+        "forwardEPS":     eps_forward,
+        "epsSource":      eps_source,
+        "valLabel":       label,
+        "erp":            erp,
+        "erpCat":         erp_cat,
+        "erpLabel":       erp_lbl,
+        "erpScoreAdj":    erp_score_adj,
+        "treasury10y":    treasury_10y,
+        "earningsYield":  earnings_yield,
+    }
 
 # ══════════════════════════════════════════════════════════════
 # HUF/USD ÁRFOLYAM (ÚJ)
@@ -1038,8 +1128,27 @@ def calc_entry_score(now, mid, lng, base, smart=None):
     # 6-18 hónap
     lei_v=sv(lng.get("leiSignal","wait")); m2_v=sv(lng.get("m2Signal","wait"))
     umi_v=sv(lng.get("umiSignal","wait"))
-    yld_v=(2 if yld>25 else 1 if yld>0 else -1 if yld<-10 else 0)
-    s+=lei_v*9+m2_v*7+umi_v*5+yld_v*4
+    # Hozamgörbe score – 10Y-2Y + 10Y-3M kombinálva (v5.5)
+    yld_3m = lng.get("yieldCurve3m", 20)
+    both_inverted = (yld < 0 and yld_3m < 0)         # mindkét spread negatív
+    possible_false = (yld < 0 and yld_3m > 0)         # csak 10Y-2Y negatív = fals riasztás esély
+    dangerous_resteeening = lng.get("yieldDangerous", False)
+
+    if dangerous_resteeening:
+        yld_v = -3                # mindkét spread re-steepening = komoly veszély
+    elif both_inverted:
+        yld_v = -2                # mindkét spread invertált = erős recessziós jel
+    elif possible_false:
+        yld_v = 0                 # csak 10Y-2Y negatív = fals riasztás → semleges
+    elif yld > 25:
+        yld_v = 2                 # normál pozitív görbe
+    elif yld > 0:
+        yld_v = 1
+    elif yld < -10:
+        yld_v = -1                # enyhe inverzió (de 10Y-3M nem erősíti)
+    else:
+        yld_v = 0
+    s += lei_v*9 + m2_v*7 + umi_v*5 + yld_v*4
     # Makro korrekciók
     s+=(3 if vix<16 else 1 if vix<22 else -2 if vix<28 else -5)
     s+=(3 if hy<3.0 else 1 if hy<3.8 else -3 if hy>4.5 else 0)
@@ -1598,7 +1707,11 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         ind(lng.get("yieldSignal","wait"),
             "Hozamgörbe 10Y–2Y + De-inversion sebesség",
             f"{'+' if yld>0 else ''}{yld} bp",
-            lng.get("yieldDesc","?") + (f" | Re-steep: {lng.get('yieldSpeed3m',0):+.0f}bp/3hó" if lng.get('yieldSpeed3m') else ""),
+            lng.get("yieldDesc","?") + (
+                f" | 10Y-3M: {lng.get('yieldCurve3m',0):+.0f}bp" +
+                (" ⚠ Lehetséges fals riasztás (10Y-3M pozitív)" if lng.get("yieldPossibleFalse") else "") +
+                (f" | Re-steep: {lng.get('yieldSpeed3m',0):+.0f}bp/3hó" if lng.get("yieldSpeed3m") else "")
+            ),
             weight=5, imp="KRITIKUS" if lng.get("yieldDangerous") else "FONTOS",
             cat5={"cur":yld_cat,"avg":"+50–100 bp (normál)",
                   "refs":["Mélyen invertált (<-25bp)","Enyhe inverzió (-25–0bp)",
@@ -2014,9 +2127,12 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                f"${net_liq:,.0f}B nettó",
                smart.get("liqDesc","?") + f" | Változás: {liq_chg:+.0f}B$ / 4hét",
                src_key="Global Liquidity"),
-        sm_row(mc_sig, "McClellan Summation Index",
-               f"{mc_sum:+,.0f}",
-               smart.get("mcDesc","?"), mc_badge, src_key="McClellan"),
+        sm_row(mc_sig, "Piaci Szélesség (RUT/SPX + EW/CW)",
+               f"{smart.get('mcOsc',0):+.1f}",
+               smart.get("mcDesc","?") +
+               (f" | RUT rel: {smart.get('rutRel20d',0):+.1f}%, EW rel: {smart.get('ewRel20d',0):+.1f}%"
+                if smart.get("rutRel20d") is not None else ""),
+               mc_badge, src_key="McClellan"),
         sm_row(dix_sig, "DIX – Dark Pool Index",
                f"{dix_v2:.1f}%",
                smart.get("dixDesc","?") + dix_badge, src_key="DIX/GEX"),
