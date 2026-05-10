@@ -1678,5 +1678,425 @@
     "sector": "Industrials",
     "industry": "Aerospace & Defense",
     "fetched": "2026-05-10T11:40:09.711994+00:00"
+  },
+  "HPQ": {
+    "symbol": "HPQ",
+    "name": "HP Inc.",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-10T11:47:45.284176+00:00"
+  },
+  "HUBB": {
+    "symbol": "HUBB",
+    "name": "Hubbell Inc",
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts",
+    "fetched": "2026-05-10T11:47:45.579101+00:00"
+  },
+  "HUM": {
+    "symbol": "HUM",
+    "name": "Humana Inc.",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-10T11:47:45.832333+00:00"
+  },
+  "HBAN": {
+    "symbol": "HBAN",
+    "name": "Huntington Bancshares Incorpora",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-10T11:47:46.069846+00:00"
+  },
+  "HII": {
+    "symbol": "HII",
+    "name": "Huntington Ingalls Industries, ",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:47:46.312478+00:00"
+  },
+  "IBM": {
+    "symbol": "IBM",
+    "name": "International Business Machines",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:47:46.553070+00:00"
+  },
+  "IEX": {
+    "symbol": "IEX",
+    "name": "IDEX Corporation",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:47:46.793247+00:00"
+  },
+  "IDXX": {
+    "symbol": "IDXX",
+    "name": "IDEXX Laboratories, Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:47:47.032272+00:00"
+  },
+  "ITW": {
+    "symbol": "ITW",
+    "name": "Illinois Tool Works Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:47:47.275375+00:00"
+  },
+  "INCY": {
+    "symbol": "INCY",
+    "name": "Incyte Corporation",
+    "sector": "Healthcare",
+    "industry": "Biotechnology",
+    "fetched": "2026-05-10T11:47:47.515824+00:00"
+  },
+  "IR": {
+    "symbol": "IR",
+    "name": "Ingersoll Rand Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:47:47.775257+00:00"
+  },
+  "PODD": {
+    "symbol": "PODD",
+    "name": "Insulet Corporation",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:47:48.025332+00:00"
+  },
+  "INTC": {
+    "symbol": "INTC",
+    "name": "Intel Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-10T11:47:48.256253+00:00"
+  },
+  "IBKR": {
+    "symbol": "IBKR",
+    "name": "Interactive Brokers Group, Inc.",
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "fetched": "2026-05-10T11:47:48.551039+00:00"
+  },
+  "ICE": {
+    "symbol": "ICE",
+    "name": "Intercontinental Exchange Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:47:48.821165+00:00"
+  },
+  "IFF": {
+    "symbol": "IFF",
+    "name": "International Flavors & Fragran",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:47:49.168199+00:00"
+  },
+  "IP": {
+    "symbol": "IP",
+    "name": "International Paper Company",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-10T11:47:49.438195+00:00"
+  },
+  "INTU": {
+    "symbol": "INTU",
+    "name": "Intuit Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:47:49.700893+00:00"
+  },
+  "ISRG": {
+    "symbol": "ISRG",
+    "name": "Intuitive Surgical, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-10T11:47:49.959413+00:00"
+  },
+  "IVZ": {
+    "symbol": "IVZ",
+    "name": "Invesco Ltd",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:47:50.298222+00:00"
+  },
+  "INVH": {
+    "symbol": "INVH",
+    "name": "Invitation Homes Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:47:50.574339+00:00"
+  },
+  "IQV": {
+    "symbol": "IQV",
+    "name": "IQVIA Holdings, Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:47:50.866251+00:00"
+  },
+  "IRM": {
+    "symbol": "IRM",
+    "name": "Iron Mountain Incorporated (Del",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-10T11:47:51.132877+00:00"
+  },
+  "JBHT": {
+    "symbol": "JBHT",
+    "name": "J.B. Hunt Transport Services, I",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-05-10T11:47:51.384286+00:00"
+  },
+  "JBL": {
+    "symbol": "JBL",
+    "name": "Jabil Inc.",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "fetched": "2026-05-10T11:47:51.643432+00:00"
+  },
+  "JKHY": {
+    "symbol": "JKHY",
+    "name": "Jack Henry & Associates, Inc.",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:47:51.878241+00:00"
+  },
+  "J": {
+    "symbol": "J",
+    "name": "Jacobs Solutions Inc.",
+    "sector": "Industrials",
+    "industry": "Engineering & Construction",
+    "fetched": "2026-05-10T11:47:52.134177+00:00"
+  },
+  "JNJ": {
+    "symbol": "JNJ",
+    "name": "Johnson & Johnson",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:47:52.403107+00:00"
+  },
+  "JCI": {
+    "symbol": "JCI",
+    "name": "Johnson Controls International ",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-10T11:47:52.684161+00:00"
+  },
+  "JPM": {
+    "symbol": "JPM",
+    "name": "JP Morgan Chase & Co.",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-10T11:47:52.946588+00:00"
+  },
+  "KVUE": {
+    "symbol": "KVUE",
+    "name": "Kenvue Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:47:53.231566+00:00"
+  },
+  "KDP": {
+    "symbol": "KDP",
+    "name": "Keurig Dr Pepper Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic",
+    "fetched": "2026-05-10T11:47:53.469056+00:00"
+  },
+  "KEY": {
+    "symbol": "KEY",
+    "name": "KeyCorp",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-10T11:47:53.716210+00:00"
+  },
+  "KEYS": {
+    "symbol": "KEYS",
+    "name": "Keysight Technologies Inc.",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-10T11:47:53.958409+00:00"
+  },
+  "KMB": {
+    "symbol": "KMB",
+    "name": "Kimberly-Clark Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:47:54.217708+00:00"
+  },
+  "KIM": {
+    "symbol": "KIM",
+    "name": "Kimco Realty Corporation (HC)",
+    "sector": "Real Estate",
+    "industry": "REIT - Retail",
+    "fetched": "2026-05-10T11:47:54.503919+00:00"
+  },
+  "KMI": {
+    "symbol": "KMI",
+    "name": "Kinder Morgan, Inc.",
+    "sector": "Energy",
+    "industry": "Oil & Gas Midstream",
+    "fetched": "2026-05-10T11:47:54.774364+00:00"
+  },
+  "KKR": {
+    "symbol": "KKR",
+    "name": "KKR & Co. Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:47:55.044498+00:00"
+  },
+  "KLAC": {
+    "symbol": "KLAC",
+    "name": "KLA Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials",
+    "fetched": "2026-05-10T11:47:55.301657+00:00"
+  },
+  "KHC": {
+    "symbol": "KHC",
+    "name": "The Kraft Heinz Company",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:47:55.553145+00:00"
+  },
+  "KR": {
+    "symbol": "KR",
+    "name": "Kroger Company (The)",
+    "sector": "Consumer Defensive",
+    "industry": "Grocery Stores",
+    "fetched": "2026-05-10T11:47:55.834546+00:00"
+  },
+  "LHX": {
+    "symbol": "LHX",
+    "name": "L3Harris Technologies, Inc.",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:47:56.107281+00:00"
+  },
+  "LH": {
+    "symbol": "LH",
+    "name": "Labcorp Holdings Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-10T11:47:56.366968+00:00"
+  },
+  "LRCX": {
+    "symbol": "LRCX",
+    "name": "Lam Research Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials",
+    "fetched": "2026-05-10T11:47:56.633791+00:00"
+  },
+  "LVS": {
+    "symbol": "LVS",
+    "name": "Las Vegas Sands Corp.",
+    "sector": "Consumer Cyclical",
+    "industry": "Resorts & Casinos",
+    "fetched": "2026-05-10T11:47:56.865915+00:00"
+  },
+  "LDOS": {
+    "symbol": "LDOS",
+    "name": "Leidos Holdings, Inc.",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:47:57.110569+00:00"
+  },
+  "LEN": {
+    "symbol": "LEN",
+    "name": "Lennar Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Residential Construction",
+    "fetched": "2026-05-10T11:47:57.369420+00:00"
+  },
+  "LII": {
+    "symbol": "LII",
+    "name": "Lennox International, Inc.",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-10T11:47:57.653354+00:00"
+  },
+  "LLY": {
+    "symbol": "LLY",
+    "name": "Eli Lilly and Company",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:47:57.925183+00:00"
+  },
+  "LIN": {
+    "symbol": "LIN",
+    "name": "Linde plc",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:47:58.162015+00:00"
+  },
+  "LYV": {
+    "symbol": "LYV",
+    "name": "Live Nation Entertainment, Inc.",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:47:58.458775+00:00"
+  },
+  "LMT": {
+    "symbol": "LMT",
+    "name": "Lockheed Martin Corporation",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:47:58.725040+00:00"
+  },
+  "L": {
+    "symbol": "L",
+    "name": "Loews Corporation",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-10T11:47:58.998508+00:00"
+  },
+  "LOW": {
+    "symbol": "LOW",
+    "name": "Lowe's Companies, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Home Improvement Retail",
+    "fetched": "2026-05-10T11:47:59.313434+00:00"
+  },
+  "LULU": {
+    "symbol": "LULU",
+    "name": "lululemon athletica inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Retail",
+    "fetched": "2026-05-10T11:47:59.659645+00:00"
+  },
+  "LITE": {
+    "symbol": "LITE",
+    "name": "Lumentum Holdings Inc.",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-10T11:47:59.927514+00:00"
+  },
+  "LYB": {
+    "symbol": "LYB",
+    "name": "LyondellBasell Industries NV",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-10T11:48:00.228494+00:00"
+  },
+  "MTB": {
+    "symbol": "MTB",
+    "name": "M&T Bank Corporation",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-10T11:48:00.488939+00:00"
+  },
+  "MPC": {
+    "symbol": "MPC",
+    "name": "Marathon Petroleum Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas Refining & Marketing",
+    "fetched": "2026-05-10T11:48:00.719687+00:00"
+  },
+  "MAR": {
+    "symbol": "MAR",
+    "name": "Marriott International",
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging",
+    "fetched": "2026-05-10T11:48:00.992914+00:00"
   }
 }
