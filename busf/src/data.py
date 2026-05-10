@@ -18,7 +18,7 @@ CACHE_DIR           = Path(__file__).parent.parent / "data" / "cache"
 FUNDAMENTALS_CACHE  = CACHE_DIR / "fundamentals.json"
 PROFILES_CACHE      = CACHE_DIR / "profiles.json"
 CACHE_TTL_DAYS      = 30
-MAX_FETCHES_PER_RUN = 120   # yfinance-nel nincs API limit
+MAX_FETCHES_PER_RUN = 520   # yfinance-nel nincs API limit
 
 SP500_URL      = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 SP500_FALLBACK = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
