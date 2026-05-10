@@ -1,0 +1,33 @@
+name: Options Dashboard
+
+on:
+  schedule:
+    - cron: '30 15 * * 5'   # Péntek 15:30 UTC = 17:30 Budapest (dashboard után 30 perccel)
+    - cron: '0 7 * * 6'     # Szombat 07:00 UTC = 09:00 Budapest (heti összefoglaló)
+  workflow_dispatch:
+
+jobs:
+  options:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install
+        run: pip install yfinance pandas numpy requests
+
+      - name: Run Options Dashboard
+        run: python options_update.py
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add options.html iv_history.json || true
+          git diff --staged --quiet || git commit -m "Options dashboard $(date +'%Y-%m-%d')"
+          git push || true
