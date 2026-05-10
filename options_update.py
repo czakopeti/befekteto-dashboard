@@ -287,7 +287,183 @@ def calc_implied_move(ticker):
     return safe(_fetch, None, f"ImplMove/{ticker}")
 
 # ── STRATEGY SUGGESTER v2 ────────────────────────────────────
-def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive):
+def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=20):
+    """
+    Teljes döntési fa – több stratégia egyszerre, konkrét paraméterekkel.
+    """
+    strategies = []
+    iv_cheap   = vix_pct < 30
+    iv_rich    = vix_pct > 70
+    iv_mid     = not iv_cheap and not iv_rich
+    back       = term_sig in ("backwardation", "strong_back")
+    strong_b   = term_sig == "strong_back"
+    put_exp    = skew_sig in ("put_expensive", "elevated")
+    gex_neg    = not gex_positive
+
+    # Delta szint VIX alapján
+    if vix_pct < 20:
+        call_delta = "OTM (35-45 delta)"
+        call_why   = "alacsony IV → gamma robbanás"
+    elif vix_pct > 70:
+        call_delta = "ITM (70-80 delta)"
+        call_why   = "magas IV → theta védelme"
+    else:
+        call_delta = "ATM (50-65 delta)"
+        call_why   = "normál volatilitás"
+
+    EXIT_RULE = "Exit: 50% profit VAGY 21 DTE előtt · Stop: -50% prémium"
+
+    # ── AZONNALI TILTÁS: Erős Backwardation ──────────────────
+    if strong_b:
+        return [{
+            "name": "STOP – Ne nyiss új pozíciót",
+            "desc": "Erős VIX Backwardation aktív. Minden long stratégia szünetel.",
+            "params": "Ha van nyitott long: szoros stop-loss vagy azonnali zárás",
+            "exit": "Amíg VIX/VIX3M ratio < 1.0 marad",
+            "risk": "Korlátlan ha bent maradsz",
+            "reward": "Tőke megőrzés", "rating": 5, "color": "#f04060",
+        }]
+
+    # ── MUST BUY (75+) ───────────────────────────────────────
+    if score >= 75:
+        if iv_cheap and not gex_neg:
+            strategies.append({
+                "name": "Long Call",
+                "desc": f"Erős makro + olcsó opció = legjobb kombináció. {call_delta} ({call_why}).",
+                "params": f"SPY/QQQ vagy top részvény · {call_delta} · 45-60 nap · Méret: max 5% portfólió",
+                "exit": EXIT_RULE,
+                "risk": "Prémium (alacsony)", "reward": "Korlátlan",
+                "rating": 5, "color": "#00d488",
+            })
+            strategies.append({
+                "name": "Bull Call Spread",
+                "desc": "Konzervatívabb változat kisebb tőkeigénnyel.",
+                "params": f"Buy ATM call · Sell 5-10% OTM call · Ugyanolyan lejárat (45 nap) · Méret: 3% portfólió",
+                "exit": "Zárd 50% profit · Ha ATM közelit az alsó szárnyhoz: zárj",
+                "risk": "Nettó debit (fix)", "reward": "Spread szélessége",
+                "rating": 4, "color": "#00d488",
+            })
+        if iv_rich or iv_mid:
+            strategies.append({
+                "name": "Cash-Secured Put",
+                "desc": "Bullish + magas prémium = ideális CSP. Ha lehívnak, jó áron veszed.",
+                "params": f"Sell 5-8% OTM put · 20-30 nap lejárat · Cash fedezet teljes sztrájk értékre · Méret: max 10% portfólió",
+                "exit": "Zárd 50% profit · Ha részvény sztrájk alá: rollover vagy átveszi",
+                "risk": "Részvény vásárlás diszkonton", "reward": f"Prémium (IV%: {vix_pct}%)",
+                "rating": 5 if iv_rich else 3, "color": "#00d488",
+            })
+        if put_exp:
+            strategies.append({
+                "name": "Ratio Bull Spread",
+                "desc": f"SKEW magas → OTM put prémium extrém. Net credit stratégia.",
+                "params": "Buy 1 ATM call · Sell 2 OTM call (20-25% feljebb) · 30 nap · Net credit szükséges",
+                "exit": "Zárd ha ATM eléri az eladott callok szintjét",
+                "risk": "Ha nagyon felmegy: veszteség a felső szárny felett",
+                "reward": "Net credit (put skew-ból)", "rating": 3, "color": "#7dd3fc",
+            })
+
+    # ── ÓVATOS (50-74) ───────────────────────────────────────
+    elif score >= 50:
+        if iv_rich and not gex_neg:
+            strategies.append({
+                "name": "Iron Condor",
+                "desc": f"Oldalazó piac + drága opció. GEX pozitív → biztonságos.",
+                "params": f"Sell ±5-8% OTM call + put · Buy ±10-12% OTM védelem · 25-35 nap · Méret: 5% portfólió",
+                "exit": "Zárd 50% profit · Ha VIX emelkedik 20%: azonnal zárd a vesztes szárnyat",
+                "risk": "Belső szárnyak közt korlátolt", "reward": f"Nettó prémium (IV%: {vix_pct}%)",
+                "rating": 5, "color": "#7dd3fc",
+            })
+            strategies.append({
+                "name": "Covered Call",
+                "desc": "Ha van részvényed: rendszeres prémium bevétel.",
+                "params": "Sell 0.25-0.30 delta call · 20-30 nap · Minden lejárat után rollover · Méret: 1 call / 100 részvény",
+                "exit": "Lejáratig tartsd vagy 80% profit esetén korai zárás",
+                "risk": "Felső oldal lezárva a sztrájknál",
+                "reward": "Havi ~1-2% bevétel", "rating": 4, "color": "#7dd3fc",
+            })
+        if iv_cheap and not gex_neg:
+            strategies.append({
+                "name": "Bull Call Spread (óvatos méret)",
+                "desc": "Bizonytalan makro de olcsó opció. Kis méret indokolt.",
+                "params": f"Buy ATM call · Sell OTM call · 45 nap · Méret: max 2% portfólió",
+                "exit": EXIT_RULE,
+                "risk": "Nettó debit (kis)", "reward": "Spread szélessége",
+                "rating": 3, "color": "#f0a500",
+            })
+        if put_exp:
+            strategies.append({
+                "name": "Bull Put Spread (Credit Spread)",
+                "desc": f"SKEW magas → OTM put prémium magas. Net credit fogadás hogy piac nem esik.",
+                "params": f"Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5% portfólió",
+                "exit": "Zárd 50% profit · Ha alá kerül az eladott put: zárj",
+                "risk": "Spread szélessége – prémium", "reward": "Net credit",
+                "rating": 4, "color": "#7dd3fc",
+            })
+
+    # ── VÉDEKEZÉS (<50) ──────────────────────────────────────
+    else:
+        if iv_cheap:
+            strategies.append({
+                "name": "Protective Put – MOST VEGYÉL",
+                "desc": "Gyenge makro + olcsó opció = filléres biztosítás. Most van alkalom.",
+                "params": "SPY vagy QQQ · 5-10% OTM put · 60-90 nap · Méret: 1-2% portfólió = teljes védelem",
+                "exit": "Tartsd amíg score 65+ vagy korrekcióig. Ha 200%+ profit: vegyed lejjebb",
+                "risk": "Prémium (ALACSONY MOST!)", "reward": "Portfólió teljes védelme",
+                "rating": 5, "color": "#f04060",
+            })
+            strategies.append({
+                "name": "Long Put (SPY/QQQ)",
+                "desc": "Közvetlen bearish fogadás az indexen. Alacsony IV = olcsó belépő.",
+                "params": f"SPY/QQQ ATM put · {call_delta.replace('call','put')} · 30-60 nap · Méret: 2-3% portfólió",
+                "exit": EXIT_RULE,
+                "risk": "Prémium (alacsony most!)", "reward": "Korlátlan esésre",
+                "rating": 4, "color": "#f04060",
+            })
+        elif iv_rich:
+            strategies.append({
+                "name": "Bear Put Spread",
+                "desc": "Bearish bet de drága IV → spread csökkenti a prémiumot.",
+                "params": "Buy ATM put · Sell 5-8% OTM put · 30 nap · Méret: 3% portfólió",
+                "exit": "Zárd 50% profit · Ha visszamegy ATM fölé: zárj",
+                "risk": "Nettó debit (spread – kisebb)", "reward": "Spread szélessége",
+                "rating": 4, "color": "#f04060",
+            })
+        if gex_neg:
+            strategies.append({
+                "name": "Csökkentsd a long kitettséget",
+                "desc": "GEX negatív: a market makerek eladni kénytelenek ha esik. Esések felerősödnek.",
+                "params": "Csökkentsd a részvény pozíciókat 30-50%-kal · Iron Condor TILOS · Csak védekező stratégiák",
+                "exit": "Amíg GEX negatív marad",
+                "risk": "–", "reward": "Tőke megőrzés",
+                "rating": 5, "color": "#f04060",
+            })
+
+    # Backwardation figyelmeztetés (ha nem strong)
+    if back and not strong_b:
+        strategies.insert(0, {
+            "name": "Backwardation – Óvatos pozicionálás",
+            "desc": "VIX > VIX3M: azonnali félelem. Csökkentett méret, csak prémium-gyűjtő stratégiák.",
+            "params": "Ne nyiss új long spekulatív pozíciót · Covered Call és CSP rendben",
+            "exit": "Amíg VIX/VIX3M < 1.0 marad",
+            "risk": "Új long pozíciók veszélyesek", "reward": "–",
+            "rating": 5, "color": "#f0a500",
+        })
+
+    # GEX negatív globális figyelmeztetés
+    if gex_neg and not any("Iron Condor TILOS" in s.get("params","") for s in strategies):
+        strategies.append({
+            "name": "GEX Negatív – Iron Condor TILOS",
+            "desc": "Negatív GEX = volatilitás amplifikátor. Oldalazó stratégiák veszélyesek.",
+            "params": "Zárj minden Iron Condort · Csak directional vagy védekező stratégiák",
+            "exit": "Amíg GEX pozitívba fordul",
+            "risk": "Ha bent maradsz ICban: nagy veszteség", "reward": "–",
+            "rating": 5, "color": "#f04060",
+        })
+
+    strategies.sort(key=lambda x: x["rating"], reverse=True)
+    return strategies[:5]
+
+
     """
     Teljes döntési fa: score + IV Percentile + SKEW + Term Structure + GEX
     """
@@ -518,20 +694,21 @@ def generate_decision_matrix(score, vix_pct, skew, term_sig, gex_positive):
         </tr>"""
     return rows_html
 
-# ── HTML GENERATOR ────────────────────────────────────────────
+# ── HTML GENERATOR ────────────────────────────────────────────NEW_FUNC = r'''
 def generate_html(state, vix_data, skew_data, impl_moves, iv_data, strategies):
-    today = datetime.datetime.now().strftime("%Y. %B %d.")
+    import datetime as _dt
+    today = _dt.datetime.now().strftime("%Y. %B %d.")
     score    = state["score"]
     playbook = state["playbook"]
     gex_pos  = state.get("gex", 5) > 0
 
-    vix      = vix_data.get("VIX", 20)
-    vix3m    = vix_data.get("VIX3M", 22)
-    vix6m    = vix_data.get("VIX6M", 23)
-    vrank    = vix_data.get("vix_rank", 50)
-    vpct     = vix_data.get("vix_pct", 50)
-    skew_v   = skew_data.get("skew", 130)
-    back     = vix_data.get("backwardation", False)
+    vix   = vix_data.get("VIX", 20)
+    vix3m = vix_data.get("VIX3M", 22)
+    vix6m = vix_data.get("VIX6M", 23)
+    vpct  = vix_data.get("vix_pct", 50)
+    vrank = vix_data.get("vix_rank", 50)
+    skew_v  = skew_data.get("skew", 130)
+    back    = vix_data.get("backwardation", False)
     strong_b = vix_data.get("strong_back", False)
     term_sig = vix_data.get("term_sig", "normal")
 
@@ -539,246 +716,233 @@ def generate_html(state, vix_data, skew_data, impl_moves, iv_data, strategies):
     vix_c   = "#f04060" if vpct > 70 else "#00d488" if vpct < 30 else "#f0a500"
     skew_c  = "#f04060" if skew_v > 145 else "#f0a500" if skew_v > 130 else "#00d488"
     term_c  = "#f04060" if back else "#00d488"
+    gex_c   = "#00d488" if gex_pos else "#f04060"
 
-    # Backwardation banner
     back_banner = ""
     if strong_b:
-        back_banner = """<div style="background:#f0406020;border:2px solid #f04060;
-            border-radius:10px;padding:14px 18px;margin-bottom:20px;
-            display:flex;align-items:center;gap:12px">
-          <div style="font-size:24px">🚨</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#f04060">VIX BACKWARDATION AKTÍV</div>
-            <div style="font-size:10px;color:#f04060;margin-top:3px">
-              VIX > VIX3M – azonnali pánik az opciós piacon. Minden long stratégia szünetel.
-              Ne nyiss új pozíciót amíg ez fennáll.
-            </div>
-          </div>
-        </div>"""
+        back_banner = ('<div style="background:#f0406015;border:2px solid #f04060;border-radius:10px;'
+            'padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">'
+            '<div style="font-size:22px">🚨</div>'
+            '<div><div style="font-weight:700;color:#f04060;margin-bottom:3px">VIX BACKWARDATION AKTÍV</div>'
+            '<div style="font-size:10px;color:#f08090">VIX > VIX3M – pánik az opciós piacon. Minden new long szünetel.</div>'
+            '</div></div>')
     elif back:
-        back_banner = """<div style="background:#f0a50015;border:1px solid #f0a500;
-            border-radius:10px;padding:10px 16px;margin-bottom:16px">
-          <span style="color:#f0a500;font-weight:700">⚠ Backwardation – </span>
-          <span style="color:#f0a500;font-size:11px">Óvatos pozicionálás. Spekulatív long-ok kerülendők.</span>
-        </div>"""
+        back_banner = ('<div style="background:#f0a50010;border:1px solid #f0a50040;border-radius:8px;'
+            'padding:9px 14px;margin-bottom:12px;font-size:10px;color:#f0a500">'
+            '⚠ <strong>Backwardation</strong> – óvatos pozicionálás.</div>')
 
     # VIX term bars
-    max_v  = max(vix, vix3m, vix6m) * 1.2
+    maxv = max(vix, vix3m, vix6m) * 1.2
     tbars = ""
-    for val, lbl in [(vix,"VIX\n30n"),(vix3m,"VIX3M\n3hó"),(vix6m,"VIX6M\n6hó")]:
-        pct = round(val / max_v * 100)
-        c   = "#f04060" if val > 25 else "#f0a500" if val > 18 else "#00d488"
-        tbars += f"""<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div style="font-size:14px;font-weight:700;color:{c}">{val}</div>
-          <div style="width:100%;height:55px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden">
-            <div style="position:absolute;bottom:0;width:100%;height:{pct}%;background:{c}25;border-top:2px solid {c}"></div>
-          </div>
-          <div style="font-size:9px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">{lbl}</div>
-        </div>"""
+    for val, lbl in [(vix, "VIX\n30n"), (vix3m, "VIX3M\n3hó"), (vix6m, "VIX6M\n6hó")]:
+        pct = round(val / maxv * 100)
+        c = "#f04060" if val > 25 else "#f0a500" if val > 18 else "#00d488"
+        tbars += (f'<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">'
+            f'<div style="font-size:13px;font-weight:700;color:{c};font-family:var(--mono)">{val}</div>'
+            f'<div style="width:100%;height:50px;background:var(--c2);border-radius:4px;position:relative;overflow:hidden">'
+            f'<div style="position:absolute;bottom:0;width:100%;height:{pct}%;background:{c}22;border-top:2px solid {c}"></div></div>'
+            f'<div style="font-size:8px;color:var(--mut);text-align:center;font-family:var(--mono);white-space:pre">{lbl}</div></div>')
+
+    # Dots helper
+    def dots(level):
+        level = max(1, min(5, level))
+        out = ""
+        for i in range(1, 6):
+            c = ("#00d488" if i <= level else "var(--brd2)")
+            out += f'<div style="width:8px;height:8px;border-radius:50%;background:{c}"></div>'
+        return out
+
+    vix_lvl  = round(vpct / 20) + 1
+    skew_lvl = (1 if skew_v < 115 else 2 if skew_v < 125 else 3 if skew_v < 135 else 4 if skew_v < 145 else 5)
+    term_lvl = (5 if back else 4 if vix_data.get("ratio_3m",0.9) > 0.97 else 3 if vix_data.get("ratio_3m",0.9) > 0.93 else 2)
+
+    # Strategy cards
+    sc_html = ""
+    for idx, s in enumerate(strategies):
+        stars = "★" * s["rating"] + "☆" * (5 - s["rating"])
+        badge = (f'<span style="background:{s["color"]}20;color:{s["color"]};font-size:8px;'
+                 f'padding:2px 7px;border-radius:99px;font-family:var(--mono);border:1px solid {s["color"]}40">▶ LEGJOBB MOST</span>'
+                 if idx == 0 else "")
+        sc_html += (f'<div style="background:var(--c2);border:1px solid var(--brd);'
+            f'border-left:3px solid {s["color"]};border-radius:9px;padding:12px 14px;margin-bottom:8px">'
+            f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">'
+            f'<div style="font-size:12px;font-weight:700;color:{s["color"]};font-family:var(--mono)">{s["name"]}</div>'
+            f'<div style="color:{s["color"]};font-size:10px;opacity:0.6">{stars}</div>{badge}</div>'
+            f'<div style="font-size:10px;color:var(--sub);margin-bottom:6px;line-height:1.5">{s["desc"]}</div>'
+            f'<div style="background:var(--bg2);border-radius:6px;padding:8px 10px;margin-bottom:6px;'
+            f'font-size:9px;font-family:var(--mono);color:var(--sub);line-height:1.5">'
+            f'<span style="color:var(--mut)">📋 </span>{s.get("params","–")}</div>'
+            f'<div style="display:flex;gap:16px;font-size:9px;font-family:var(--mono);flex-wrap:wrap">'
+            f'<span style="color:var(--mut)">Kockázat: <span style="color:#f04060">{s["risk"]}</span></span>'
+            f'<span style="color:var(--mut)">Hozam: <span style="color:#00d488">{s["reward"]}</span></span></div>'
+            f'<div style="margin-top:5px;font-size:9px;color:var(--mut);font-family:var(--mono)">'
+            f'⏱ {s.get("exit","Exit: 50% profit vagy 21 DTE")}</div></div>')
 
     # Implied moves
     im_rows = ""
     for m in (impl_moves or []):
         c = "#f0a500" if m["impl_pct"] > 15 else "#4da6ff"
-        im_rows += f"""<tr>
-          <td style="font-weight:700;color:var(--fg)">{m['ticker']}</td>
-          <td>${m['price']:.2f}</td>
-          <td style="color:{c};font-weight:700">±{m['impl_pct']:.1f}%</td>
-          <td>{m['days']} nap</td>
-          <td>{m['atm_iv']:.0f}%</td>
-          <td>${m['straddle']:.2f}</td></tr>"""
+        im_rows += (f'<div style="display:grid;grid-template-columns:60px 70px 70px 60px 55px 70px;'
+            f'gap:6px;padding:8px 10px;border-bottom:1px solid var(--brd);align-items:center;font-size:11px">'
+            f'<div style="font-weight:700;color:var(--text);font-family:var(--mono)">{m["ticker"]}</div>'
+            f'<div style="color:var(--sub);font-family:var(--mono)">${m["price"]:.2f}</div>'
+            f'<div style="color:{c};font-weight:700;font-family:var(--mono)">±{m["impl_pct"]:.1f}%</div>'
+            f'<div style="color:var(--mut)">{m["days"]} nap</div>'
+            f'<div style="color:var(--sub);font-family:var(--mono)">{m["atm_iv"]:.0f}%</div>'
+            f'<div style="color:var(--mut);font-family:var(--mono)">${m["straddle"]:.2f}</div></div>')
     if not im_rows:
-        im_rows = '<tr><td colspan="6" style="color:var(--mut);text-align:center;padding:14px">Nincs közelgő earnings a watchlisten (30 napon belül)</td></tr>'
+        im_rows = '<div style="padding:16px;text-align:center;color:var(--mut);font-size:11px">Nincs közelgő earnings (30 napon belül)</div>'
 
     # IV tracker
     iv_rows = ""
     for t, d in sorted(iv_data.items()):
-        iv   = d.get("iv", 0)
-        ivp  = d.get("iv_pct")
-        wk   = d.get("weeks", 1)
+        iv = d.get("iv", 0); ivp = d.get("iv_pct"); wk = d.get("weeks", 1)
         beta = d.get("iv_beta", False)
         if ivp is not None:
-            c   = "#f04060" if ivp > 70 else "#00d488" if ivp < 30 else "#f0a500"
+            c = "#f04060" if ivp > 70 else "#00d488" if ivp < 30 else "#f0a500"
             tip = "Eladj" if ivp > 70 else "Végy" if ivp < 30 else "–"
-            beta_lbl = ' <span style="font-size:8px;color:#f0a500">(béta)</span>' if beta else ''
-            pct_str = f'<span style="color:{c};font-weight:700">{ivp}%</span>' + beta_lbl
-            bar = f'<div style="height:3px;background:var(--c2);border-radius:2px;margin-top:3px"><div style="height:3px;width:{ivp}%;background:{c};border-radius:2px"></div></div>'
+            bdg = ' <span style="color:#f0a500;font-size:8px">(béta)</span>' if beta else ""
+            pbar = (f'<div style="height:3px;background:var(--brd2);border-radius:2px;margin-top:3px">'
+                    f'<div style="height:3px;width:{ivp}%;background:{c};border-radius:2px"></div></div>')
+            pct_s = f'<span style="color:{c};font-weight:700;font-family:var(--mono)">{ivp}%</span>{bdg}{pbar}'
         else:
             c = "var(--mut)"; tip = "–"
-            pct_str = f'<span style="color:var(--mut);font-size:9px">{wk} hét – gyűlik</span>'
-            bar = ""
-        iv_rows += f"""<tr>
-          <td style="font-weight:700;color:var(--fg)">{t}</td>
-          <td style="color:var(--sub)">{iv:.0f}%</td>
-          <td>{pct_str}{bar}</td>
-          <td style="color:{c};font-size:10px">{tip}</td></tr>"""
-
-    # Strategy cards
-    sc_html = ""
-    for s in strategies:
-        stars = "★" * s["rating"] + "☆" * (5 - s["rating"])
-        sc_html += f"""<div style="background:var(--card);border:1px solid {s['color']}25;
-            border-left:3px solid {s['color']};border-radius:10px;
-            padding:14px 16px;margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-            <div style="font-size:12px;font-weight:700;color:{s['color']};font-family:var(--mono)">{s['name']}</div>
-            <div style="color:{s['color']};font-size:11px;opacity:0.7">{stars}</div>
-          </div>
-          <div style="font-size:10.5px;color:var(--sub);margin-bottom:7px;line-height:1.5">{s['desc']}</div>
-          <div style="display:flex;gap:20px;font-size:9px;font-family:var(--mono)">
-            <span>Kockázat: <span style="color:#f04060">{s['risk']}</span></span>
-            <span>Hozam: <span style="color:#00d488">{s['reward']}</span></span>
-          </div></div>"""
+            pct_s = f'<span style="color:var(--mut);font-size:9px">{wk} hét – gyűlik</span>'
+        iv_rows += (f'<div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;'
+            f'padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center">'
+            f'<div style="font-weight:700;color:var(--text);font-family:var(--mono)">{t}</div>'
+            f'<div style="color:var(--sub);font-family:var(--mono)">{iv:.0f}%</div>'
+            f'<div>{pct_s}</div>'
+            f'<div style="color:{c};font-size:9px;font-family:var(--mono)">{tip}</div></div>')
 
     # Decision matrix
     dm_rows = generate_decision_matrix(score, vpct, skew_v, term_sig, gex_pos)
 
-    return f"""<!DOCTYPE html>
-<html lang="hu"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Opciós Dashboard – {today}</title>
-<style>
-:root{{--bg:#0d0f14;--card:#151820;--c2:#1e2230;--brd:#2a2e3d;
-      --fg:#e8ecf5;--sub:#8b91a8;--mut:#555b72;
-      --mono:'JetBrains Mono','Courier New',monospace}}
-*{{box-sizing:border-box;margin:0;padding:0}}
-body{{background:var(--bg);color:var(--fg);
-     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}}
-.wrap{{max-width:960px;margin:0 auto;padding:20px 16px}}
-h2{{font-size:10px;font-family:var(--mono);color:var(--mut);letter-spacing:2px;
-    text-transform:uppercase;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--brd)}}
-.g4{{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}}
-.card{{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px}}
-.nav{{display:flex;gap:10px;margin-bottom:20px}}
-.nav a{{font-size:10px;font-family:var(--mono);color:var(--mut);text-decoration:none;
-        padding:5px 12px;border:1px solid var(--brd);border-radius:20px}}
-.nav .act{{color:#4da6ff;border-color:#4da6ff30;background:#4da6ff08}}
-table{{width:100%;border-collapse:collapse}}
-th{{font-size:9px;font-family:var(--mono);color:var(--mut);text-align:left;padding:6px 8px;border-bottom:1px solid var(--brd)}}
-td{{padding:8px 8px;border-bottom:1px solid #1e223080;font-size:11px;color:var(--sub)}}
-tr:hover td{{background:var(--c2)}}
-@media(max-width:600px){{.g4{{grid-template-columns:1fr 1fr}}}}
-</style></head><body><div class="wrap">
+    CSS = """:root{
+  --bg:#0b1525;--bg2:#0e1b30;--card:#121f38;--c2:#172542;
+  --brd:#1d2f4a;--brd2:#243860;
+  --text:#dce8f5;--sub:#8aabcc;--mut:#4e6f8f;
+  --bull:#00d488;--bear:#f04060;--neu:#f0a500;--info:#4da6ff;
+  --mono:"JetBrains Mono",monospace;--sans:"Inter",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;padding:14px;min-height:100vh}
+.sbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sp{font-family:var(--mono);font-size:9.5px;padding:3px 10px;border-radius:99px;border:1px solid}
+.sp-ok{color:var(--bull);border-color:#00d48830;background:#00d48810}
+.sp-info{color:var(--sub);border-color:var(--brd);background:var(--card)}
+.sp-warn{color:var(--neu);border-color:#f0a50030;background:#f0a50010}
+.sbar-r{margin-left:auto;font-size:10px;color:var(--mut);font-family:var(--mono)}
+.sec{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:15px;margin-bottom:12px}
+.sec-title{font-size:10px;font-family:var(--mono);color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nav a{font-size:10px;font-family:var(--mono);color:var(--mut);text-decoration:none;padding:4px 12px;border:1px solid var(--brd);border-radius:99px}
+.nav a:hover{color:var(--text)}
+.nav .act{color:var(--info);border-color:#4da6ff30;background:#4da6ff08}
+.dm-table{width:100%;border-collapse:collapse;font-size:10px}
+.dm-table th{font-size:8px;font-family:var(--mono);color:var(--mut);text-align:left;padding:6px 8px;border-bottom:1px solid var(--brd);white-space:nowrap}
+.dm-table td{padding:7px 8px;border-bottom:1px solid #1d2f4a50;color:var(--sub);vertical-align:top;font-size:10px}
+.dm-table tr.active td{background:#00d48808;color:var(--text)}
+.dm-table tr.active td:nth-child(3){color:#00d488;font-weight:700}
+@media(max-width:640px){
+  .g4{grid-template-columns:1fr 1fr}
+  .dm-table{font-size:9px}
+  .dm-table th,.dm-table td{padding:5px 6px}
+}"""
 
-<div class="nav">
-  <a href="index.html">📊 Fő Dashboard</a>
-  <a href="options.html" class="act">⚡ Opciós Modul</a>
-</div>
+    sp_gex_cls = "sp-ok" if gex_pos else "sp-warn"
 
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
-  <div>
-    <div style="font-size:20px;font-weight:700">Opciós Dashboard</div>
-    <div style="font-size:10px;color:var(--mut);font-family:var(--mono)">{today}</div>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="font-size:10px;color:var(--mut)">Makro score:</div>
-    <div style="font-size:28px;font-weight:900;color:{score_c}">{score}</div>
-    <div style="padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--mono);
-                font-weight:600;color:{score_c};background:{score_c}15;border:1px solid {score_c}30">{playbook}</div>
-    <div style="padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--mono);
-                color:{'#00d488' if gex_pos else '#f04060'};
-                background:{'#00d48812' if gex_pos else '#f0406012'};
-                border:1px solid {'#00d48830' if gex_pos else '#f0406030'}">
-      GEX {"+" if gex_pos else "–"}</div>
-  </div>
-</div>
-
-{back_banner}
-
-<h2>Volatilitás Rezsim</h2>
-<div class="g4">
-  <div class="card" style="border-color:{vix_c}25">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">IV PERCENTILE (52 HÉT)</div>
-    <div style="font-size:30px;font-weight:900;color:{vix_c}">{vpct}%</div>
-    <div style="height:4px;background:var(--c2);border-radius:2px;margin:6px 0">
-      <div style="height:4px;width:{vpct}%;background:{vix_c};border-radius:2px"></div></div>
-    <div style="font-size:10px;color:var(--sub)">
-      {"DRÁGA – opció ELADÁS kedvező" if vpct > 70 else "OLCSÓ – opció VÉTEL kedvező" if vpct < 30 else "Normál IV szint"}</div>
-    <div style="font-size:8px;color:var(--mut);margin-top:4px;font-family:var(--mono)">VIX Rank: {vrank}%</div>
-  </div>
-  <div class="card" style="border-color:{skew_c}25">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">SKEW INDEX</div>
-    <div style="font-size:30px;font-weight:900;color:{skew_c}">{skew_v}</div>
-    <div style="font-size:10px;color:var(--sub);margin-top:6px;line-height:1.4">{skew_data.get('skew_desc','?')}</div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px;font-family:var(--mono)">
-      {skew_data.get('trade_hint','–')}</div>
-  </div>
-  <div class="card" style="border-color:{term_c}25">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX TERM STRUCTURE</div>
-    <div style="font-size:11px;font-weight:700;color:{term_c};margin-bottom:8px">
-      {"🔴 BACKWARDATION" if back else "🟢 Contango"}</div>
-    <div style="display:flex;gap:8px;align-items:flex-end;height:65px">{tbars}</div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px">{vix_data.get('term_desc','?')}</div>
-  </div>
-  <div class="card">
-    <div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:4px">VIX / VIX3M ARÁNY</div>
-    <div style="font-size:30px;font-weight:900;color:{term_c}">{vix_data.get('ratio_3m',0.9):.3f}</div>
-    <div style="font-size:10px;color:var(--sub);margin-top:6px">
-      Kritikus szint: <strong>1.0</strong> felett = Backwardation</div>
-    <div style="font-size:9px;color:var(--mut);margin-top:6px;font-family:var(--mono)">
-      {"⚠ FELETT VAGYUNK" if back else "✓ Normál tartomány"}</div>
-  </div>
-</div>
-
-<h2>Stratégia Javaslat</h2>
-<div style="padding:10px 14px;background:var(--c2);border-radius:8px;margin-bottom:12px;
-            font-size:9px;color:var(--mut);font-family:var(--mono)">
-  Bemenet: Score <strong style="color:{score_c}">{score}</strong> · 
-  IV Pct <strong style="color:{vix_c}">{vpct}%</strong> · 
-  SKEW <strong style="color:{skew_c}">{skew_v}</strong> · 
-  Term: <strong style="color:{term_c}">{"Backwardation" if back else "Contango"}</strong> · 
-  GEX: <strong style="color:{'#00d488' if gex_pos else '#f04060'}">{"Pozitív" if gex_pos else "NEGATÍV"}</strong>
-</div>
-{sc_html}
-
-<h2>Döntési Mátrix – Pontosan Mit, Mikor, Hogyan</h2>
-<div class="card">
-  <table>
-    <thead><tr>
-      <th>Score</th><th>IV</th><th>Stratégia</th>
-      <th>Időzítés / Lejárat</th><th>Pozícióméret / Exit</th>
-    </tr></thead>
-    <tbody>{dm_rows}</tbody>
-  </table>
-  <div style="margin-top:10px;padding:10px;background:var(--c2);border-radius:6px;
-              font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.7">
-    ★ Zöld sor = jelenlegi piaci állapothoz legjobb stratégia · 
-    Lejárat: 30-45 nap optimális a theta-decay szempontjából · 
-    Méretezés: max 5% portfólióból egy opciós pozícióra · 
-    Általános exit: 50% profit VAGY 21 nap a lejárat előtt
-  </div>
-</div>
-
-<h2>Implied Move – Közelgő Earnings</h2>
-<div class="card">
-  <table>
-    <thead><tr><th>Ticker</th><th>Ár</th><th>Implied ±%</th>
-    <th>Earnings</th><th>ATM IV</th><th>Straddle ár</th></tr></thead>
-    <tbody>{im_rows}</tbody>
-  </table>
-  <div style="margin-top:8px;font-size:9px;color:var(--mut);font-family:var(--mono)">
-    Implied Move = ATM Straddle / Részvény ár. Ha a részvény historikusan többet mozog → opció alulárazott (venni jobb).
-  </div>
-</div>
-
-<h2>IV Percentile Tracker</h2>
-<div class="card">
-  <div style="font-size:9px;color:var(--mut);margin-bottom:10px;font-family:var(--mono)">
-    IV Percentile: az idő hány %-ában volt alacsonyabb az IV a mostaninál. 
-    8+ hét után megbízható. Jelenleg elegendő adat: {len([v for v in iv_data.values() if (v.get('weeks',0) or 0) >= 8])} részvény.
-  </div>
-  <table>
-    <thead><tr><th>Ticker</th><th>Aktuális IV</th><th>IV Percentile</th><th>Javaslat</th></tr></thead>
-    <tbody>{iv_rows}</tbody>
-  </table>
-</div>
-
-<div style="margin-top:20px;padding:12px;background:var(--c2);border-radius:8px;
-            font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.8">
-  Adatforrások: CBOE (^SKEW, ^VIX via yfinance) · Options chains: yfinance · GEX: SqueezeMetrics<br>
-  ⚠ Nem befektetési tanács. Az opciók tőkeáttétes, komplex instrumentumok. Értsd meg a kockázatot mielőtt kereskedsz.
-</div>
-</div></body></html>"""
+    return (f'<!DOCTYPE html><html lang="hu"><head>'
+        f'<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+        f'<title>Opciós Dashboard – {today}</title>'
+        f'<style>{CSS}</style></head><body>'
+        f'<div class="nav"><a href="index.html">📊 Fő Dashboard</a>'
+        f'<a href="options.html" class="act">⚡ Opciós Modul</a></div>'
+        f'<div class="sbar">'
+        f'<span class="sp sp-ok">⬤ Opciós Dashboard</span>'
+        f'<span class="sp sp-info">{today}</span>'
+        f'<span class="sp sp-info">Score: {score} – {playbook}</span>'
+        f'<span class="sp {sp_gex_cls}">GEX {"+" if gex_pos else "–"}</span>'
+        f'<div class="sbar-r">Heti frissítés · Péntek 17:30</div></div>'
+        f'{back_banner}'
+        f'<div class="sec"><div class="sec-title">Volatilitás Rezsim'
+        f'<span style="background:#4da6ff12;color:var(--info);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid #4da6ff25">SPX opciós piac</span></div>'
+        f'<div class="g4">'
+        # IV Percentile card
+        f'<div style="background:var(--c2);border:1px solid {vix_c}25;border-radius:9px;padding:12px">'
+        f'<div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">IV PERCENTILE</div>'
+        f'<div style="font-size:26px;font-weight:700;color:{vix_c};font-family:var(--mono)">{vpct}%</div>'
+        f'<div style="display:flex;gap:3px;margin:6px 0">{dots(vix_lvl)}</div>'
+        f'<div style="font-size:9px;color:var(--sub)">{"DRÁGA – eladni" if vpct>70 else "OLCSÓ – venni" if vpct<30 else "Normál"}</div>'
+        f'<div style="height:3px;background:var(--brd2);border-radius:2px;margin-top:6px">'
+        f'<div style="height:3px;width:{vpct}%;background:{vix_c};border-radius:2px"></div></div>'
+        f'<div style="font-size:8px;color:var(--mut);margin-top:3px;font-family:var(--mono)">VIX Rank: {vrank}%</div></div>'
+        # SKEW card
+        f'<div style="background:var(--c2);border:1px solid {skew_c}25;border-radius:9px;padding:12px">'
+        f'<div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">SKEW INDEX</div>'
+        f'<div style="font-size:26px;font-weight:700;color:{skew_c};font-family:var(--mono)">{skew_v}</div>'
+        f'<div style="display:flex;gap:3px;margin:6px 0">{dots(skew_lvl)}</div>'
+        f'<div style="font-size:9px;color:var(--sub);line-height:1.4">{skew_data.get("skew_desc","?")}</div>'
+        f'<div style="font-size:8px;color:var(--mut);margin-top:6px;font-family:var(--mono)">{skew_data.get("trade_hint","–")}</div></div>'
+        # Term Structure card
+        f'<div style="background:var(--c2);border:1px solid {term_c}25;border-radius:9px;padding:12px">'
+        f'<div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX TERM STRUCTURE</div>'
+        f'<div style="font-size:11px;font-weight:700;color:{term_c};margin-bottom:8px">{"🔴 BACKWARDATION" if back else "🟢 Contango"}</div>'
+        f'<div style="display:flex;gap:6px;align-items:flex-end;height:60px">{tbars}</div>'
+        f'<div style="font-size:8px;color:var(--mut);margin-top:6px">{vix_data.get("term_desc","?")}</div></div>'
+        # Ratio card
+        f'<div style="background:var(--c2);border:1px solid {term_c}25;border-radius:9px;padding:12px">'
+        f'<div style="font-size:9px;font-family:var(--mono);color:var(--mut);margin-bottom:6px">VIX/VIX3M ARÁNY</div>'
+        f'<div style="font-size:26px;font-weight:700;color:{term_c};font-family:var(--mono)">{vix_data.get("ratio_3m",0.9):.3f}</div>'
+        f'<div style="display:flex;gap:3px;margin:6px 0">{dots(term_lvl)}</div>'
+        f'<div style="font-size:9px;color:var(--sub)">Kritikus: <strong>1.0</strong> felett = Backwardation</div>'
+        f'<div style="font-size:8px;color:{term_c};margin-top:6px;font-family:var(--mono)">{"⚠ FELETT VAGYUNK" if back else "✓ Normál"}</div></div>'
+        f'</div></div>'
+        # Strategy
+        f'<div class="sec"><div class="sec-title">Stratégia Javaslat'
+        f'<span style="background:var(--c2);color:var(--mut);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid var(--brd)">'
+        f'Score {score} · IV {vpct}% · SKEW {skew_v} · {"Back" if back else "Contango"} · GEX {"+" if gex_pos else "–"}</span></div>'
+        f'{sc_html}</div>'
+        # Decision matrix
+        f'<div class="sec"><div class="sec-title">Döntési Mátrix'
+        f'<span style="background:#00d48812;color:#00d488;font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid #00d48830">▶ Zöld = aktuális</span></div>'
+        f'<div style="overflow-x:auto"><table class="dm-table"><thead><tr>'
+        f'<th>Score</th><th>IV</th><th>Stratégia</th><th>Lejárat</th><th>Exit</th>'
+        f'</tr></thead><tbody>{dm_rows}</tbody></table></div>'
+        f'<div style="margin-top:8px;padding:8px 10px;background:var(--c2);border-radius:6px;'
+        f'font-size:9px;color:var(--mut);font-family:var(--mono)">Max 5% portfólió / pozíció · Exit: 50% profit VAGY 21 DTE</div></div>'
+        # Implied move
+        f'<div class="sec"><div class="sec-title">Implied Move – Közelgő Earnings</div>'
+        f'<div style="background:var(--c2);border:1px solid var(--brd);border-radius:8px;overflow:hidden">'
+        f'<div style="display:grid;grid-template-columns:60px 70px 70px 60px 55px 70px;gap:6px;'
+        f'padding:7px 10px;border-bottom:1px solid var(--brd)">'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">TICKER</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">ÁR</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IMPLIED ±%</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">NAPOK</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">ATM IV</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">STRADDLE</div>'
+        f'</div>{im_rows}</div>'
+        f'<div style="margin-top:8px;font-size:9px;color:var(--mut);font-family:var(--mono)">'
+        f'ATM Straddle / Ár = piaci várható mozgás ±irányban</div></div>'
+        # IV tracker
+        f'<div class="sec"><div class="sec-title">IV Percentile Tracker'
+        f'<span style="background:var(--c2);color:var(--mut);font-size:9px;padding:2px 8px;border-radius:99px;border:1px solid var(--brd)">'
+        f'{len([v for v in iv_data.values() if (v.get("weeks",0) or 0) >= 8])} elegendő adat (8+ hét)</span></div>'
+        f'<div style="background:var(--c2);border:1px solid var(--brd);border-radius:8px;overflow:hidden">'
+        f'<div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;'
+        f'padding:7px 10px;border-bottom:1px solid var(--brd)">'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">TICKER</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IV</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">IV PERCENTILE</div>'
+        f'<div style="font-size:8px;color:var(--mut);font-family:var(--mono)">JAVASLAT</div>'
+        f'</div>{iv_rows}</div></div>'
+        f'<div style="padding:10px 12px;background:var(--card);border:1px solid var(--brd);border-radius:8px;'
+        f'font-size:9px;color:var(--mut);font-family:var(--mono);line-height:1.7">'
+        f'Adatforrás: CBOE ^SKEW ^VIX ^VIX3M ^VIX6M via yfinance · GEX: dashboard history.json<br>'
+        f'⚠ Nem befektetési tanács. Az opciók komplex instrumentumok.</div>'
+        f'</body></html>')
 
 def main():
     print("\n" + "="*55)
@@ -809,7 +973,8 @@ def main():
     strats  = suggest_strategy(
         state["score"], vix_data.get("vix_pct",50),
         skew_data.get("skew_sig","normal"),
-        vix_data.get("term_sig","normal"), gex_pos)
+        vix_data.get("term_sig","normal"), gex_pos,
+        vix_val=vix_data.get("VIX", 20))
 
     log("HTML generálás...")
     html = generate_html(state, vix_data, skew_data, impl_moves, iv_data, strats)

@@ -1634,7 +1634,10 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
                           "Golden Cross, lassul","Golden Cross, gyorsuló"]}, src_label="Medium Term"),
 
         ind("go" if pe<18 else "bear" if pe>24 else "wait",
-            "Forward P/E", f"{pe}x", base.get("valLabel","?"), weight=4, imp="FONTOS",
+            "Forward P/E",
+            f"{pe}x",
+            base.get("valLabel","?") + f" | EPS: ${base.get('forwardEPS',338):.0f} ({base.get('epsSource','?')})",
+            weight=4, imp="FONTOS",
             cat5={"cur":pe_cat,"avg":"18–19x (historikus)",
                   "refs":["Nagyon drága (>25x)","Drága (22–25x)","Fair (19–22x)",
                           "Kedvező (17–19x)","Olcsó (<17x)"]}, src_label="Forward P/E"),
@@ -2351,6 +2354,9 @@ body{{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1
   <span class="sp sp-info">Frissítve: {today}</span>
   <span class="sp sp-info">Rezsim: {rl}</span>
   {"<span class='sp' style='color:#f0a500;border-color:#f0a50030;background:#f0a50010'>"+season.get('seasonLabel','')+"</span>" if season else ""}
+  <a href="options.html" style="font-family:var(--mono);font-size:9.5px;padding:3px 10px;
+     border-radius:99px;border:1px solid #4da6ff30;background:#4da6ff08;color:#4da6ff;
+     text-decoration:none;margin-left:4px">⚡ Opciós Modul</a>
   <div class="sbar-r">Következő: péntek, {next_fri} · 17:00</div>
 </div>
 
