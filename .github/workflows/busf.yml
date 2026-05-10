@@ -11,7 +11,7 @@ permissions:
 jobs:
   screen:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
@@ -19,20 +19,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r busf/requirements.txt
+        run: pip install requests pandas lxml html5lib beautifulsoup4 yfinance
 
       - name: Run BUSF screen
         env:
-          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
-          NTFY_TOPIC:  ${{ secrets.NTFY_TOPIC }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
           cd busf
           python src/run.py
 
-      - name: Commit updated cache and lists
+      - name: Commit cache and results
         run: |
           git config user.name  "busf-bot"
           git config user.email "busf-bot@users.noreply.github.com"
@@ -40,6 +38,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes"
           else
-            git commit -m "BUSF screen $(date -u +%Y-%m-%d)"
+            git commit -m "BUSF $(date -u +%Y-%m-%d)"
             git push
           fi
