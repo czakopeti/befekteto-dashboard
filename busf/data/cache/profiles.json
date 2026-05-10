@@ -1258,5 +1258,425 @@
     "sector": "Real Estate",
     "industry": "REIT - Residential",
     "fetched": "2026-05-10T11:27:33.270611+00:00"
+  },
+  "ERIE": {
+    "symbol": "ERIE",
+    "name": "Erie Indemnity Company",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-10T11:39:54.744191+00:00"
+  },
+  "ESS": {
+    "symbol": "ESS",
+    "name": "Essex Property Trust, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-10T11:39:54.987251+00:00"
+  },
+  "EL": {
+    "symbol": "EL",
+    "name": "Estee Lauder Companies, Inc. (T",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-10T11:39:55.227226+00:00"
+  },
+  "EG": {
+    "symbol": "EG",
+    "name": "Everest Group, Ltd.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Reinsurance",
+    "fetched": "2026-05-10T11:39:55.470636+00:00"
+  },
+  "EVRG": {
+    "symbol": "EVRG",
+    "name": "Evergy, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:39:55.716216+00:00"
+  },
+  "ES": {
+    "symbol": "ES",
+    "name": "Eversource Energy (D/B/A)",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:39:55.956836+00:00"
+  },
+  "EXC": {
+    "symbol": "EXC",
+    "name": "Exelon Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:39:56.196579+00:00"
+  },
+  "EXE": {
+    "symbol": "EXE",
+    "name": "Expand Energy Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-10T11:39:56.489029+00:00"
+  },
+  "EXPE": {
+    "symbol": "EXPE",
+    "name": "Expedia Group, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-10T11:39:56.727392+00:00"
+  },
+  "EXPD": {
+    "symbol": "EXPD",
+    "name": "Expeditors International of Was",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-05-10T11:39:56.966422+00:00"
+  },
+  "EXR": {
+    "symbol": "EXR",
+    "name": "Extra Space Storage Inc",
+    "sector": "Real Estate",
+    "industry": "REIT - Industrial",
+    "fetched": "2026-05-10T11:39:57.252639+00:00"
+  },
+  "XOM": {
+    "symbol": "XOM",
+    "name": "Exxon Mobil Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas Integrated",
+    "fetched": "2026-05-10T11:39:57.491862+00:00"
+  },
+  "FFIV": {
+    "symbol": "FFIV",
+    "name": "F5, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:39:57.729946+00:00"
+  },
+  "FDS": {
+    "symbol": "FDS",
+    "name": "FactSet Research Systems Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-10T11:39:57.973520+00:00"
+  },
+  "FICO": {
+    "symbol": "FICO",
+    "name": "Fair Isaac Corporation",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-10T11:39:58.245438+00:00"
+  },
+  "FAST": {
+    "symbol": "FAST",
+    "name": "Fastenal Company",
+    "sector": "Industrials",
+    "industry": "Industrial Distribution",
+    "fetched": "2026-05-10T11:39:58.490194+00:00"
+  },
+  "FRT": {
+    "symbol": "FRT",
+    "name": "Federal Realty Investment Trust",
+    "sector": "Real Estate",
+    "industry": "REIT - Retail",
+    "fetched": "2026-05-10T11:39:58.764212+00:00"
+  },
+  "FDX": {
+    "symbol": "FDX",
+    "name": "FedEx Corporation",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-05-10T11:39:59.007250+00:00"
+  },
+  "FIS": {
+    "symbol": "FIS",
+    "name": "Fidelity National Information S",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:39:59.249845+00:00"
+  },
+  "FITB": {
+    "symbol": "FITB",
+    "name": "Fifth Third Bancorp",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-10T11:39:59.489916+00:00"
+  },
+  "FSLR": {
+    "symbol": "FSLR",
+    "name": "First Solar, Inc.",
+    "sector": "Technology",
+    "industry": "Solar",
+    "fetched": "2026-05-10T11:39:59.733459+00:00"
+  },
+  "FE": {
+    "symbol": "FE",
+    "name": "FirstEnergy Corp.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-10T11:39:59.971766+00:00"
+  },
+  "FISV": {
+    "symbol": "FISV",
+    "name": "Fiserv, Inc.",
+    "sector": "Unknown",
+    "industry": "Unknown",
+    "fetched": "2026-05-10T11:40:00.244403+00:00"
+  },
+  "F": {
+    "symbol": "F",
+    "name": "Ford Motor Company",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers",
+    "fetched": "2026-05-10T11:40:00.483628+00:00"
+  },
+  "FTNT": {
+    "symbol": "FTNT",
+    "name": "Fortinet, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:40:00.726546+00:00"
+  },
+  "FTV": {
+    "symbol": "FTV",
+    "name": "Fortive Corporation",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-10T11:40:01.000308+00:00"
+  },
+  "FOXA": {
+    "symbol": "FOXA",
+    "name": "Fox Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:40:01.242724+00:00"
+  },
+  "FOX": {
+    "symbol": "FOX",
+    "name": "Fox Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-10T11:40:01.486595+00:00"
+  },
+  "BEN": {
+    "symbol": "BEN",
+    "name": "Franklin Resources, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-10T11:40:01.736578+00:00"
+  },
+  "FCX": {
+    "symbol": "FCX",
+    "name": "Freeport-McMoRan, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Copper",
+    "fetched": "2026-05-10T11:40:01.980948+00:00"
+  },
+  "GRMN": {
+    "symbol": "GRMN",
+    "name": "Garmin Ltd.",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-10T11:40:02.227882+00:00"
+  },
+  "IT": {
+    "symbol": "IT",
+    "name": "Gartner, Inc.",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "fetched": "2026-05-10T11:40:02.471127+00:00"
+  },
+  "GE": {
+    "symbol": "GE",
+    "name": "GE Aerospace",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:40:02.713068+00:00"
+  },
+  "GEHC": {
+    "symbol": "GEHC",
+    "name": "GE HealthCare Technologies Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-10T11:40:02.957931+00:00"
+  },
+  "GEV": {
+    "symbol": "GEV",
+    "name": "GE Vernova Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:40:03.195183+00:00"
+  },
+  "GEN": {
+    "symbol": "GEN",
+    "name": "Gen Digital Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:40:03.437235+00:00"
+  },
+  "GNRC": {
+    "symbol": "GNRC",
+    "name": "Generac Holdlings Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-10T11:40:03.687467+00:00"
+  },
+  "GD": {
+    "symbol": "GD",
+    "name": "General Dynamics Corporation",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:40:03.971981+00:00"
+  },
+  "GIS": {
+    "symbol": "GIS",
+    "name": "General Mills, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:40:04.214371+00:00"
+  },
+  "GM": {
+    "symbol": "GM",
+    "name": "General Motors Company",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers",
+    "fetched": "2026-05-10T11:40:04.489984+00:00"
+  },
+  "GPC": {
+    "symbol": "GPC",
+    "name": "Genuine Parts Company",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Parts",
+    "fetched": "2026-05-10T11:40:04.816323+00:00"
+  },
+  "GILD": {
+    "symbol": "GILD",
+    "name": "Gilead Sciences, Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-10T11:40:05.061389+00:00"
+  },
+  "GPN": {
+    "symbol": "GPN",
+    "name": "Global Payments Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Business Services",
+    "fetched": "2026-05-10T11:40:05.301913+00:00"
+  },
+  "GL": {
+    "symbol": "GL",
+    "name": "Globe Life Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Life",
+    "fetched": "2026-05-10T11:40:05.546142+00:00"
+  },
+  "GDDY": {
+    "symbol": "GDDY",
+    "name": "GoDaddy Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-10T11:40:05.792956+00:00"
+  },
+  "GS": {
+    "symbol": "GS",
+    "name": "Goldman Sachs Group, Inc. (The)",
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "fetched": "2026-05-10T11:40:06.035463+00:00"
+  },
+  "HAL": {
+    "symbol": "HAL",
+    "name": "Halliburton Company",
+    "sector": "Energy",
+    "industry": "Oil & Gas Equipment & Services",
+    "fetched": "2026-05-10T11:40:06.278147+00:00"
+  },
+  "HIG": {
+    "symbol": "HIG",
+    "name": "The Hartford Insurance Group, I",
+    "sector": "Financial Services",
+    "industry": "Insurance - Diversified",
+    "fetched": "2026-05-10T11:40:06.553639+00:00"
+  },
+  "HAS": {
+    "symbol": "HAS",
+    "name": "Hasbro, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Leisure",
+    "fetched": "2026-05-10T11:40:06.830958+00:00"
+  },
+  "HCA": {
+    "symbol": "HCA",
+    "name": "HCA Healthcare, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Care Facilities",
+    "fetched": "2026-05-10T11:40:07.080898+00:00"
+  },
+  "DOC": {
+    "symbol": "DOC",
+    "name": "Healthpeak Properties, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Healthcare Facilities",
+    "fetched": "2026-05-10T11:40:07.325347+00:00"
+  },
+  "HSIC": {
+    "symbol": "HSIC",
+    "name": "Henry Schein, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Distribution",
+    "fetched": "2026-05-10T11:40:07.567923+00:00"
+  },
+  "HSY": {
+    "symbol": "HSY",
+    "name": "The Hershey Company",
+    "sector": "Consumer Defensive",
+    "industry": "Confectioners",
+    "fetched": "2026-05-10T11:40:07.838923+00:00"
+  },
+  "HPE": {
+    "symbol": "HPE",
+    "name": "Hewlett Packard Enterprise Comp",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-10T11:40:08.079927+00:00"
+  },
+  "HLT": {
+    "symbol": "HLT",
+    "name": "Hilton Worldwide Holdings Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Lodging",
+    "fetched": "2026-05-10T11:40:08.329235+00:00"
+  },
+  "HD": {
+    "symbol": "HD",
+    "name": "Home Depot, Inc. (The)",
+    "sector": "Consumer Cyclical",
+    "industry": "Home Improvement Retail",
+    "fetched": "2026-05-10T11:40:08.583592+00:00"
+  },
+  "HON": {
+    "symbol": "HON",
+    "name": "Honeywell International Inc.",
+    "sector": "Industrials",
+    "industry": "Conglomerates",
+    "fetched": "2026-05-10T11:40:08.959791+00:00"
+  },
+  "HRL": {
+    "symbol": "HRL",
+    "name": "Hormel Foods Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-10T11:40:09.201858+00:00"
+  },
+  "HST": {
+    "symbol": "HST",
+    "name": "Host Hotels & Resorts, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Hotel & Motel",
+    "fetched": "2026-05-10T11:40:09.472433+00:00"
+  },
+  "HWM": {
+    "symbol": "HWM",
+    "name": "Howmet Aerospace Inc.",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-10T11:40:09.711994+00:00"
   }
 }

@@ -5,8 +5,8 @@
   "top": [
     {
       "ticker": "FICO",
-      "name": "FICO",
-      "sector": "Unknown",
+      "name": "Fair Isaac Corporation",
+      "sector": "Technology",
       "score": 88,
       "lifecycle": "Scaling",
       "price": 1126.0,
@@ -68,8 +68,8 @@
     },
     {
       "ticker": "FDS",
-      "name": "FDS",
-      "sector": "Unknown",
+      "name": "FactSet Research Systems Inc.",
+      "sector": "Financial Services",
       "score": 70,
       "lifecycle": "Compounding",
       "price": 223.61,
@@ -110,8 +110,8 @@
     },
     {
       "ticker": "FAST",
-      "name": "FAST",
-      "sector": "Unknown",
+      "name": "Fastenal Company",
+      "sector": "Industrials",
       "score": 67,
       "lifecycle": "Compounding",
       "price": 44.17,
@@ -320,8 +320,8 @@
     },
     {
       "ticker": "EXPD",
-      "name": "EXPD",
-      "sector": "Unknown",
+      "name": "Expeditors International of Was",
+      "sector": "Industrials",
       "score": 53,
       "lifecycle": "Compounding",
       "price": 156.69,
@@ -467,8 +467,8 @@
     },
     {
       "ticker": "EXE",
-      "name": "EXE",
-      "sector": "Unknown",
+      "name": "Expand Energy Corporation",
+      "sector": "Energy",
       "score": 39,
       "lifecycle": "Mature",
       "price": 95.94,
@@ -530,8 +530,8 @@
     },
     {
       "ticker": "FDX",
-      "name": "FDX",
-      "sector": "Unknown",
+      "name": "FedEx Corporation",
+      "sector": "Industrials",
       "score": 34,
       "lifecycle": "Mature",
       "price": 378.58,
