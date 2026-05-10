@@ -68,7 +68,7 @@
       "qualityScore": 75,
       "analystEpsGrowth": 15.4,
       "epsRevPositive": true,
-      "analystPriceTarget": 562.07
+      "analystPriceTarget": 561.56
     },
     {
       "ticker": "ACN",
@@ -148,14 +148,14 @@
       "sector": "Basic Materials",
       "roe": 22.4,
       "roi": 8.0,
-      "de": 0.91,
+      "de": 0.92,
       "qualityScore": 53,
       "analystEpsGrowth": 30.0,
       "epsRevPositive": true,
       "analystPriceTarget": 317.48
     }
   ],
-  "updated": "2026-05-09T06:38:45.445872",
+  "updated": "2026-05-10T16:42:45.419288",
   "count": 11,
   "params": {
     "sma200_min": -30.0,
