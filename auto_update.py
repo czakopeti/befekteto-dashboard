@@ -2165,7 +2165,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     term_ico, term_wx, term_c = wx_icon(term_sig, "Nyugodt legénység (VIX Contango)", "PÁNIK! (VIX Backwardation)", "Nyughatatlan (VIX flat)")
 
     weather_header_html = (
-        f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">'
+        f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">'
         f'<div style="background:var(--card);border:1px solid {lei_c}30;border-radius:10px;padding:10px 12px;text-align:center">'
         f'<div style="font-size:18px">{lei_ico}</div>'
         f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-top:2px">STRATÉGIA (6-18hó)</div>'
@@ -2178,6 +2178,91 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         f'<div style="font-size:18px">{term_ico}</div>'
         f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-top:2px">HANGULAT (VIX)</div>'
         f'<div style="font-size:10px;color:{term_c};margin-top:3px;font-weight:600">{term_wx}</div></div>'
+        f'</div>'
+    )
+
+    # ── INTEGRÁLT PLAYBOOK – 12 kombináció (4 score × 3 piaci rezsim) ─
+    score_v  = base.get("entryScore", 50)
+    gex_v    = smart.get("gex", 5) if smart else 5
+    gex_pos  = gex_v > 0
+    backwardation = now.get("termSignal", "wait") == "bear"  # VIX Backwardation
+
+    # 3 piaci rezsim:
+    # 1. Backwardation (pánik – mindent felülír)
+    # 2. GEX- + Contango (instabil, de nem pánik)
+    # 3. GEX+ + Contango (optimális)
+
+    if score_v >= 85:          # MUST BUY
+        if backwardation:
+            opt_strategy = "Várd meg amíg Backwardation megszűnik"
+            opt_desc     = "Makro MUST BUY de opciós pánik – NE lépj be directional long-ba most"
+            opt_col      = "#f0a500"
+        elif gex_pos:
+            opt_strategy = "Long Call + Részvényvásárlás"
+            opt_desc     = "Maximális támadás – erős makro + stabil piac"
+            opt_col      = "#00d488"
+        else:                  # GEX-
+            opt_strategy = "Cash-Secured Put eladás"
+            opt_desc     = "Erős makro de GEX instabil – prémiummal lépj be, ne directional"
+            opt_col      = "#7dd3fc"
+
+    elif score_v >= 65:        # ÓVATOS VÉTEL
+        if backwardation:
+            opt_strategy = "Cash-Secured Put (óvatos méret)"
+            opt_desc     = "Bullish makro de opciós pánik – csak prémiumgyűjtő stratégia"
+            opt_col      = "#f0a500"
+        elif gex_pos:
+            opt_strategy = "Bull Call Spread / Cash-Secured Put"
+            opt_desc     = "Bullish tendencia + stabil GEX – óvatos directional vagy prémiumgyűjtés"
+            opt_col      = "#7dd3fc"
+        else:                  # GEX-
+            opt_strategy = "Bull Put Spread (kis méret)"
+            opt_desc     = "Bullish de GEX instabil – prémiummal fogadj az irányra, kis méretben"
+            opt_col      = "#f0a500"
+
+    elif score_v >= 40:        # VÁRAKOZÁS
+        if backwardation:
+            opt_strategy = "Covered Call meglévő pozícióra"
+            opt_desc     = "Oldalazó makro + pánik – ne nyiss new long-ot, meglévőre adj prémiumot"
+            opt_col      = "#f0a500"
+        elif gex_pos:
+            opt_strategy = "Bull Put Spread / Covered Call"
+            opt_desc     = "Várakozó makro + stabil piac – a prémiumgyűjtés aranykora"
+            opt_col      = "#f0a500"
+        else:                  # GEX-
+            opt_strategy = "Készpénzgyűjtés – semmit sem nyitunk"
+            opt_desc     = "Oldalazó makro + GEX instabil – nagy rángatások várhatók, várj"
+            opt_col      = "#f04060"
+
+    else:                      # VÉDEKEZÉS (<40)
+        if backwardation:
+            opt_strategy = "Teljes védekezés / Bear Put Spread"
+            opt_desc     = "Gyenge makro + pánik – kiszállás longokból, short bet mérlegelhető"
+            opt_col      = "#f04060"
+        elif gex_pos:
+            opt_strategy = "Protective Put vásárlás – MOST"
+            opt_desc     = "Gyenge makro + Contango = olcsó biztosítás – ne halaszd"
+            opt_col      = "#f04060"
+        else:                  # GEX-
+            opt_strategy = "Protective Put + Pozíció csökkentés"
+            opt_desc     = "Gyenge makro + GEX negatív – esések felerősödnek, védekezz"
+            opt_col      = "#f04060"
+
+    integrated_playbook_html = (
+        f'<div style="background:var(--card);border:1px solid {opt_col}25;border-radius:10px;'
+        f'padding:12px 16px;margin-bottom:12px;display:grid;'
+        f'grid-template-columns:auto 1fr auto;gap:12px;align-items:center">'
+        f'<div style="font-size:22px">⚡</div>'
+        f'<div>'
+        f'<div style="font-size:9px;color:var(--mut);font-family:var(--mono);margin-bottom:3px">'
+        f'OPCIÓS STRATÉGIA · Score {score_v} · GEX {"+" if gex_pos else "–"} · '
+        f'{"Backwardation ⚠" if backwardation else "Contango ✓"}</div>'
+        f'<div style="font-size:12px;font-weight:700;color:{opt_col};margin-bottom:2px">{opt_strategy}</div>'
+        f'<div style="font-size:10px;color:var(--sub)">{opt_desc}</div>'
+        f'</div>'
+        f'<a href="options.html" style="font-size:9px;font-family:var(--mono);padding:5px 12px;'
+        f'border:1px solid {opt_col}40;border-radius:99px;color:{opt_col};text-decoration:none;'
+        f'background:{opt_col}10;white-space:nowrap">Részletek →</a>'
         f'</div>'
     )
 
@@ -2362,6 +2447,9 @@ body{{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:1
 
 <!-- IDŐJÁRÁS FEJLÉC – 3 kulcsmutató -->
 {weather_header_html}
+
+<!-- INTEGRÁLT PLAYBOOK -->
+{integrated_playbook_html}
 
 <!-- FŐ SCORE -->
 <div class="main">
