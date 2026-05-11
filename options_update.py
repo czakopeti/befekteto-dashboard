@@ -23,10 +23,28 @@ IV_HIST_FILE = "iv_history.json"
 HISTORY_FILE = "history.json"
 
 WATCHLIST = [
-    "AAPL","MSFT","NVDA","AMZN","META","GOOGL","TSLA",
-    "CRWD","DDOG","PLTR","RKLB","IONQ","MA","MSTR",
-    "AMD","INTC","MU","AVGO","NFLX","ADBE","ORCL",
-    "NOW","CRM","FTNT","PANW","ZS","LLY","TMO","TJX",
+    # Peter portfóliója – prioritás
+    "TSLA","CRWD","DDOG","MSFT","AAPL","NVDA","IONQ","MA","MSTR","AMZN",
+    # Mega cap / AI
+    "META","GOOGL","AMD","AVGO","NFLX","ORCL",
+    # Cloud / SaaS
+    "NOW","CRM","ADBE","INTU","SNOW","NET","PLTR","HUBS",
+    # Cybersecurity
+    "FTNT","PANW","ZS","OKTA","S",
+    # Semiconductor
+    "MU","INTC","LRCX","KLAC","AMAT","TXN","ON",
+    # Space / Defence
+    "RKLB","LUNR","AXON","RTX","LMT",
+    # Healthcare / Biotech
+    "LLY","ABBV","REGN","VRTX","TMO",
+    # Fintech / Finance
+    "V","AXP","PYPL","COIN","NU",
+    # Consumer / Retail
+    "COST","TJX","HD","SBUX","MCD",
+    # Industrial / Compounders
+    "FICO","CPRT","FAST","ETN","CME","SPGI","BLK",
+    # Index ETF-ek (opciós stratégiákhoz)
+    "SPY","QQQ","IWM",
 ]
 
 def log(msg): print(f"  {msg}")
@@ -499,92 +517,110 @@ def generate_decision_matrix(score, vix_pct, skew, term_sig, gex_positive):
     iv_rich  = vix_pct > 70
 
     rows = [
-        # score_min, score_max, iv_cheap, iv_rich, gex_pos, back, strategy, timing, action
-        (85,100, True,  False, True,  False,
-         "Long Call (ATM/ITM, 60-75 delta)",
-         "45-60 nap lejárat · ATM/ITM delta · max 5% portfólió",
+        # score_min, score_max, label, strategy, timing, action
+        # label: "cheap"=olcsó IV, "rich"=drága IV, "mid"=normál, "any"=bármely
+        # gex_ok: True=GEX+, False=GEX-, None=bármely
+        # back_ok: True=backwardation kell, False=contango kell, None=bármely
+        (85,100, "cheap", True,  False, "Long Call (ATM/ITM, 60-75 delta)",
+         "45-60 nap · ATM/ITM delta · max 5% portfólió",
          "Exit: 50% profit VAGY 21 DTE · Stop: -50% prémium"),
 
-        (85,100, False, True,  True,  False,
-         "Cash-Secured Put (OTM support szintjén)",
-         "5-8% OTM put · 20-30 nap · cash fedezet 100%",
-         "Prémium >1% pozíció értéke · Ha lehívnak: tartsd a részvényt"),
+        (85,100, "mid",   True,  False, "Bull Call Spread",
+         "Buy ATM call · Sell 5-10% OTM call · 45 nap · max 3%",
+         "Exit: 50% profit VAGY 21 DTE"),
 
-        (85,100, False, False, False, False,
-         "Cash-Secured Put (GEX instabil – prémiummal lépj be)",
+        (85,100, "rich",  True,  False, "Cash-Secured Put (OTM support szintjén)",
+         "Sell 5-8% OTM put · 20-30 nap · cash fedezet 100%",
+         "Prémium >1% pozíció értéke · Ha lehívnak: tartsd"),
+
+        (85,100, "any",   False, False, "Cash-Secured Put (GEX instabil)",
          "5-8% OTM put · 20-30 nap · óvatosabb méret (5%)",
          "Directional long kerülendő amíg GEX negatív"),
 
-        (85,100, False, False, False, True,
-         "Várd meg amíg Backwardation megszűnik",
+        (85,100, "any",   True,  True,  "Várd meg amíg Backwardation megszűnik",
          "Ne nyiss new long-ot · CSP meglévő pozícióra OK",
          "Amíg VIX/VIX3M < 1.0 visszatér"),
 
-        (65,84,  False, True,  True,  False,
-         "Bull Put Spread / Cash-Secured Put",
+        (65,84,  "rich",  True,  False, "Bull Put Spread / Cash-Secured Put",
          "Sell 5-8% OTM put · 20-30 nap · max 5% portfólió",
          "Exit: 50% profit · rollover ha alá megy"),
 
-        (65,84,  True,  False, True,  False,
-         "Bull Call Spread (óvatos méret)",
+        (65,84,  "mid",   True,  False, "Bull Put Spread (óvatos méret)",
+         "Sell 5-8% OTM put · Buy 10-12% OTM put · 30 nap · max 3%",
+         "Exit: 50% profit · Ha alá kerül az eladott put: zárj"),
+
+        (65,84,  "cheap", True,  False, "Bull Call Spread (óvatos méret)",
          "Buy ATM call · Sell OTM call · 45 nap · max 3% portfólió",
          "Exit: 50% profit VAGY 21 DTE"),
 
-        (40,64,  False, True,  True,  False,
-         "Iron Condor / Bull Put Spread",
+        (40,64,  "rich",  True,  False, "Iron Condor / Bull Put Spread",
          "±5-8% OTM szárnyak · 25-35 nap · max 5% portfólió",
          "Zárd 50% profit · Ha VIX +20%: azonnal zárd vesztes szárnyat"),
 
-        (40,64,  False, False, False, False,
-         "Készpénzgyűjtés – ne nyiss new pozíciót",
+        (40,64,  "mid",   True,  False, "Bull Put Spread / Covered Call",
+         "Sell 5-8% OTM put · Buy 10-12% put · 25-30 nap · max 3%",
+         "Zárd 50% profit · Covered Call meglévő részvényre"),
+
+        (40,64,  "cheap", True,  False, "Covered Call meglévő pozícióra",
+         "Sell 0.25-0.30 delta call · 20-30 nap · 1 kontr/100 rész",
+         "Lejáratig tartsd vagy 80% profit esetén korai zárás"),
+
+        (40,64,  "any",   False, False, "Készpénzgyűjtés – ne nyiss pozíciót",
          "GEX negatív = rángatások · Covered Call meglévőre OK",
          "Amíg GEX pozitívba fordul"),
 
-        (40,64,  False, False, False, True,
-         "Covered Call meglévő pozícióra",
-         "0.25-0.30 delta call · 20-30 nap · ne nyiss new long-ot",
-         "Backwardation = ne spekulálj directional"),
+        (40,64,  "any",   True,  True,  "Covered Call + Várakozás",
+         "Ne nyiss new long-ot · meglévőre Covered Call OK",
+         "Amíg VIX/VIX3M < 1.0 visszatér"),
 
-        (0,39,   True,  False, True,  False,
-         "Protective Put – MOST VEGYÉL (olcsó!)",
+        (0,39,   "cheap", True,  False, "Protective Put – MOST VEGYÉL",
          "SPY/QQQ 5-10% OTM put · 60-90 nap · 1-2% portfólió",
          "Tartsd amíg score 65+ · Ha 200%+: görgesd lejjebb"),
 
-        (0,39,   False, True,  False, False,
-         "Bear Put Spread / Pozíció csökkentés",
-         "Buy ATM put · Sell 5-8% OTM put · 30 nap · 3% portfólió",
+        (0,39,   "mid",   True,  False, "Protective Put + Pozíció csökkentés",
+         "SPY/QQQ 5-10% OTM put · 60-90 nap · GEX+ de gyenge makro",
+         "Csökkentsd longokat 30-50%-kal · tartsd a put-ot"),
+
+        (0,39,   "rich",  False, False, "Bear Put Spread + Pozíció csökkentés",
+         "Buy ATM put · Sell 5-8% OTM put · 30 nap · max 3%",
          "GEX negatív = esések felerősödnek · csökkentsd a longokat"),
 
-        (0,100,  False, False, False, True,
-         "NEM nyitunk – Backwardation aktív",
+        (0,100,  "any",   True,  True,  "NEM nyitunk – Backwardation aktív",
          "Várj amíg VIX/VIX3M < 1.0 visszatér",
          "Nyitott pozíció: szoros stop vagy azonnali zárás"),
     ]
 
+    iv_label = "cheap" if iv_cheap else "rich" if iv_rich else "mid"
+
     rows_html = ""
-    for (smin, smax, ic, ir, gp, back, strat, timing, action) in rows:
-        # Aktuálisan aktív sor kiemelése
+    for row in rows:
+        smin, smax, iv_req, gp, back_req, strat, timing, action = row
+
         score_match = smin <= score <= smax
-        iv_match    = (iv_cheap and ic) or (iv_rich and ir) or (not ic and not ir)
-        back_match  = (backwardation == back) or not back
-        gex_match   = gex_positive == gp
+        iv_match    = (iv_req == "any") or (iv_req == iv_label)
+        gex_match   = (gp is None) or (gex_positive == gp)
+        back_match  = (back_req is None) or (backwardation == back_req)
         active      = score_match and iv_match and gex_match and back_match
 
-        row_bg  = "background:#00d48815;border-left:4px solid #00d488;font-weight:600" if active else ""
-        strat_c = "#00d488" if active else "var(--sub)"
-        active_badge = '<span style="background:#00d48820;color:#00d488;font-size:8px;padding:2px 6px;border-radius:10px;margin-left:6px;font-family:var(--mono)">▶ AKTÍV</span>' if active else ''
+        iv_disp = {"cheap":"Olcsó (<30%)", "rich":"Drága (>70%)",
+                   "mid":"Normál", "any":"Bármely"}.get(iv_req, iv_req)
+        row_bg   = "background:#00d48815;border-left:4px solid #00d488" if active else ""
+        strat_c  = "#00d488" if active else "var(--sub)"
+        fw       = "700" if active else "400"
+        badge    = ('<span style="background:#00d48820;color:#00d488;font-size:8px;'
+                   'padding:2px 6px;border-radius:10px;margin-left:6px;font-family:var(--mono)">'
+                   '▶ AKTÍV</span>') if active else ""
 
-        rows_html += f"""
-        <tr style="{row_bg}">
-          <td style="font-size:10px;color:var(--mut);font-family:var(--mono)">{smin}–{smax}</td>
-          <td style="font-size:10px;color:var(--mut)">{"Olcsó" if ic else "Drága" if ir else "Bármely"}</td>
-          <td style="font-size:10px;color:{strat_c};font-weight:{'700' if active else '400'}">{strat}{active_badge}</td>
-          <td style="font-size:9px;color:var(--mut)">{timing}</td>
-          <td style="font-size:9px;color:var(--mut)">{action}</td>
-        </tr>"""
+        rows_html += (f'<tr style="{row_bg}">'
+            f'<td style="font-size:10px;color:var(--mut);font-family:var(--mono)">{smin}–{smax}</td>'
+            f'<td style="font-size:10px;color:var(--mut)">{iv_disp}</td>'
+            f'<td style="font-size:10px;color:{strat_c};font-weight:{fw}">{strat}{badge}</td>'
+            f'<td style="font-size:9px;color:var(--mut)">{timing}</td>'
+            f'<td style="font-size:9px;color:var(--mut)">{action}</td>'
+            f'</tr>')
     return rows_html
 
-# ── HTML GENERATOR ────────────────────────────────────────────NEW_FUNC = r'''
+# ── HTML GENERATOR ──────────────────────────────────────────────────────────
 def generate_html(state, vix_data, skew_data, impl_moves, iv_data, strategies):
     import datetime as _dt
     today = _dt.datetime.now().strftime("%Y. %B %d.")
@@ -691,13 +727,13 @@ def generate_html(state, vix_data, skew_data, impl_moves, iv_data, strategies):
         if ivp is not None:
             c = "#f04060" if ivp > 70 else "#00d488" if ivp < 30 else "#f0a500"
             tip = "Eladj" if ivp > 70 else "Végy" if ivp < 30 else "–"
-            bdg = ' <span style="color:#f0a500;font-size:8px">(béta)</span>' if beta else ""
+            beta_lbl = f' <span style="color:#f0a500;font-size:8px">({wk}hét béta)</span>' if beta else f'<span style="color:var(--mut);font-size:8px"> {wk}hét</span>'
             pbar = (f'<div style="height:3px;background:var(--brd2);border-radius:2px;margin-top:3px">'
                     f'<div style="height:3px;width:{ivp}%;background:{c};border-radius:2px"></div></div>')
-            pct_s = f'<span style="color:{c};font-weight:700;font-family:var(--mono)">{ivp}%</span>{bdg}{pbar}'
+            pct_s = f'<span style="color:{c};font-weight:700;font-family:var(--mono)">{ivp}%</span>{beta_lbl}{pbar}'
         else:
             c = "var(--mut)"; tip = "–"
-            pct_s = f'<span style="color:var(--mut);font-size:9px">{wk} hét – gyűlik</span>'
+            pct_s = f'<span style="color:var(--mut);font-size:9px">{wk} hét – gyűlik még</span>'
         iv_rows += (f'<div style="display:grid;grid-template-columns:65px 55px 1fr 45px;gap:8px;'
             f'padding:7px 10px;border-bottom:1px solid var(--brd);align-items:center">'
             f'<div style="font-weight:700;color:var(--text);font-family:var(--mono)">{t}</div>'
