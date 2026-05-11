@@ -481,7 +481,7 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
         if put_exp:
             strategies.append({
                 "name": "Bull Put Spread (SKEW miatt extra prémium)",
-                "desc": f"SKEW {skew_v:.0f} → az OTM put prémium a normálnál magasabb. Extra bevétel prémium eladással.",
+                "desc": f"SKEW magas ({skew_sig}) → az OTM put prémium a normálnál magasabb. Extra bevétel prémium eladással.",
                 "params": "Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5% portfólió",
                 "exit": "Zárd 50% profit · Ha alá kerül az eladott put: zárj",
                 "risk": "Spread – prémium", "reward": "Net credit (SKEW prémium)",
