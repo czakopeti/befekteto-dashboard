@@ -1373,15 +1373,24 @@ def load_screener_data():
         except Exception: pass
     return {"stocks":[],"updated":None,"count":0,"params":{}}
 
-def save_history(hist, base, now, mid, lng, es, cp, regime, kelly):
+def save_history(hist, base, now, mid, lng, es, cp, regime, kelly, smart=None):
+    if smart is None: smart = {}
+    pb = kelly.get("playbook","wait")
     snap={"date":datetime.date.today().isoformat(),
           "spx":base.get("spx"),"entryScore":es,"corrProb":cp,
+          "playbook": pb,
           "regime":regime,"kellyAlloc":kelly.get("kellyAlloc"),
           "vix":base.get("vix"),"hySpread":base.get("hySpread"),
           "breadth":mid.get("breadth"),"cnnFG":now.get("cnnFG"),
           "yieldCurve":lng.get("yieldCurve"),"recProb":lng.get("recProb"),
           "leiSignal":lng.get("leiSignal"),"m2Yoy":lng.get("m2Yoy"),
-          "cgTrend":mid.get("cgTrend")}
+          "cgTrend":mid.get("cgTrend"),
+          "gex":      smart.get("gex", 5),
+          "gexSignal":smart.get("gexSignal","wait"),
+          "afSignal": now.get("afSignal","wait"),
+          "afCur":    now.get("afCur", 0),
+          "termSignal":now.get("termSignal","wait"),
+          "termRatio": now.get("termRatio", 0.9)}
     hist.append(snap); hist=hist[-52:]
     with open(HISTORY_FILE,"w",encoding="utf-8") as f:
         json.dump(hist,f,indent=2,ensure_ascii=False)
@@ -2672,7 +2681,7 @@ def main():
     kelly   = calc_kelly_v5(es, cp, regime, smart=smart, base=base, now=now, mid=mid)
     season  = calc_seasonality()
 
-    hist    = save_history(hist, base, now, mid, lng, es, cp, regime, kelly)
+    hist    = save_history(hist, base, now, mid, lng, es, cp, regime, kelly, smart)
     log_d   = save_error_log()
 
     log(f"\n  📊 Score: {es}/100 | Playbook: {kelly.get('playbook','?').upper()} | Korr.: {cp}% | Allokáció: {kelly.get('kellyAlloc')}%\n")

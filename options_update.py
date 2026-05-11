@@ -22,29 +22,25 @@ OUTPUT_HTML  = "options.html"
 IV_HIST_FILE = "iv_history.json"
 HISTORY_FILE = "history.json"
 
+# Top 30 legjobb opciós likviditás (szűk spread, nagy volumen)
+# Peter portfóliója előre + legjobb index ETF-ek + top liquid részvények
 WATCHLIST = [
-    # Peter portfóliója – prioritás
-    "TSLA","CRWD","DDOG","MSFT","AAPL","NVDA","IONQ","MA","MSTR","AMZN",
-    # Mega cap / AI
-    "META","GOOGL","AMD","AVGO","NFLX","ORCL",
-    # Cloud / SaaS
-    "NOW","CRM","ADBE","INTU","SNOW","NET","PLTR","HUBS",
-    # Cybersecurity
-    "FTNT","PANW","ZS","OKTA","S",
-    # Semiconductor
-    "MU","INTC","LRCX","KLAC","AMAT","TXN","ON",
-    # Space / Defence
-    "RKLB","LUNR","AXON","RTX","LMT",
-    # Healthcare / Biotech
-    "LLY","ABBV","REGN","VRTX","TMO",
-    # Fintech / Finance
-    "V","AXP","PYPL","COIN","NU",
-    # Consumer / Retail
-    "COST","TJX","HD","SBUX","MCD",
-    # Industrial / Compounders
-    "FICO","CPRT","FAST","ETN","CME","SPGI","BLK",
-    # Index ETF-ek (opciós stratégiákhoz)
+    # Index ETF-ek – minden stratégia alapja
     "SPY","QQQ","IWM",
+    # Peter portfóliója
+    "TSLA","CRWD","DDOG","MSFT","AAPL","NVDA","AMZN",
+    # Mega cap tech – legjobb opciós likviditás
+    "META","GOOGL","AMD","AVGO","NFLX",
+    # Growth / AI
+    "PLTR","MSTR","IONQ","RKLB",
+    # Cloud / Cyber
+    "NOW","PANW","FTNT","CRM",
+    # Fintech / Finance
+    "MA","V","COIN","GS",
+    # Healthcare
+    "LLY","REGN",
+    # Commodity / Macro hedge
+    "GLD","TLT",
 ]
 
 def log(msg): print(f"  {msg}")
@@ -70,14 +66,25 @@ def get_dashboard_state():
     hist = load_json(HISTORY_FILE)
     if hist and isinstance(hist, list) and hist:
         l = hist[-1]
+        score = l.get("entryScore", 50)
+        pb = l.get("playbook") or (
+            "MUST BUY" if score >= 85 else
+            "ÓVATOS VÉTEL" if score >= 65 else
+            "VÁRAKOZÁS" if score >= 40 else "VÉDEKEZÉS")
         return {
-            "score":    l.get("entryScore", 50),
-            "playbook": l.get("playbook", "WAIT"),
-            "date":     l.get("date", "?"),
-            "gex":      l.get("gex", 5),        # GEX a history-ból
-            "af_bear":  l.get("afBear", True),  # AF lila-e
+            "score":      score,
+            "playbook":   pb,
+            "date":       l.get("date", "?"),
+            "gex":        l.get("gex", 5),
+            "gex_signal": l.get("gexSignal","wait"),
+            "af_signal":  l.get("afSignal","wait"),
+            "af_cur":     l.get("afCur", 0),
+            "term_signal":l.get("termSignal","wait"),
+            "term_ratio": l.get("termRatio", 0.9),
         }
-    return {"score": 50, "playbook": "WAIT", "date": "?", "gex": 5, "af_bear": False}
+    return {"score":50,"playbook":"VÁRAKOZÁS","date":"?",
+            "gex":5,"gex_signal":"wait","af_signal":"wait",
+            "af_cur":0,"term_signal":"wait","term_ratio":0.9}
 
 # ── VIX TERM STRUCTURE ───────────────────────────────────────
 def fetch_vix_term():
@@ -205,10 +212,17 @@ def update_iv_history():
             row    = calls[calls["strike"] == atm_k]
             if row.empty:
                 return None
-            return round(float(row["impliedVolatility"].iloc[0]) * 100, 1)
+            raw_iv = float(row["impliedVolatility"].iloc[0])
+            if raw_iv < 0.01:  # 1% alatti IV = hibás adat (0.0 = nincs árjegyzés)
+                # Fallback: info-ból a general IV
+                iv_info = info.get("impliedVolatility") or info.get("beta", 0) * 0.15
+                raw_iv = iv_info if iv_info and iv_info > 0.05 else None
+                if raw_iv is None:
+                    return None
+            return round(float(raw_iv) * 100, 1)
 
         iv = safe(_fetch_iv, None, f"IV/{ticker}")
-        if iv:
+        if iv and iv >= 1.0:  # minimum 1% IV – alatta hibás
             if ticker not in iv_hist:
                 iv_hist[ticker] = {}
             iv_hist[ticker][today] = iv
@@ -420,7 +434,16 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
 
     # ── VÁRAKOZÁS (40-64) ─────────────────────────────────────
     elif score >= 40:
-        if iv_rich and not gex_neg:
+        if gex_neg:
+            strategies.append({
+                "name": "Készpénzgyűjtés – semmit sem nyitunk",
+                "desc": "Oldalazó makro + GEX instabil – nagy rángatások várhatók.",
+                "params": "Ne nyiss new pozíciót · Covered Call meglévő pozícióra OK",
+                "exit": "Amíg GEX pozitívba fordul",
+                "risk": "–", "reward": "Tőke megőrzés",
+                "rating": 5, "color": "#f04060",
+            })
+        elif iv_rich:
             strategies.append({
                 "name": "Iron Condor",
                 "desc": "A prémiumgyűjtés aranykora: oldalazó makro + drága opció + GEX stabil.",
@@ -431,20 +454,38 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
             })
             strategies.append({
                 "name": "Bull Put Spread / Covered Call",
-                "desc": "Oldalazó makro de piac stabil – prémiumgyűjtés, nem directional bet.",
+                "desc": "Oldalazó makro + drága opció + stabil GEX → prémiumgyűjtés.",
                 "params": "Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5%",
                 "exit": "Zárd 50% profit · Ha alá kerül az eladott put: zárj",
                 "risk": "Spread – prémium", "reward": "Net credit",
                 "rating": 4, "color": "#f0a500",
             })
-        elif gex_neg:
+        else:
+            # Normál IV (30-70%) + GEX pozitív + nincs backwardation → ez a jelenlegi állapot
             strategies.append({
-                "name": "Készpénzgyűjtés – semmit sem nyitunk",
-                "desc": "Oldalazó makro + GEX instabil – nagy rángatások várhatók.",
-                "params": "Ne nyiss new pozíciót · Covered Call meglévő pozícióra OK",
-                "exit": "Amíg GEX pozitívba fordul",
-                "risk": "–", "reward": "Tőke megőrzés",
-                "rating": 5, "color": "#f04060",
+                "name": "Bull Put Spread",
+                "desc": "Várakozó makro + normál IV + GEX stabil. Prémiumgyűjtés, bearish irányba fogadunk hogy a piac NEM esik.",
+                "params": f"Sell 5-8% OTM put · Buy 10-12% OTM put · 25-30 nap · Méret: 3% portfólió · SPY/QQQ vagy top részvény",
+                "exit": "Zárd 50% profit · Ha az eladott put alá megy az ár: AZONNAL zárj",
+                "risk": "Spread szélessége – kapott prémium", "reward": "Net credit (prémium)",
+                "rating": 4, "color": "#f0a500",
+            })
+            strategies.append({
+                "name": "Covered Call (meglévő pozícióra)",
+                "desc": "Ha van részvényed: adj el OTM call-t és gyűjts prémiumot amíg a piac oldalaz.",
+                "params": "Sell 0.25-0.30 delta call · 20-30 nap · 1 kontraktus / 100 részvény",
+                "exit": "Lejáratig tartsd vagy 80% profitot elérve zárd korán",
+                "risk": "Felső oldal lezárva a sztrájknál", "reward": "Havi ~1-2% bevétel",
+                "rating": 3, "color": "#f0a500",
+            })
+        if put_exp:
+            strategies.append({
+                "name": "Bull Put Spread (SKEW miatt extra prémium)",
+                "desc": f"SKEW {skew_v:.0f} → az OTM put prémium a normálnál magasabb. Extra bevétel prémium eladással.",
+                "params": "Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5% portfólió",
+                "exit": "Zárd 50% profit · Ha alá kerül az eladott put: zárj",
+                "risk": "Spread – prémium", "reward": "Net credit (SKEW prémium)",
+                "rating": 4, "color": "#7dd3fc",
             })
 
     # ── VÉDEKEZÉS (<40) ──────────────────────────────────────────
@@ -876,7 +917,7 @@ def main():
     print(f"  {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("="*55 + "\n")
 
-    state    = safe(get_dashboard_state, {"score":50,"playbook":"WAIT","date":"?","gex":5}, "state")
+    state    = safe(get_dashboard_state, {"score":50,"playbook":"VÁRAKOZÁS","date":"?","gex":5,"gex_signal":"wait","af_signal":"wait","af_cur":0,"term_signal":"wait","term_ratio":0.9}, "state")
     vix_data = safe(fetch_vix_term, {"VIX":20,"VIX3M":22,"VIX6M":23,"vix_pct":50,
                     "vix_rank":50,"backwardation":False,"strong_back":False,
                     "term_sig":"normal","term_desc":"?"}, "VIX")
