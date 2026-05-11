@@ -870,7 +870,7 @@ def fetch_ta_spx():
         cnn_r=d["fear_and_greed"]["rating"]
     except Exception: pass
 
-    # SPX AF(18,6) – TRIX heti timeframe (ÚJ – Peter chartja alapján)
+    # SPX Momentum Oszcillátor (TRIX 18/6) – Peter chartja alapján
     try:
         spx_w = yf.Ticker("^GSPC").history(period="5y", interval="1wk")["Close"].dropna()
         def trix_w(s, n):
@@ -886,13 +886,13 @@ def fetch_ta_spx():
         af_turning_bear = af_cur < 0 and af_prev >= 0   # sárgáról lilára fordul
         af_positive = af_cur > 0
         if af_turning_bull:
-            af_sig="bull"; af_desc=f"Liláról SÁRGÁRA fordult (+{af_cur:.3f}) – VÉTELI TRIGGER!"
+            af_sig="bull"; af_desc=f"Liláról SÁRGÁRA fordult (+{af_cur:.3f}) – VÉTELI TRIGGER! (TRIX 18/6)"
         elif af_turning_bear:
-            af_sig="bear"; af_desc=f"Sárgáról LILÁRA fordult ({af_cur:.3f}) – KILÉPÉSI FIGYELMEZTETÉS!"
+            af_sig="bear"; af_desc=f"Sárgáról LILÁRA fordult ({af_cur:.3f}) – KILÉPÉSI FIGYELMEZTETÉS! (TRIX 18/6)"
         elif af_positive:
-            af_sig="bull"; af_desc=f"Sárga oszlop ({af_cur:.3f}) – bullish momentum"
+            af_sig="bull"; af_desc=f"Sárga oszlop ({af_cur:.3f}) – bullish momentum (TRIX 18/6)"
         else:
-            af_sig="bear"; af_desc=f"Lila oszlop ({af_cur:.3f}) – gyengülő momentum"
+            af_sig="bear"; af_desc=f"Lila oszlop ({af_cur:.3f}) – gyengülő momentum (TRIX 18/6)"
     except Exception:
         af_cur=0; af_sig="wait"; af_desc="Nincs adat"; af_turning_bull=False; af_turning_bear=False
 
@@ -1539,7 +1539,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
 
     now_html="".join([
         ind(now.get("afSignal","wait"),
-            f"SPX AF (18,6) – heti TRIX{af_trend_html}",
+            f"Momentum Oszcillátor (TRIX 18/6){af_trend_html}",
             str(round(af_cur,4)), af_desc, weight=7, imp="KRITIKUS",
             cat5={"cur":af_cat,"avg":"0.0",
                   "refs":["Lila, eső (-0.3<)","Lila, gyenge (-0.1 – -0.3)",
@@ -1931,7 +1931,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         f'<div style="font-size:9px;color:var(--mut)">Feszítés ({rb_cat})</div></div>'
         f'</div>'
         f'<div style="padding:8px 11px;background:var(--c2);border-radius:8px;border:1px solid var(--brd);margin-bottom:8px">'
-        f'<div style="font-size:9px;color:var(--mut);margin-bottom:5px;font-family:var(--mono)">AF(18,6) szignál: {af_txt}</div>'
+        f'<div style="font-size:9px;color:var(--mut);margin-bottom:5px;font-family:var(--mono)">Momentum (TRIX 18/6): {af_txt}</div>'
         f'<div style="font-size:10px;color:var(--sub);line-height:1.5">'
         f'Ha AF negatívba fordul → SMA40 visszatérés: <span style="color:#f04060;font-family:var(--mono)">'
         f'{rb_target:,} ({downside_target:+.1f}%)</span> · '
@@ -2161,7 +2161,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
         else:                        return "🟡", neu_txt,  "#f0a500"
 
     lei_ico,  lei_wx,  lei_c  = wx_icon(lei_sig,  "Nincs jéghegy (LEI BULL)", "Jéghegy közeledik! (LEI BEAR)", "Vegyes (LEI NEU)")
-    af_ico,   af_wx,   af_c   = wx_icon(af_sig,   "Fúj a szél (AF sárga)",    "Elállt a szél (AF lila)",       "Szélcsendes (AF semleges)")
+    af_ico,   af_wx,   af_c   = wx_icon(af_sig,   "Fúj a szél (Momentum sárga)",    "Elállt a szél (Momentum lila)",       "Szélcsendes (Momentum semleges)")
     term_ico, term_wx, term_c = wx_icon(term_sig, "Nyugodt legénység (VIX Contango)", "PÁNIK! (VIX Backwardation)", "Nyughatatlan (VIX flat)")
 
     weather_header_html = (
@@ -2182,7 +2182,7 @@ def generate_html(base, now, mid, lng, es, cp, history, alerts,
     )
 
     # ── INTEGRÁLT PLAYBOOK – 12 kombináció (4 score × 3 piaci rezsim) ─
-    score_v  = base.get("entryScore", 50)
+    score_v  = es   # es = entryScore paraméter, nem base.get()
     gex_v    = smart.get("gex", 5) if smart else 5
     gex_pos  = gex_v > 0
     backwardation = now.get("termSignal", "wait") == "bear"  # VIX Backwardation
