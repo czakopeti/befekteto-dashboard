@@ -324,8 +324,8 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
             "reward": "Tőke megőrzés", "rating": 5, "color": "#f04060",
         }]
 
-    # ── MUST BUY (75+) ───────────────────────────────────────
-    if score >= 75:
+    # ── MUST BUY (85+) ───────────────────────────────────────
+    if score >= 85:
         if iv_cheap and not gex_neg:
             strategies.append({
                 "name": "Long Call",
@@ -362,8 +362,8 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
                 "reward": "Net credit (put skew-ból)", "rating": 3, "color": "#7dd3fc",
             })
 
-    # ── ÓVATOS (50-74) ───────────────────────────────────────
-    elif score >= 50:
+    # ── ÓVATOS VÉTEL (65-84) ──────────────────────────────────
+    elif score >= 65:
         if iv_rich and not gex_neg:
             strategies.append({
                 "name": "Iron Condor",
@@ -400,7 +400,36 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
                 "rating": 4, "color": "#7dd3fc",
             })
 
-    # ── VÉDEKEZÉS (<50) ──────────────────────────────────────
+    # ── VÁRAKOZÁS (40-64) ─────────────────────────────────────
+    elif score >= 40:
+        if iv_rich and not gex_neg:
+            strategies.append({
+                "name": "Iron Condor",
+                "desc": "A prémiumgyűjtés aranykora: oldalazó makro + drága opció + GEX stabil.",
+                "params": f"Sell ±5-8% OTM call+put · Buy ±10-12% védelem · 25-35 nap · Méret: 5% portfólió",
+                "exit": "Zárd 50% profit · Ha VIX +20%: azonnal zárd a vesztes szárnyat",
+                "risk": "Belső szárnyak közt korlátolt", "reward": f"Nettó prémium (IV%: {vix_pct}%)",
+                "rating": 5, "color": "#f0a500",
+            })
+            strategies.append({
+                "name": "Bull Put Spread / Covered Call",
+                "desc": "Oldalazó makro de piac stabil – prémiumgyűjtés, nem directional bet.",
+                "params": "Sell 5-8% OTM put · Buy 10-12% OTM put · 20-30 nap · Méret: 3-5%",
+                "exit": "Zárd 50% profit · Ha alá kerül az eladott put: zárj",
+                "risk": "Spread – prémium", "reward": "Net credit",
+                "rating": 4, "color": "#f0a500",
+            })
+        elif gex_neg:
+            strategies.append({
+                "name": "Készpénzgyűjtés – semmit sem nyitunk",
+                "desc": "Oldalazó makro + GEX instabil – nagy rángatások várhatók.",
+                "params": "Ne nyiss new pozíciót · Covered Call meglévő pozícióra OK",
+                "exit": "Amíg GEX pozitívba fordul",
+                "risk": "–", "reward": "Tőke megőrzés",
+                "rating": 5, "color": "#f04060",
+            })
+
+    # ── VÉDEKEZÉS (<40) ──────────────────────────────────────────
     else:
         if iv_cheap:
             strategies.append({
@@ -463,165 +492,6 @@ def suggest_strategy(score, vix_pct, skew_sig, term_sig, gex_positive, vix_val=2
     strategies.sort(key=lambda x: x["rating"], reverse=True)
     return strategies[:5]
 
-
-    """
-    Teljes döntési fa: score + IV Percentile + SKEW + Term Structure + GEX
-    """
-    strategies = []
-    iv_cheap = vix_pct < 30
-    iv_rich  = vix_pct > 70
-    backwardation     = term_sig in ("backwardation", "strong_back")
-    strong_back       = term_sig == "strong_back"
-    put_expensive     = skew_sig in ("put_expensive", "elevated")
-    gex_negative      = not gex_positive
-
-    # ── BACKWARDATION TRUMP CARD ─────────────────────────────
-    if strong_back:
-        return [{
-            "name": "🚨 STOP – Minden long stratégia szünetel",
-            "desc": "Erős Backwardation: a piac MOST fél. Ne nyiss új opciós pozíciót. "
-                    "Ha van nyitott long-od, fontold meg a zárást vagy stop-loss szigorítást.",
-            "risk": "Korlátlan ha bent maradsz", "reward": "Tőke megőrzés",
-            "rating": 5, "color": "#f04060",
-        }, {
-            "name": "Protective Put (ha még nincs)",
-            "desc": "Ha eddig nem volt védelmed, most még nem késő OTM put-ot venni – "
-                    "bár drága, de a védelem megéri a prémiumot.",
-            "risk": "Magas prémium", "reward": "Portfólió védelem",
-            "rating": 4, "color": "#f04060",
-        }]
-
-    if backwardation:
-        strategies.append({
-            "name": "Csökkentett méret / Várakozás",
-            "desc": "Backwardation aktív. Amíg tart, kerüld az új long spekulatív pozíciókat. "
-                    "Covered Call és Cash-Secured Put rendben, mert prémiumot KAPSZ.",
-            "risk": "–", "reward": "Kisebb kockázat",
-            "rating": 5, "color": "#f0a500",
-        })
-
-    # ── MUST BUY (75+) ───────────────────────────────────────
-    if score >= 75:
-        if iv_cheap and not gex_negative:
-            strategies.append({
-                "name": "Long Call",
-                "desc": ("Ideális kombináció: erős makro + olcsó opció. "
-                         + ("OTM 40-50 delta (gamma robbanás – alacsony IV)" if vix_pct < 20
-                            else "ITM/ATM 60-75 delta (kisebb theta – magas IV)")
-                         + ". 45-60 nap. Exit: 50% profit vagy 21 DTE."),
-                "risk": "Prémium (alacsony most)", "reward": "Korlátlan",
-                "rating": 5, "color": "#00d488",
-            })
-            strategies.append({
-                "name": "Bull Call Spread",
-                "desc": "Konzervatívabb változat: buy ATM call, sell OTM call ugyanolyan lejáratra. "
-                        "Kisebb tőkeigény, korlátolt nyereség.",
-                "risk": "Nettó debit", "reward": "Spread width",
-                "rating": 4, "color": "#00d488",
-            })
-        elif iv_rich:
-            strategies.append({
-                "name": "Cash-Secured Put (CSP)",
-                "desc": "Bullish bet + drága prémium = tökéletes CSP. "
-                        "Adj el OTM put-ot support szinten. Ha lehívnak, jó áron veszed a részvényt.",
-                "risk": "Részvény vásárlás kötelezettség", "reward": f"Magas prémium (IV: {vix_pct}%)",
-                "rating": 5, "color": "#00d488",
-            })
-        if put_expensive:
-            strategies.append({
-                "name": "Ratio Bull Spread",
-                "desc": f"SKEW magas – a put prémium extrém drága. "
-                        "Buy 1 ATM call, sell 2 OTM call → net credit vagy kis debit. "
-                        "Profitál ha a piac felfelé megy, de nem robbanásszerűen.",
-                "risk": "Ha piac nagyon felmegy: veszteség a fölső szárnyak felett",
-                "reward": "Net credit a put skew-ból",
-                "rating": 3, "color": "#7dd3fc",
-            })
-
-    # ── ÓVATOS (50-74) ───────────────────────────────────────
-    elif score >= 50:
-        if iv_rich and not gex_negative:
-            strategies.append({
-                "name": "Iron Condor",
-                "desc": "Oldalazó piac + drága opció = klasszikus Iron Condor. "
-                        "Sell OTM call + sell OTM put, mindkettőre vegyél távolabb védelmet. "
-                        "⚠ TILOS ha GEX negatív!",
-                "risk": "Korlátolt (belső szárny)", "reward": f"Nettó prémium ({vix_pct}% IV)",
-                "rating": 5 if not gex_negative else 1, "color": "#7dd3fc",
-            })
-            strategies.append({
-                "name": "Covered Call",
-                "desc": "Ha van részvényed: adj el ATM vagy OTM call-t ellene. "
-                        "Magas IV = magas prémium bevétel havonta.",
-                "risk": "Felső oldal lezárva", "reward": "Call prémium",
-                "rating": 4, "color": "#7dd3fc",
-            })
-        elif iv_cheap:
-            strategies.append({
-                "name": "Kis Long Call (paper trade méretben)",
-                "desc": "Bizonytalan makro + olcsó opció. Kis méretben long call rendben, "
-                        "de ne tegyél fel sokat amíg a score nem megy 75 fölé.",
-                "risk": "Kis prémium", "reward": "Korlátlan (kis méret)",
-                "rating": 3, "color": "#f0a500",
-            })
-        if put_expensive:
-            strategies.append({
-                "name": "Bull Put Spread (Credit Spread)",
-                "desc": f"SKEW {skew_sig}: az OTM put prémium magas. "
-                        "Sell OTM put, buy mélyebb OTM put → net credit. "
-                        "Bullish/semleges fogadás magas prémiummal.",
-                "risk": "Spread width – prémium", "reward": "Net credit",
-                "rating": 4, "color": "#7dd3fc",
-            })
-
-    # ── VÉDEKEZÉS (<50) ──────────────────────────────────────
-    else:
-        if iv_cheap:
-            strategies.append({
-                "name": "🛡️ Protective Put – MOST VEGYÉL!",
-                "desc": "KRITIKUS: Gyenge makro + olcsó opció = filléres biztosítás. "
-                        "Vegyél SPX vagy SPY OTM put-ot (5-10% OTM, 60-90 nap). "
-                        "Amikor mindenki nyugodt (alacsony IV), a katasztrófa biztosítás olcsó.",
-                "risk": "Kis prémium (most olcsó!)", "reward": "Teljes védelmet nyújt esnél",
-                "rating": 5, "color": "#f04060",
-            })
-            strategies.append({
-                "name": "Long Put (SPY/QQQ)",
-                "desc": "Közvetlen bearish bet az indexen. OTM put 30-60 nap. "
-                        "Alacsony IV = olcsó belépő a short pozícióhoz.",
-                "risk": "Prémium (alacsony most!)", "reward": "Korlátlan esésre",
-                "rating": 4, "color": "#f04060",
-            })
-        elif iv_rich:
-            strategies.append({
-                "name": "Bear Put Spread",
-                "desc": "Bearish bet de IV drága → spread-del csökkentjük a prémiumot. "
-                        "Buy ATM put, sell OTM put. Korlátolt de olcsóbb bearish pozíció.",
-                "risk": "Nettó debit (kisebb)", "reward": "Spread width",
-                "rating": 4, "color": "#f04060",
-            })
-        if gex_negative:
-            strategies.append({
-                "name": "Csökkentsd a részvény pozíciót",
-                "desc": "GEX negatív + gyenge score = a market makerek eladni kénytelenek ha esik. "
-                        "Az esések felerősödnek. Csökkentsd a long kitettséget.",
-                "risk": "–", "reward": "Tőke megőrzés",
-                "rating": 5, "color": "#f04060",
-            })
-
-    # GEX negatív figyelmeztetés (mindig)
-    if gex_negative and not any(s["name"].startswith("Csökkentsd") for s in strategies):
-        strategies.append({
-            "name": "⚠ GEX Negatív – Iron Condor TILOS",
-            "desc": "Negatív GEX rezsimben az oldalazó stratégiák (Iron Condor, Short Straddle) "
-                    "veszélyesek mert az opciós piac felerősíti az árfolyammozgásokat.",
-            "risk": "Ha bent vagy: zárj!", "reward": "Kockázat csökkentés",
-            "rating": 5, "color": "#f04060",
-        })
-
-    strategies.sort(key=lambda x: x["rating"], reverse=True)
-    return strategies[:5]
-
 # ── DÖNTÉSI MÁTRIX SZÖVEG ────────────────────────────────────
 def generate_decision_matrix(score, vix_pct, skew, term_sig, gex_positive):
     backwardation = term_sig in ("backwardation", "strong_back")
@@ -629,46 +499,66 @@ def generate_decision_matrix(score, vix_pct, skew, term_sig, gex_positive):
     iv_rich  = vix_pct > 70
 
     rows = [
-        # score_min, score_max, iv_cheap_ok, iv_rich_ok, gex_pos, back_ok, strategy, timing, action
-        (75,100, True, False, True, False,
-         "Long Call (ITM, 60-75 delta)",
-         "Nyiss 45-60 napra, zárd 50% profit vagy 21 nap előtt",
-         "Méret: max 5% portfólióból. Exit: -50% stop"),
+        # score_min, score_max, iv_cheap, iv_rich, gex_pos, back, strategy, timing, action
+        (85,100, True,  False, True,  False,
+         "Long Call (ATM/ITM, 60-75 delta)",
+         "45-60 nap lejárat · ATM/ITM delta · max 5% portfólió",
+         "Exit: 50% profit VAGY 21 DTE · Stop: -50% prémium"),
 
-        (75,100, False, True, True, False,
-         "Cash-Secured Put (OTM, support szintjén)",
-         "Adj el a következő erős support alá, 30 nap lejáratra",
-         "Prémium legyen >1% pozíció értékének. Ha lehívnak: tartsd a részvényt"),
+        (85,100, False, True,  True,  False,
+         "Cash-Secured Put (OTM support szintjén)",
+         "5-8% OTM put · 20-30 nap · cash fedezet 100%",
+         "Prémium >1% pozíció értéke · Ha lehívnak: tartsd a részvényt"),
 
-        (50,74, False, True, True, False,
-         "Iron Condor (OTM call + OTM put eladás)",
-         "Delta: ±15-20 szárnyak. Lejárat: 30-45 nap",
-         "Zárd 50% profit. Ha VIX emelkedik: azonnal zárd a vesztes szárnyat"),
+        (85,100, False, False, False, False,
+         "Cash-Secured Put (GEX instabil – prémiummal lépj be)",
+         "5-8% OTM put · 20-30 nap · óvatosabb méret (5%)",
+         "Directional long kerülendő amíg GEX negatív"),
 
-        (50,74, False, True, False, False,
-         "Iron Condor TILOS ha GEX negatív!",
-         "Várakozás vagy Covered Call csak",
-         "GEX negatív = minden irányba nagy mozgás lehetséges"),
+        (85,100, False, False, False, True,
+         "Várd meg amíg Backwardation megszűnik",
+         "Ne nyiss new long-ot · CSP meglévő pozícióra OK",
+         "Amíg VIX/VIX3M < 1.0 visszatér"),
 
-        (40,74, False, False, True, False,
-         "Covered Call (ha van részvényed)",
-         "Adj el OTM call-t 20-30 nap lejáratra, 0.30 delta körül",
-         "Bevétel: kb 1-2%/hó. Ha fölé megy: hadd lehívják vagy görgesd"),
+        (65,84,  False, True,  True,  False,
+         "Bull Put Spread / Cash-Secured Put",
+         "Sell 5-8% OTM put · 20-30 nap · max 5% portfólió",
+         "Exit: 50% profit · rollover ha alá megy"),
 
-        (0,49, True, False, True, False,
-         "Protective Put (SPY OTM, 5-10% OTM)",
-         "Vegyél 60-90 nap lejáratra, mielőtt drága lesz",
-         "Méret: 1-2% portfólióból = teljes védelmet nyújt"),
+        (65,84,  True,  False, True,  False,
+         "Bull Call Spread (óvatos méret)",
+         "Buy ATM call · Sell OTM call · 45 nap · max 3% portfólió",
+         "Exit: 50% profit VAGY 21 DTE"),
 
-        (0,49, False, True, False, False,
-         "Bear Put Spread (ATM put vétel + OTM put eladás)",
-         "Ugyanolyan lejárat, 30-60 nap, 5-10% szélességű spread",
-         "Max veszteség = nettó prémium. Max nyereség = spread - prémium"),
+        (40,64,  False, True,  True,  False,
+         "Iron Condor / Bull Put Spread",
+         "±5-8% OTM szárnyak · 25-35 nap · max 5% portfólió",
+         "Zárd 50% profit · Ha VIX +20%: azonnal zárd vesztes szárnyat"),
 
-        (0,100, False, False, False, True,
-         "NEM nyitunk új pozíciót",
-         "Backwardation idején: várj amíg VIX/VIX3M visszamegy 1.0 alá",
-         "Ha van nyitott pozíció: szoros stop-loss vagy azonnali zárás"),
+        (40,64,  False, False, False, False,
+         "Készpénzgyűjtés – ne nyiss new pozíciót",
+         "GEX negatív = rángatások · Covered Call meglévőre OK",
+         "Amíg GEX pozitívba fordul"),
+
+        (40,64,  False, False, False, True,
+         "Covered Call meglévő pozícióra",
+         "0.25-0.30 delta call · 20-30 nap · ne nyiss new long-ot",
+         "Backwardation = ne spekulálj directional"),
+
+        (0,39,   True,  False, True,  False,
+         "Protective Put – MOST VEGYÉL (olcsó!)",
+         "SPY/QQQ 5-10% OTM put · 60-90 nap · 1-2% portfólió",
+         "Tartsd amíg score 65+ · Ha 200%+: görgesd lejjebb"),
+
+        (0,39,   False, True,  False, False,
+         "Bear Put Spread / Pozíció csökkentés",
+         "Buy ATM put · Sell 5-8% OTM put · 30 nap · 3% portfólió",
+         "GEX negatív = esések felerősödnek · csökkentsd a longokat"),
+
+        (0,100,  False, False, False, True,
+         "NEM nyitunk – Backwardation aktív",
+         "Várj amíg VIX/VIX3M < 1.0 visszatér",
+         "Nyitott pozíció: szoros stop vagy azonnali zárás"),
     ]
 
     rows_html = ""
@@ -676,9 +566,9 @@ def generate_decision_matrix(score, vix_pct, skew, term_sig, gex_positive):
         # Aktuálisan aktív sor kiemelése
         score_match = smin <= score <= smax
         iv_match    = (iv_cheap and ic) or (iv_rich and ir) or (not ic and not ir)
-        gex_match   = (gex_positive == gp) or (gp is False and True)
-        back_match  = (backwardation == back)
-        active      = score_match and (iv_cheap == ic or iv_rich == ir)
+        back_match  = (backwardation == back) or not back
+        gex_match   = gex_positive == gp
+        active      = score_match and iv_match and gex_match and back_match
 
         row_bg  = "background:#00d48815;border-left:4px solid #00d488;font-weight:600" if active else ""
         strat_c = "#00d488" if active else "var(--sub)"
