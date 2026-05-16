@@ -2518,5 +2518,425 @@
     "sector": "Industrials",
     "industry": "Specialty Industrial Machinery",
     "fetched": "2026-05-10T11:53:49.877143+00:00"
+  },
+  "PAYX": {
+    "symbol": "PAYX",
+    "name": "Paychex, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-16T14:54:55.278133+00:00"
+  },
+  "PYPL": {
+    "symbol": "PYPL",
+    "name": "PayPal Holdings, Inc.",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-16T14:54:55.523588+00:00"
+  },
+  "PNR": {
+    "symbol": "PNR",
+    "name": "Pentair plc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-16T14:54:55.763729+00:00"
+  },
+  "PEP": {
+    "symbol": "PEP",
+    "name": "Pepsico, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Beverages - Non-Alcoholic",
+    "fetched": "2026-05-16T14:54:56.001993+00:00"
+  },
+  "PFE": {
+    "symbol": "PFE",
+    "name": "Pfizer, Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - General",
+    "fetched": "2026-05-16T14:54:56.243392+00:00"
+  },
+  "PCG": {
+    "symbol": "PCG",
+    "name": "Pacific Gas & Electric Co.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-16T14:54:56.478247+00:00"
+  },
+  "PM": {
+    "symbol": "PM",
+    "name": "Philip Morris International Inc",
+    "sector": "Consumer Defensive",
+    "industry": "Tobacco",
+    "fetched": "2026-05-16T14:54:56.716622+00:00"
+  },
+  "PSX": {
+    "symbol": "PSX",
+    "name": "Phillips 66",
+    "sector": "Energy",
+    "industry": "Oil & Gas Refining & Marketing",
+    "fetched": "2026-05-16T14:54:56.952214+00:00"
+  },
+  "PNW": {
+    "symbol": "PNW",
+    "name": "Pinnacle West Capital Corporati",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-16T14:54:57.187085+00:00"
+  },
+  "PNC": {
+    "symbol": "PNC",
+    "name": "PNC Financial Services Group, I",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-16T14:54:57.454773+00:00"
+  },
+  "POOL": {
+    "symbol": "POOL",
+    "name": "Pool Corporation",
+    "sector": "Industrials",
+    "industry": "Industrial Distribution",
+    "fetched": "2026-05-16T14:54:57.694717+00:00"
+  },
+  "PPG": {
+    "symbol": "PPG",
+    "name": "PPG Industries, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-16T14:54:57.938526+00:00"
+  },
+  "PPL": {
+    "symbol": "PPL",
+    "name": "PPL Corporation",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-16T14:54:58.181788+00:00"
+  },
+  "PFG": {
+    "symbol": "PFG",
+    "name": "Principal Financial Group Inc",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-16T14:54:58.421483+00:00"
+  },
+  "PG": {
+    "symbol": "PG",
+    "name": "Procter & Gamble Company (The)",
+    "sector": "Consumer Defensive",
+    "industry": "Household & Personal Products",
+    "fetched": "2026-05-16T14:54:58.662074+00:00"
+  },
+  "PGR": {
+    "symbol": "PGR",
+    "name": "Progressive Corporation (The)",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-16T14:54:58.925620+00:00"
+  },
+  "PLD": {
+    "symbol": "PLD",
+    "name": "Prologis, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Industrial",
+    "fetched": "2026-05-16T14:54:59.167178+00:00"
+  },
+  "PRU": {
+    "symbol": "PRU",
+    "name": "Prudential Financial, Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Life",
+    "fetched": "2026-05-16T14:54:59.442039+00:00"
+  },
+  "PEG": {
+    "symbol": "PEG",
+    "name": "Public Service Enterprise Group",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-16T14:54:59.679408+00:00"
+  },
+  "PTC": {
+    "symbol": "PTC",
+    "name": "PTC Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-16T14:54:59.919384+00:00"
+  },
+  "PSA": {
+    "symbol": "PSA",
+    "name": "Public Storage",
+    "sector": "Real Estate",
+    "industry": "REIT - Industrial",
+    "fetched": "2026-05-16T14:55:00.159537+00:00"
+  },
+  "PHM": {
+    "symbol": "PHM",
+    "name": "PulteGroup, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Residential Construction",
+    "fetched": "2026-05-16T14:55:00.433941+00:00"
+  },
+  "PWR": {
+    "symbol": "PWR",
+    "name": "Quanta Services, Inc.",
+    "sector": "Industrials",
+    "industry": "Engineering & Construction",
+    "fetched": "2026-05-16T14:55:00.673902+00:00"
+  },
+  "QCOM": {
+    "symbol": "QCOM",
+    "name": "QUALCOMM Incorporated",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-16T14:55:00.945364+00:00"
+  },
+  "DGX": {
+    "symbol": "DGX",
+    "name": "Quest Diagnostics Incorporated",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-16T14:55:01.193417+00:00"
+  },
+  "Q": {
+    "symbol": "Q",
+    "name": "Qnity Electronics, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials",
+    "fetched": "2026-05-16T14:55:01.431732+00:00"
+  },
+  "RL": {
+    "symbol": "RL",
+    "name": "Ralph Lauren Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Manufacturing",
+    "fetched": "2026-05-16T14:55:01.677408+00:00"
+  },
+  "RJF": {
+    "symbol": "RJF",
+    "name": "Raymond James Financial, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-16T14:55:01.918143+00:00"
+  },
+  "RTX": {
+    "symbol": "RTX",
+    "name": "RTX Corporation",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-16T14:55:02.175035+00:00"
+  },
+  "O": {
+    "symbol": "O",
+    "name": "Realty Income Corporation",
+    "sector": "Real Estate",
+    "industry": "REIT - Retail",
+    "fetched": "2026-05-16T14:55:02.409083+00:00"
+  },
+  "REG": {
+    "symbol": "REG",
+    "name": "Regency Centers Corporation",
+    "sector": "Real Estate",
+    "industry": "REIT - Retail",
+    "fetched": "2026-05-16T14:55:02.654056+00:00"
+  },
+  "REGN": {
+    "symbol": "REGN",
+    "name": "Regeneron Pharmaceuticals, Inc.",
+    "sector": "Healthcare",
+    "industry": "Biotechnology",
+    "fetched": "2026-05-16T14:55:02.906310+00:00"
+  },
+  "RF": {
+    "symbol": "RF",
+    "name": "Regions Financial Corporation",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-16T14:55:03.178498+00:00"
+  },
+  "RSG": {
+    "symbol": "RSG",
+    "name": "Republic Services, Inc.",
+    "sector": "Industrials",
+    "industry": "Waste Management",
+    "fetched": "2026-05-16T14:55:03.416159+00:00"
+  },
+  "RMD": {
+    "symbol": "RMD",
+    "name": "ResMed Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-16T14:55:03.660482+00:00"
+  },
+  "RVTY": {
+    "symbol": "RVTY",
+    "name": "Revvity, Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-16T14:55:03.965502+00:00"
+  },
+  "HOOD": {
+    "symbol": "HOOD",
+    "name": "Robinhood Markets, Inc.",
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "fetched": "2026-05-16T14:55:04.230014+00:00"
+  },
+  "ROK": {
+    "symbol": "ROK",
+    "name": "Rockwell Automation, Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-16T14:55:04.499598+00:00"
+  },
+  "ROL": {
+    "symbol": "ROL",
+    "name": "Rollins, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Personal Services",
+    "fetched": "2026-05-16T14:55:04.732789+00:00"
+  },
+  "ROP": {
+    "symbol": "ROP",
+    "name": "Roper Technologies, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-16T14:55:04.970633+00:00"
+  },
+  "ROST": {
+    "symbol": "ROST",
+    "name": "Ross Stores, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Retail",
+    "fetched": "2026-05-16T14:55:05.268812+00:00"
+  },
+  "RCL": {
+    "symbol": "RCL",
+    "name": "Royal Caribbean Cruises Ltd.",
+    "sector": "Consumer Cyclical",
+    "industry": "Travel Services",
+    "fetched": "2026-05-16T14:55:05.561655+00:00"
+  },
+  "SPGI": {
+    "symbol": "SPGI",
+    "name": "S&P Global Inc.",
+    "sector": "Financial Services",
+    "industry": "Financial Data & Stock Exchanges",
+    "fetched": "2026-05-16T14:55:05.800711+00:00"
+  },
+  "CRM": {
+    "symbol": "CRM",
+    "name": "Salesforce, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-16T14:55:06.037284+00:00"
+  },
+  "SNDK": {
+    "symbol": "SNDK",
+    "name": "Sandisk Corporation",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-16T14:55:06.297405+00:00"
+  },
+  "SBAC": {
+    "symbol": "SBAC",
+    "name": "SBA Communications Corporation",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-16T14:55:06.531037+00:00"
+  },
+  "SLB": {
+    "symbol": "SLB",
+    "name": "SLB Limited",
+    "sector": "Energy",
+    "industry": "Oil & Gas Equipment & Services",
+    "fetched": "2026-05-16T14:55:06.804272+00:00"
+  },
+  "STX": {
+    "symbol": "STX",
+    "name": "Seagate Technology Holdings PLC",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-16T14:55:07.039850+00:00"
+  },
+  "SRE": {
+    "symbol": "SRE",
+    "name": "DBA Sempra",
+    "sector": "Utilities",
+    "industry": "Utilities - Diversified",
+    "fetched": "2026-05-16T14:55:07.286814+00:00"
+  },
+  "NOW": {
+    "symbol": "NOW",
+    "name": "ServiceNow, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-16T14:55:07.529636+00:00"
+  },
+  "SHW": {
+    "symbol": "SHW",
+    "name": "Sherwin-Williams Company (The)",
+    "sector": "Basic Materials",
+    "industry": "Specialty Chemicals",
+    "fetched": "2026-05-16T14:55:07.768933+00:00"
+  },
+  "SPG": {
+    "symbol": "SPG",
+    "name": "Simon Property Group, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Retail",
+    "fetched": "2026-05-16T14:55:08.005898+00:00"
+  },
+  "SWKS": {
+    "symbol": "SWKS",
+    "name": "Skyworks Solutions, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-16T14:55:08.261957+00:00"
+  },
+  "SJM": {
+    "symbol": "SJM",
+    "name": "The J.M. Smucker Company",
+    "sector": "Consumer Defensive",
+    "industry": "Packaged Foods",
+    "fetched": "2026-05-16T14:55:08.502796+00:00"
+  },
+  "SW": {
+    "symbol": "SW",
+    "name": "Smurfit WestRock plc",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "fetched": "2026-05-16T14:55:08.745439+00:00"
+  },
+  "SNA": {
+    "symbol": "SNA",
+    "name": "Snap-On Incorporated",
+    "sector": "Industrials",
+    "industry": "Tools & Accessories",
+    "fetched": "2026-05-16T14:55:08.984946+00:00"
+  },
+  "SOLV": {
+    "symbol": "SOLV",
+    "name": "Solventum Corporation",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-16T14:55:09.220875+00:00"
+  },
+  "SO": {
+    "symbol": "SO",
+    "name": "Southern Company (The)",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-16T14:55:09.504918+00:00"
+  },
+  "LUV": {
+    "symbol": "LUV",
+    "name": "Southwest Airlines Company",
+    "sector": "Industrials",
+    "industry": "Airlines",
+    "fetched": "2026-05-16T14:55:09.782424+00:00"
+  },
+  "SWK": {
+    "symbol": "SWK",
+    "name": "Stanley Black & Decker, Inc.",
+    "sector": "Industrials",
+    "industry": "Tools & Accessories",
+    "fetched": "2026-05-16T14:55:10.136386+00:00"
   }
 }
