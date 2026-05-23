@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-05-16T14:54:54.576472+00:00",
+    "fetched": "2026-05-23T14:58:55.653224+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-05-16T14:54:54.905974+00:00",
+    "fetched": "2026-05-23T14:58:56.434653+00:00",
     "broken": true
   },
   "BLDR": {
@@ -11030,5 +11030,27 @@
     "rd_intensity": 0.07372979824654062,
     "interest_coverage": 16.2027027027027,
     "payout_ratio": 0.3328
+  },
+  "BNY": {
+    "symbol": "BNY",
+    "fetched": "2026-05-23T14:58:56.035713+00:00",
+    "revenue_ttm": 20753999872,
+    "gp_to_assets": null,
+    "op_margin_ttm": 0.37647998,
+    "net_margin_ttm": 0.28722,
+    "debt_to_equity": null,
+    "operating_income_positive_count": 3,
+    "gross_margin_ttm": 0.0,
+    "roa_ttm": 0.01196,
+    "roe_ttm": 0.13472,
+    "roce_ttm": null,
+    "fcf_margin": null,
+    "fcf_to_ocf": null,
+    "rev_cagr_3y": 0.134,
+    "gm_trend_3y": null,
+    "op_margin_trend_2y": null,
+    "rd_intensity": null,
+    "interest_coverage": null,
+    "payout_ratio": 0.2556
   }
 }

@@ -2938,5 +2938,425 @@
     "sector": "Industrials",
     "industry": "Tools & Accessories",
     "fetched": "2026-05-16T14:55:10.136386+00:00"
+  },
+  "BNY": {
+    "symbol": "BNY",
+    "name": "The Bank of New York Mellon Cor",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-23T14:58:56.649354+00:00"
+  },
+  "SBUX": {
+    "symbol": "SBUX",
+    "name": "Starbucks Corporation",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-23T14:58:56.952001+00:00"
+  },
+  "STT": {
+    "symbol": "STT",
+    "name": "State Street Corporation",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-23T14:58:57.228163+00:00"
+  },
+  "STLD": {
+    "symbol": "STLD",
+    "name": "Steel Dynamics, Inc.",
+    "sector": "Basic Materials",
+    "industry": "Steel",
+    "fetched": "2026-05-23T14:58:57.530533+00:00"
+  },
+  "STE": {
+    "symbol": "STE",
+    "name": "STERIS plc (Ireland)",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-23T14:58:57.785500+00:00"
+  },
+  "SYK": {
+    "symbol": "SYK",
+    "name": "Stryker Corporation",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-23T14:58:58.047692+00:00"
+  },
+  "SMCI": {
+    "symbol": "SMCI",
+    "name": "Super Micro Computer, Inc.",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-23T14:58:58.290581+00:00"
+  },
+  "SYF": {
+    "symbol": "SYF",
+    "name": "Synchrony Financial",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-23T14:58:58.547570+00:00"
+  },
+  "SNPS": {
+    "symbol": "SNPS",
+    "name": "Synopsys, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-23T14:58:58.796669+00:00"
+  },
+  "SYY": {
+    "symbol": "SYY",
+    "name": "Sysco Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Food Distribution",
+    "fetched": "2026-05-23T14:58:59.094769+00:00"
+  },
+  "TMUS": {
+    "symbol": "TMUS",
+    "name": "T-Mobile US, Inc.",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-23T14:58:59.351025+00:00"
+  },
+  "TROW": {
+    "symbol": "TROW",
+    "name": "T. Rowe Price Group, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "fetched": "2026-05-23T14:58:59.645231+00:00"
+  },
+  "TTWO": {
+    "symbol": "TTWO",
+    "name": "Take-Two Interactive Software, ",
+    "sector": "Communication Services",
+    "industry": "Electronic Gaming & Multimedia",
+    "fetched": "2026-05-23T14:58:59.933566+00:00"
+  },
+  "TPR": {
+    "symbol": "TPR",
+    "name": "Tapestry, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Luxury Goods",
+    "fetched": "2026-05-23T14:59:00.176036+00:00"
+  },
+  "TRGP": {
+    "symbol": "TRGP",
+    "name": "Targa Resources, Inc.",
+    "sector": "Energy",
+    "industry": "Oil & Gas Midstream",
+    "fetched": "2026-05-23T14:59:00.469975+00:00"
+  },
+  "TGT": {
+    "symbol": "TGT",
+    "name": "Target Corporation",
+    "sector": "Consumer Defensive",
+    "industry": "Discount Stores",
+    "fetched": "2026-05-23T14:59:00.708892+00:00"
+  },
+  "TEL": {
+    "symbol": "TEL",
+    "name": "TE Connectivity plc",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "fetched": "2026-05-23T14:59:00.956997+00:00"
+  },
+  "TDY": {
+    "symbol": "TDY",
+    "name": "Teledyne Technologies Incorpora",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-23T14:59:01.243331+00:00"
+  },
+  "TER": {
+    "symbol": "TER",
+    "name": "Teradyne, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment & Materials",
+    "fetched": "2026-05-23T14:59:01.485024+00:00"
+  },
+  "TSLA": {
+    "symbol": "TSLA",
+    "name": "Tesla, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Auto Manufacturers",
+    "fetched": "2026-05-23T14:59:01.729719+00:00"
+  },
+  "TXN": {
+    "symbol": "TXN",
+    "name": "Texas Instruments Incorporated",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-05-23T14:59:01.995981+00:00"
+  },
+  "TPL": {
+    "symbol": "TPL",
+    "name": "Texas Pacific Land Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "fetched": "2026-05-23T14:59:02.228112+00:00"
+  },
+  "TXT": {
+    "symbol": "TXT",
+    "name": "Textron Inc.",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-23T14:59:02.575187+00:00"
+  },
+  "TMO": {
+    "symbol": "TMO",
+    "name": "Thermo Fisher Scientific Inc",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-23T14:59:02.989441+00:00"
+  },
+  "TJX": {
+    "symbol": "TJX",
+    "name": "TJX Companies, Inc. (The)",
+    "sector": "Consumer Cyclical",
+    "industry": "Apparel Retail",
+    "fetched": "2026-05-23T14:59:03.290276+00:00"
+  },
+  "TKO": {
+    "symbol": "TKO",
+    "name": "TKO Group Holdings, Inc.",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-23T14:59:03.573131+00:00"
+  },
+  "TTD": {
+    "symbol": "TTD",
+    "name": "The Trade Desk, Inc.",
+    "sector": "Communication Services",
+    "industry": "Advertising Agencies",
+    "fetched": "2026-05-23T14:59:03.836803+00:00"
+  },
+  "TSCO": {
+    "symbol": "TSCO",
+    "name": "Tractor Supply Company",
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail",
+    "fetched": "2026-05-23T14:59:04.172214+00:00"
+  },
+  "TT": {
+    "symbol": "TT",
+    "name": "Trane Technologies plc",
+    "sector": "Industrials",
+    "industry": "Building Products & Equipment",
+    "fetched": "2026-05-23T14:59:04.435022+00:00"
+  },
+  "TDG": {
+    "symbol": "TDG",
+    "name": "Transdigm Group Incorporated",
+    "sector": "Industrials",
+    "industry": "Aerospace & Defense",
+    "fetched": "2026-05-23T14:59:04.710919+00:00"
+  },
+  "TRV": {
+    "symbol": "TRV",
+    "name": "The Travelers Companies, Inc.",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-23T14:59:04.960103+00:00"
+  },
+  "TRMB": {
+    "symbol": "TRMB",
+    "name": "Trimble Inc.",
+    "sector": "Technology",
+    "industry": "Scientific & Technical Instruments",
+    "fetched": "2026-05-23T14:59:05.255921+00:00"
+  },
+  "TFC": {
+    "symbol": "TFC",
+    "name": "Truist Financial Corporation",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-23T14:59:05.528554+00:00"
+  },
+  "TYL": {
+    "symbol": "TYL",
+    "name": "Tyler Technologies, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-23T14:59:05.790452+00:00"
+  },
+  "TSN": {
+    "symbol": "TSN",
+    "name": "Tyson Foods, Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Farm Products",
+    "fetched": "2026-05-23T14:59:06.087131+00:00"
+  },
+  "USB": {
+    "symbol": "USB",
+    "name": "U.S. Bancorp",
+    "sector": "Financial Services",
+    "industry": "Banks - Regional",
+    "fetched": "2026-05-23T14:59:06.394478+00:00"
+  },
+  "UBER": {
+    "symbol": "UBER",
+    "name": "Uber Technologies, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-23T14:59:06.665127+00:00"
+  },
+  "UDR": {
+    "symbol": "UDR",
+    "name": "UDR, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Residential",
+    "fetched": "2026-05-23T14:59:06.930659+00:00"
+  },
+  "ULTA": {
+    "symbol": "ULTA",
+    "name": "Ulta Beauty, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail",
+    "fetched": "2026-05-23T14:59:07.177204+00:00"
+  },
+  "UNP": {
+    "symbol": "UNP",
+    "name": "Union Pacific Corporation",
+    "sector": "Industrials",
+    "industry": "Railroads",
+    "fetched": "2026-05-23T14:59:07.445550+00:00"
+  },
+  "UAL": {
+    "symbol": "UAL",
+    "name": "United Airlines Holdings, Inc.",
+    "sector": "Industrials",
+    "industry": "Airlines",
+    "fetched": "2026-05-23T14:59:07.711204+00:00"
+  },
+  "UPS": {
+    "symbol": "UPS",
+    "name": "United Parcel Service, Inc.",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-05-23T14:59:07.945608+00:00"
+  },
+  "URI": {
+    "symbol": "URI",
+    "name": "United Rentals, Inc.",
+    "sector": "Industrials",
+    "industry": "Rental & Leasing Services",
+    "fetched": "2026-05-23T14:59:08.213142+00:00"
+  },
+  "UNH": {
+    "symbol": "UNH",
+    "name": "UnitedHealth Group Incorporated",
+    "sector": "Healthcare",
+    "industry": "Healthcare Plans",
+    "fetched": "2026-05-23T14:59:08.481666+00:00"
+  },
+  "UHS": {
+    "symbol": "UHS",
+    "name": "Universal Health Services, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Care Facilities",
+    "fetched": "2026-05-23T14:59:08.726444+00:00"
+  },
+  "VLO": {
+    "symbol": "VLO",
+    "name": "Valero Energy Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas Refining & Marketing",
+    "fetched": "2026-05-23T14:59:08.976483+00:00"
+  },
+  "VEEV": {
+    "symbol": "VEEV",
+    "name": "Veeva Systems Inc.",
+    "sector": "Healthcare",
+    "industry": "Health Information Services",
+    "fetched": "2026-05-23T14:59:09.256181+00:00"
+  },
+  "VTR": {
+    "symbol": "VTR",
+    "name": "Ventas, Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Healthcare Facilities",
+    "fetched": "2026-05-23T14:59:09.529145+00:00"
+  },
+  "VLTO": {
+    "symbol": "VLTO",
+    "name": "Veralto Corp",
+    "sector": "Industrials",
+    "industry": "Pollution & Treatment Controls",
+    "fetched": "2026-05-23T14:59:09.766614+00:00"
+  },
+  "VRSN": {
+    "symbol": "VRSN",
+    "name": "VeriSign, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-05-23T14:59:10.077319+00:00"
+  },
+  "VRSK": {
+    "symbol": "VRSK",
+    "name": "Verisk Analytics, Inc.",
+    "sector": "Industrials",
+    "industry": "Consulting Services",
+    "fetched": "2026-05-23T14:59:10.364606+00:00"
+  },
+  "VZ": {
+    "symbol": "VZ",
+    "name": "Verizon Communications Inc.",
+    "sector": "Communication Services",
+    "industry": "Telecom Services",
+    "fetched": "2026-05-23T14:59:10.636433+00:00"
+  },
+  "VRTX": {
+    "symbol": "VRTX",
+    "name": "Vertex Pharmaceuticals Incorpor",
+    "sector": "Healthcare",
+    "industry": "Biotechnology",
+    "fetched": "2026-05-23T14:59:10.903493+00:00"
+  },
+  "VRT": {
+    "symbol": "VRT",
+    "name": "Vertiv Holdings, LLC",
+    "sector": "Industrials",
+    "industry": "Electrical Equipment & Parts",
+    "fetched": "2026-05-23T14:59:11.194112+00:00"
+  },
+  "VTRS": {
+    "symbol": "VTRS",
+    "name": "Viatris Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic",
+    "fetched": "2026-05-23T14:59:11.463853+00:00"
+  },
+  "VICI": {
+    "symbol": "VICI",
+    "name": "VICI Properties Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Diversified",
+    "fetched": "2026-05-23T14:59:11.724988+00:00"
+  },
+  "V": {
+    "symbol": "V",
+    "name": "Visa Inc.",
+    "sector": "Financial Services",
+    "industry": "Credit Services",
+    "fetched": "2026-05-23T14:59:11.982476+00:00"
+  },
+  "VST": {
+    "symbol": "VST",
+    "name": "Vistra Corp.",
+    "sector": "Utilities",
+    "industry": "Utilities - Independent Power Producers",
+    "fetched": "2026-05-23T14:59:12.233555+00:00"
+  },
+  "VMC": {
+    "symbol": "VMC",
+    "name": "Vulcan Materials Company (Holdi",
+    "sector": "Basic Materials",
+    "industry": "Building Materials",
+    "fetched": "2026-05-23T14:59:12.531133+00:00"
+  },
+  "WRB": {
+    "symbol": "WRB",
+    "name": "W.R. Berkley Corporation",
+    "sector": "Financial Services",
+    "industry": "Insurance - Property & Casualty",
+    "fetched": "2026-05-23T14:59:12.773470+00:00"
   }
 }
