@@ -3358,5 +3358,173 @@
     "sector": "Financial Services",
     "industry": "Insurance - Property & Casualty",
     "fetched": "2026-05-23T14:59:12.773470+00:00"
+  },
+  "GWW": {
+    "symbol": "GWW",
+    "name": "W.W. Grainger, Inc.",
+    "sector": "Industrials",
+    "industry": "Industrial Distribution",
+    "fetched": "2026-05-30T15:04:48.547477+00:00"
+  },
+  "WAB": {
+    "symbol": "WAB",
+    "name": "Westinghouse Air Brake Technolo",
+    "sector": "Industrials",
+    "industry": "Railroads",
+    "fetched": "2026-05-30T15:04:48.762275+00:00"
+  },
+  "WMT": {
+    "symbol": "WMT",
+    "name": "Walmart Inc.",
+    "sector": "Consumer Defensive",
+    "industry": "Discount Stores",
+    "fetched": "2026-05-30T15:04:48.983197+00:00"
+  },
+  "DIS": {
+    "symbol": "DIS",
+    "name": "Walt Disney Company (The)",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-30T15:04:49.201716+00:00"
+  },
+  "WBD": {
+    "symbol": "WBD",
+    "name": "Warner Bros. Discovery, Inc. - ",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-05-30T15:04:49.419124+00:00"
+  },
+  "WM": {
+    "symbol": "WM",
+    "name": "Waste Management, Inc.",
+    "sector": "Industrials",
+    "industry": "Waste Management",
+    "fetched": "2026-05-30T15:04:49.642800+00:00"
+  },
+  "WAT": {
+    "symbol": "WAT",
+    "name": "Waters Corporation",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "fetched": "2026-05-30T15:04:49.908214+00:00"
+  },
+  "WEC": {
+    "symbol": "WEC",
+    "name": "WEC Energy Group, Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-30T15:04:50.128544+00:00"
+  },
+  "WFC": {
+    "symbol": "WFC",
+    "name": "Wells Fargo & Company",
+    "sector": "Financial Services",
+    "industry": "Banks - Diversified",
+    "fetched": "2026-05-30T15:04:50.349811+00:00"
+  },
+  "WELL": {
+    "symbol": "WELL",
+    "name": "Welltower Inc.",
+    "sector": "Real Estate",
+    "industry": "REIT - Healthcare Facilities",
+    "fetched": "2026-05-30T15:04:50.567094+00:00"
+  },
+  "WST": {
+    "symbol": "WST",
+    "name": "West Pharmaceutical Services, I",
+    "sector": "Healthcare",
+    "industry": "Medical Instruments & Supplies",
+    "fetched": "2026-05-30T15:04:50.838401+00:00"
+  },
+  "WDC": {
+    "symbol": "WDC",
+    "name": "Western Digital Corporation",
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "fetched": "2026-05-30T15:04:51.103913+00:00"
+  },
+  "WY": {
+    "symbol": "WY",
+    "name": "Weyerhaeuser Company",
+    "sector": "Real Estate",
+    "industry": "REIT - Specialty",
+    "fetched": "2026-05-30T15:04:51.379814+00:00"
+  },
+  "WSM": {
+    "symbol": "WSM",
+    "name": "Williams-Sonoma, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Specialty Retail",
+    "fetched": "2026-05-30T15:04:51.597766+00:00"
+  },
+  "WMB": {
+    "symbol": "WMB",
+    "name": "Williams Companies, Inc. (The)",
+    "sector": "Energy",
+    "industry": "Oil & Gas Midstream",
+    "fetched": "2026-05-30T15:04:51.860553+00:00"
+  },
+  "WTW": {
+    "symbol": "WTW",
+    "name": "Willis Towers Watson Public Lim",
+    "sector": "Financial Services",
+    "industry": "Insurance Brokers",
+    "fetched": "2026-05-30T15:04:52.079025+00:00"
+  },
+  "WDAY": {
+    "symbol": "WDAY",
+    "name": "Workday, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Application",
+    "fetched": "2026-05-30T15:04:52.293951+00:00"
+  },
+  "WYNN": {
+    "symbol": "WYNN",
+    "name": "Wynn Resorts, Limited",
+    "sector": "Consumer Cyclical",
+    "industry": "Resorts & Casinos",
+    "fetched": "2026-05-30T15:04:52.512929+00:00"
+  },
+  "XEL": {
+    "symbol": "XEL",
+    "name": "Xcel Energy Inc.",
+    "sector": "Utilities",
+    "industry": "Utilities - Regulated Electric",
+    "fetched": "2026-05-30T15:04:52.728655+00:00"
+  },
+  "XYL": {
+    "symbol": "XYL",
+    "name": "Xylem Inc.",
+    "sector": "Industrials",
+    "industry": "Specialty Industrial Machinery",
+    "fetched": "2026-05-30T15:04:52.947506+00:00"
+  },
+  "YUM": {
+    "symbol": "YUM",
+    "name": "Yum! Brands, Inc.",
+    "sector": "Consumer Cyclical",
+    "industry": "Restaurants",
+    "fetched": "2026-05-30T15:04:53.216881+00:00"
+  },
+  "ZBRA": {
+    "symbol": "ZBRA",
+    "name": "Zebra Technologies Corporation",
+    "sector": "Technology",
+    "industry": "Communication Equipment",
+    "fetched": "2026-05-30T15:04:53.485741+00:00"
+  },
+  "ZBH": {
+    "symbol": "ZBH",
+    "name": "Zimmer Biomet Holdings, Inc.",
+    "sector": "Healthcare",
+    "industry": "Medical Devices",
+    "fetched": "2026-05-30T15:04:53.756904+00:00"
+  },
+  "ZTS": {
+    "symbol": "ZTS",
+    "name": "Zoetis Inc.",
+    "sector": "Healthcare",
+    "industry": "Drug Manufacturers - Specialty & Generic",
+    "fetched": "2026-05-30T15:04:53.972400+00:00"
   }
 }
