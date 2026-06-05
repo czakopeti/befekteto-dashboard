@@ -645,5 +645,29 @@
     "afCur": -0.6792,
     "termSignal": "bull",
     "termRatio": 0.821
+  },
+  {
+    "date": "2026-06-05",
+    "spx": 7448,
+    "entryScore": 55,
+    "corrProb": 18,
+    "playbook": "wait",
+    "regime": "bull",
+    "kellyAlloc": 10,
+    "vix": 18.7,
+    "hySpread": 2.74,
+    "breadth": 58,
+    "cnnFG": 47,
+    "yieldCurve": 42,
+    "recProb": 0.4,
+    "leiSignal": "bull",
+    "m2Yoy": 4.4,
+    "cgTrend": "bull",
+    "gex": 7716824237.309999,
+    "gexSignal": "bull",
+    "afSignal": "bear",
+    "afCur": -0.6527,
+    "termSignal": "wait",
+    "termRatio": 0.9
   }
 ]
