@@ -3526,5 +3526,12 @@
     "sector": "Healthcare",
     "industry": "Drug Manufacturers - Specialty & Generic",
     "fetched": "2026-05-30T15:04:53.972400+00:00"
+  },
+  "FDXF": {
+    "symbol": "FDXF",
+    "name": "FedEx Freight Holding Company, Inc.",
+    "sector": "Industrials",
+    "industry": "Integrated Freight & Logistics",
+    "fetched": "2026-06-06T15:13:14.098699+00:00"
   }
 }
