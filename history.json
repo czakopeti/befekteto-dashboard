@@ -717,5 +717,29 @@
     "afCur": -0.5433,
     "termSignal": "bull",
     "termRatio": 0.881
+  },
+  {
+    "date": "2026-06-13",
+    "spx": 7431,
+    "entryScore": 85,
+    "corrProb": 4,
+    "playbook": "must_buy",
+    "regime": "bull",
+    "kellyAlloc": 38,
+    "vix": 17.7,
+    "hySpread": 2.78,
+    "breadth": 44,
+    "cnnFG": 34,
+    "yieldCurve": 39,
+    "recProb": 0.4,
+    "leiSignal": "bull",
+    "m2Yoy": 4.4,
+    "cgTrend": "bull",
+    "gex": 3327313572.8200026,
+    "gexSignal": "bull",
+    "afSignal": "bear",
+    "afCur": -0.544,
+    "termSignal": "bull",
+    "termRatio": 0.862
   }
 ]
