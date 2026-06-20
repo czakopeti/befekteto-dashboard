@@ -3533,5 +3533,19 @@
     "sector": "Industrials",
     "industry": "Integrated Freight & Logistics",
     "fetched": "2026-06-06T15:13:14.098699+00:00"
+  },
+  "FLEX": {
+    "symbol": "FLEX",
+    "name": "Flex Ltd.",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "fetched": "2026-06-20T15:45:07.609651+00:00"
+  },
+  "MRVL": {
+    "symbol": "MRVL",
+    "name": "Marvell Technology, Inc.",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "fetched": "2026-06-20T15:45:07.764289+00:00"
   }
 }
