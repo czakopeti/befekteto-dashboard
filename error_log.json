@@ -1,6 +1,12 @@
 {
-  "last_run": "2026-06-19T17:22:09.327310",
-  "status": "OK",
-  "errors": [],
-  "success_count": 14
+  "last_run": "2026-06-20T08:42:18.996257",
+  "status": "PARTIAL",
+  "errors": [
+    {
+      "source": "SPX",
+      "error": "cannot convert float NaN to integer",
+      "time": "2026-06-20T08:42:06.486914"
+    }
+  ],
+  "success_count": 13
 }

@@ -16,8 +16,8 @@
     },
     {
       "ticker": "RMD",
-      "price": 188.63,
-      "vsMA200": -21.9,
+      "price": 186.29,
+      "vsMA200": -23.0,
       "name": "ResMed Inc.",
       "sector": "Healthcare",
       "roe": 25.2,
@@ -30,8 +30,8 @@
     },
     {
       "ticker": "IDXX",
-      "price": 562.09,
-      "vsMA200": -11.1,
+      "price": 546.09,
+      "vsMA200": -13.7,
       "name": "IDEXX Laboratories, Inc.",
       "sector": "Healthcare",
       "roe": 72.9,
@@ -100,8 +100,8 @@
     },
     {
       "ticker": "FOX",
-      "price": 46.95,
-      "vsMA200": -17.9,
+      "price": 46.73,
+      "vsMA200": -18.3,
       "name": "Fox Corporation",
       "sector": "Communication Services",
       "roe": 15.2,
@@ -113,7 +113,7 @@
       "analystPriceTarget": 0
     }
   ],
-  "updated": "2026-06-19T17:21:55.882107",
+  "updated": "2026-06-20T08:42:05.627320",
   "count": 8,
   "params": {
     "sma200_min": -30.0,
