@@ -12,7 +12,7 @@
       "qualityScore": 92,
       "analystEpsGrowth": 57.4,
       "epsRevPositive": true,
-      "analystPriceTarget": 279.87
+      "analystPriceTarget": 280.66
     },
     {
       "ticker": "NFLX",
@@ -26,7 +26,7 @@
       "qualityScore": 87,
       "analystEpsGrowth": 24.0,
       "epsRevPositive": true,
-      "analystPriceTarget": 114.15
+      "analystPriceTarget": 113.94
     },
     {
       "ticker": "IDXX",
@@ -96,7 +96,7 @@
       "qualityScore": 70,
       "analystEpsGrowth": 33.9,
       "epsRevPositive": true,
-      "analystPriceTarget": 828.13
+      "analystPriceTarget": 828.17
     },
     {
       "ticker": "ISRG",
@@ -124,7 +124,7 @@
       "qualityScore": 62,
       "analystEpsGrowth": 51.6,
       "epsRevPositive": true,
-      "analystPriceTarget": 71.38
+      "analystPriceTarget": 72.31
     },
     {
       "ticker": "FOX",
@@ -141,7 +141,7 @@
       "analystPriceTarget": 0
     }
   ],
-  "updated": "2026-07-03T16:39:20.501744",
+  "updated": "2026-07-04T08:25:25.186786",
   "count": 10,
   "params": {
     "sma200_min": -30.0,
