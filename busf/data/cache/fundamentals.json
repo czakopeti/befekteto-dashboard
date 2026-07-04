@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-06-27T15:13:28.841365+00:00",
+    "fetched": "2026-07-04T15:02:55.045104+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-06-27T15:13:29.509198+00:00",
+    "fetched": "2026-07-04T15:02:55.362037+00:00",
     "broken": true
   },
   "BLDR": {
@@ -4411,7 +4411,7 @@
   },
   "FISV": {
     "symbol": "FISV",
-    "fetched": "2026-06-27T15:13:30.162200+00:00",
+    "fetched": "2026-07-04T15:02:55.681628+00:00",
     "broken": true
   },
   "F": {
@@ -11118,6 +11118,28 @@
     "fcf_margin": -0.03093185738286987,
     "fcf_to_ocf": 6.748848345493404,
     "rev_cagr_3y": -0.052,
+    "gm_trend_3y": null,
+    "op_margin_trend_2y": null,
+    "rd_intensity": null,
+    "interest_coverage": null,
+    "payout_ratio": 0.0
+  },
+  "HONA": {
+    "symbol": "HONA",
+    "fetched": "2026-07-04T15:02:56.006242+00:00",
+    "revenue_ttm": 17681999872,
+    "gp_to_assets": null,
+    "op_margin_ttm": 0.20152001,
+    "net_margin_ttm": 0.14388,
+    "debt_to_equity": null,
+    "operating_income_positive_count": 3,
+    "gross_margin_ttm": 0.34894,
+    "roa_ttm": null,
+    "roe_ttm": null,
+    "roce_ttm": null,
+    "fcf_margin": null,
+    "fcf_to_ocf": null,
+    "rev_cagr_3y": 0.068,
     "gm_trend_3y": null,
     "op_margin_trend_2y": null,
     "rd_intensity": null,
