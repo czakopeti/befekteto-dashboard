@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-07-04T15:02:55.045104+00:00",
+    "fetched": "2026-07-11T14:50:21.711669+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-07-04T15:02:55.362037+00:00",
+    "fetched": "2026-07-11T14:50:22.095887+00:00",
     "broken": true
   },
   "BLDR": {
@@ -4411,7 +4411,7 @@
   },
   "FISV": {
     "symbol": "FISV",
-    "fetched": "2026-07-04T15:02:55.681628+00:00",
+    "fetched": "2026-07-11T14:50:22.907608+00:00",
     "broken": true
   },
   "F": {
@@ -11038,7 +11038,7 @@
   },
   "FDXF": {
     "symbol": "FDXF",
-    "fetched": "2026-06-06T15:13:13.868907+00:00",
+    "fetched": "2026-07-11T14:50:22.497783+00:00",
     "revenue_ttm": 8684000256,
     "gp_to_assets": null,
     "op_margin_ttm": 0.06027,
@@ -11048,7 +11048,7 @@
     "gross_margin_ttm": 0.29674998,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": 0.2947338688726428,
+    "roce_ttm": 0.2947595571193631,
     "fcf_margin": null,
     "fcf_to_ocf": null,
     "rev_cagr_3y": -0.047,
