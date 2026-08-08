@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-08-01T14:57:48.404267+00:00",
+    "fetched": "2026-08-08T14:29:08.863116+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-08-01T14:57:49.395261+00:00",
+    "fetched": "2026-08-08T14:29:09.438035+00:00",
     "broken": true
   },
   "BLDR": {
@@ -4411,7 +4411,7 @@
   },
   "FISV": {
     "symbol": "FISV",
-    "fetched": "2026-08-01T14:57:50.425532+00:00",
+    "fetched": "2026-08-08T14:29:10.591251+00:00",
     "broken": true
   },
   "F": {
@@ -11126,24 +11126,46 @@
   },
   "HONA": {
     "symbol": "HONA",
-    "fetched": "2026-07-04T15:02:56.006242+00:00",
-    "revenue_ttm": 17681999872,
+    "fetched": "2026-08-08T14:29:11.181455+00:00",
+    "revenue_ttm": 17915000832,
     "gp_to_assets": null,
-    "op_margin_ttm": 0.20152001,
-    "net_margin_ttm": 0.14388,
+    "op_margin_ttm": 0.14684,
+    "net_margin_ttm": 0.10862,
     "debt_to_equity": null,
     "operating_income_positive_count": 3,
-    "gross_margin_ttm": 0.34894,
+    "gross_margin_ttm": 0.34535,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": null,
+    "roce_ttm": 0.051592615389393755,
     "fcf_margin": null,
     "fcf_to_ocf": null,
-    "rev_cagr_3y": 0.068,
+    "rev_cagr_3y": 0.054,
     "gm_trend_3y": null,
     "op_margin_trend_2y": null,
     "rd_intensity": null,
     "interest_coverage": null,
     "payout_ratio": 0.0
+  },
+  "FERG": {
+    "symbol": "FERG",
+    "fetched": "2026-08-08T14:29:10.013983+00:00",
+    "revenue_ttm": 31058200576,
+    "gp_to_assets": null,
+    "op_margin_ttm": 0.08137,
+    "net_margin_ttm": 0.06296,
+    "debt_to_equity": 1.03524,
+    "operating_income_positive_count": 3,
+    "gross_margin_ttm": 0.30697,
+    "roa_ttm": null,
+    "roe_ttm": null,
+    "roce_ttm": 0.055276882899862836,
+    "fcf_margin": null,
+    "fcf_to_ocf": null,
+    "rev_cagr_3y": 0.036,
+    "gm_trend_3y": null,
+    "op_margin_trend_2y": null,
+    "rd_intensity": null,
+    "interest_coverage": null,
+    "payout_ratio": 0.3327
   }
 }

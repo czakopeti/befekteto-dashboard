@@ -3561,5 +3561,12 @@
     "sector": "Industrials",
     "industry": "Aerospace & Defense",
     "fetched": "2026-07-04T15:02:56.216063+00:00"
+  },
+  "FERG": {
+    "symbol": "FERG",
+    "name": "Ferguson Enterprises Inc.",
+    "sector": "Industrials",
+    "industry": "Industrial Distribution",
+    "fetched": "2026-08-08T14:29:11.699149+00:00"
   }
 }
