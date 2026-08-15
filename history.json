@@ -1,22 +1,5 @@
 [
   {
-    "date": "2026-03-17",
-    "spx": 6721,
-    "entryScore": 88,
-    "corrProb": 15,
-    "regime": "extreme_fear",
-    "kellyAlloc": 58,
-    "vix": 22.9,
-    "hySpread": 3.27,
-    "breadth": 32,
-    "cnnFG": 22,
-    "yieldCurve": 55,
-    "recProb": 0.8,
-    "leiSignal": "bull",
-    "m2Yoy": 4.0,
-    "cgTrend": "bear"
-  },
-  {
     "date": "2026-03-20",
     "spx": 6489,
     "entryScore": 84,
@@ -1078,5 +1061,29 @@
     "afCur": -0.0314,
     "termSignal": "bull",
     "termRatio": 0.784
+  },
+  {
+    "date": "2026-08-15",
+    "spx": 7786,
+    "entryScore": 47,
+    "corrProb": 26,
+    "playbook": "wait",
+    "regime": "bull",
+    "kellyAlloc": 8,
+    "vix": 14.2,
+    "hySpread": 2.71,
+    "breadth": 74,
+    "cnnFG": 65,
+    "yieldCurve": 51,
+    "recProb": 0.6,
+    "leiSignal": "bull",
+    "m2Yoy": 5.1,
+    "cgTrend": "bear",
+    "gex": 15192866703.359991,
+    "gexSignal": "bull",
+    "afSignal": "bear",
+    "afCur": -0.0325,
+    "termSignal": "bull",
+    "termRatio": 0.772
   }
 ]
