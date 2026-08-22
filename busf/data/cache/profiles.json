@@ -3568,5 +3568,19 @@
     "sector": "Industrials",
     "industry": "Industrial Distribution",
     "fetched": "2026-08-08T14:29:11.699149+00:00"
+  },
+  "RDDT": {
+    "symbol": "RDDT",
+    "name": "Reddit, Inc.",
+    "sector": "Communication Services",
+    "industry": "Internet Content & Information",
+    "fetched": "2026-08-22T14:21:25.029558+00:00"
+  },
+  "VMRK": {
+    "symbol": "VMRK",
+    "name": "Vivmark Residential",
+    "sector": "Unknown",
+    "industry": "Unknown",
+    "fetched": "2026-08-22T14:21:25.269678+00:00"
   }
 }
