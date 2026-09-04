@@ -1,12 +1,6 @@
 {
-  "last_run": "2026-08-29T11:59:41.344906",
-  "status": "PARTIAL",
-  "errors": [
-    {
-      "source": "SPX",
-      "error": "cannot convert float NaN to integer",
-      "time": "2026-08-29T11:59:28.067057"
-    }
-  ],
-  "success_count": 13
+  "last_run": "2026-09-04T18:13:48.215433",
+  "status": "OK",
+  "errors": [],
+  "success_count": 14
 }
