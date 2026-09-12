@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-09-05T16:30:55.854828+00:00",
+    "fetched": "2026-09-12T16:44:36.630071+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-09-05T16:30:56.640022+00:00",
+    "fetched": "2026-09-12T16:44:37.048732+00:00",
     "broken": true
   },
   "BLDR": {
@@ -4411,7 +4411,7 @@
   },
   "FISV": {
     "symbol": "FISV",
-    "fetched": "2026-09-05T16:30:57.369136+00:00",
+    "fetched": "2026-09-12T16:44:37.876974+00:00",
     "broken": true
   },
   "F": {
@@ -11126,7 +11126,7 @@
   },
   "HONA": {
     "symbol": "HONA",
-    "fetched": "2026-08-08T14:29:11.181455+00:00",
+    "fetched": "2026-09-12T16:44:38.490192+00:00",
     "revenue_ttm": 17915000832,
     "gp_to_assets": null,
     "op_margin_ttm": 0.14684,
@@ -11136,7 +11136,7 @@
     "gross_margin_ttm": 0.34535,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": 0.051592615389393755,
+    "roce_ttm": 0.054158358914938656,
     "fcf_margin": null,
     "fcf_to_ocf": null,
     "rev_cagr_3y": 0.054,
@@ -11148,20 +11148,20 @@
   },
   "FERG": {
     "symbol": "FERG",
-    "fetched": "2026-08-08T14:29:10.013983+00:00",
-    "revenue_ttm": 31058200576,
+    "fetched": "2026-09-12T16:44:37.463905+00:00",
+    "revenue_ttm": 31446200320,
     "gp_to_assets": null,
-    "op_margin_ttm": 0.08137,
-    "net_margin_ttm": 0.06296,
-    "debt_to_equity": 1.03524,
+    "op_margin_ttm": 0.10159001,
+    "net_margin_ttm": 0.063200004,
+    "debt_to_equity": 1.11063,
     "operating_income_positive_count": 3,
-    "gross_margin_ttm": 0.30697,
+    "gross_margin_ttm": 0.30633,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": 0.055276882899862836,
+    "roce_ttm": 0.06203111025000255,
     "fcf_margin": null,
     "fcf_to_ocf": null,
-    "rev_cagr_3y": 0.036,
+    "rev_cagr_3y": 0.046,
     "gm_trend_3y": null,
     "op_margin_trend_2y": null,
     "rd_intensity": null,
