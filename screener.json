@@ -2,8 +2,8 @@
   "stocks": [
     {
       "ticker": "NFLX",
-      "price": 71.25,
-      "vsMA200": -15.9,
+      "price": 71.15,
+      "vsMA200": -16.0,
       "name": "Netflix, Inc.",
       "sector": "Communication Services",
       "roe": 49.5,
@@ -16,8 +16,8 @@
     },
     {
       "ticker": "IDXX",
-      "price": 516.15,
-      "vsMA200": -12.9,
+      "price": 519.26,
+      "vsMA200": -12.3,
       "name": "IDEXX Laboratories, Inc.",
       "sector": "Healthcare",
       "roe": 74.2,
@@ -26,12 +26,12 @@
       "qualityScore": 87,
       "analystEpsGrowth": 19.4,
       "epsRevPositive": true,
-      "analystPriceTarget": 698.92
+      "analystPriceTarget": 701.33
     },
     {
       "ticker": "ADBE",
-      "price": 235.85,
-      "vsMA200": -10.2,
+      "price": 235.47,
+      "vsMA200": -10.4,
       "name": "Adobe Inc.",
       "sector": "Technology",
       "roe": 61.9,
@@ -44,8 +44,8 @@
     },
     {
       "ticker": "TJX",
-      "price": 129.78,
-      "vsMA200": -14.8,
+      "price": 130.06,
+      "vsMA200": -14.6,
       "name": "TJX Companies, Inc. (The)",
       "sector": "Consumer Cyclical",
       "roe": 62.2,
@@ -57,22 +57,8 @@
       "analystPriceTarget": 169.8
     },
     {
-      "ticker": "CRS",
-      "price": 394.88,
-      "vsMA200": -10.1,
-      "name": "Carpenter Technology Corporatio",
-      "sector": "Industrials",
-      "roe": 25.8,
-      "roi": 11.9,
-      "de": 0.33,
-      "qualityScore": 70,
-      "analystEpsGrowth": 51.2,
-      "epsRevPositive": true,
-      "analystPriceTarget": 625.88
-    },
-    {
       "ticker": "SYK",
-      "price": 272.45,
+      "price": 272.36,
       "vsMA200": -17.7,
       "name": "Stryker Corporation",
       "sector": "Healthcare",
@@ -80,14 +66,28 @@
       "roi": 8.2,
       "de": 0.64,
       "qualityScore": 67,
-      "analystEpsGrowth": 73.1,
+      "analystEpsGrowth": 73.5,
       "epsRevPositive": true,
       "analystPriceTarget": 369.0
     },
     {
+      "ticker": "CRS",
+      "price": 396.84,
+      "vsMA200": -9.7,
+      "name": "Carpenter Technology Corporatio",
+      "sector": "Industrials",
+      "roe": 25.8,
+      "roi": 11.9,
+      "de": 0.33,
+      "qualityScore": 65,
+      "analystEpsGrowth": 51.0,
+      "epsRevPositive": true,
+      "analystPriceTarget": 625.88
+    },
+    {
       "ticker": "ISRG",
-      "price": 402.36,
-      "vsMA200": -10.8,
+      "price": 405.18,
+      "vsMA200": -10.1,
       "name": "Intuitive Surgical, Inc.",
       "sector": "Healthcare",
       "roe": 17.4,
@@ -100,20 +100,20 @@
     },
     {
       "ticker": "ACN",
-      "price": 177.0,
-      "vsMA200": -9.4,
+      "price": 176.11,
+      "vsMA200": -9.9,
       "name": "Accenture plc",
       "sector": "Technology",
       "roe": 24.4,
       "roi": 10.9,
       "de": 0.25,
       "qualityScore": 45,
-      "analystEpsGrowth": 17.1,
+      "analystEpsGrowth": 17.2,
       "epsRevPositive": true,
       "analystPriceTarget": 192.49
     }
   ],
-  "updated": "2026-09-25T19:11:34.793590",
+  "updated": "2026-09-26T10:31:59.902481",
   "count": 8,
   "params": {
     "sma200_min": -30.0,
