@@ -1,23 +1,6 @@
 [
   {
     "date": "2026-05-08",
-    "spx": 7337,
-    "entryScore": 53,
-    "corrProb": 28,
-    "regime": "bull",
-    "kellyAlloc": 10,
-    "vix": 17.0,
-    "hySpread": 2.75,
-    "breadth": 50,
-    "cnnFG": 67,
-    "yieldCurve": 49,
-    "recProb": 1.8,
-    "leiSignal": "bull",
-    "m2Yoy": 4.2,
-    "cgTrend": "bull"
-  },
-  {
-    "date": "2026-05-08",
     "spx": 7397,
     "entryScore": 64,
     "corrProb": 10,
@@ -1176,5 +1159,29 @@
     "afCur": 0.1335,
     "termSignal": "bull",
     "termRatio": 0.852
+  },
+  {
+    "date": "2026-10-03",
+    "spx": 7723,
+    "entryScore": 72,
+    "corrProb": 4,
+    "playbook": "caut_buy",
+    "regime": "bull",
+    "kellyAlloc": 24,
+    "vix": 15.3,
+    "hySpread": 3.24,
+    "breadth": 38,
+    "cnnFG": 31,
+    "yieldCurve": 45,
+    "recProb": 0.6,
+    "leiSignal": "bull",
+    "m2Yoy": 5.3,
+    "cgTrend": "bull",
+    "gex": 7693512554.449996,
+    "gexSignal": "bull",
+    "afSignal": "bull",
+    "afCur": 0.1338,
+    "termSignal": "bull",
+    "termRatio": 0.85
   }
 ]
