@@ -3603,5 +3603,26 @@
     "sector": "Healthcare",
     "industry": "Diagnostics & Research",
     "fetched": "2026-09-26T17:39:47.651923+00:00"
+  },
+  "SKYD": {
+    "symbol": "SKYD",
+    "name": "Paramount Skydance Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "fetched": "2026-10-10T18:12:51.421840+00:00"
+  },
+  "TWLO": {
+    "symbol": "TWLO",
+    "name": "Twilio Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-10-10T18:12:51.532381+00:00"
+  },
+  "VYLR": {
+    "symbol": "VYLR",
+    "name": "Vylor Inc.",
+    "sector": "Financial Services",
+    "industry": "Shell Companies",
+    "fetched": "2026-10-10T18:12:51.729577+00:00"
   }
 }
