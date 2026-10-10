@@ -38,9 +38,9 @@
       "roi": 9.7,
       "de": 0.67,
       "qualityScore": 80,
-      "analystEpsGrowth": 44.8,
+      "analystEpsGrowth": 44.7,
       "epsRevPositive": true,
-      "analystPriceTarget": 170.96
+      "analystPriceTarget": 170.87
     },
     {
       "ticker": "ADBE",
@@ -73,7 +73,7 @@
     {
       "ticker": "TJX",
       "price": 138.76,
-      "vsMA200": -8.3,
+      "vsMA200": -8.4,
       "name": "TJX Companies, Inc. (The)",
       "sector": "Consumer Cyclical",
       "roe": 62.2,
@@ -100,7 +100,7 @@
     },
     {
       "ticker": "SYK",
-      "price": 277.32,
+      "price": 277.33,
       "vsMA200": -15.0,
       "name": "Stryker Corporation",
       "sector": "Healthcare",
@@ -108,13 +108,13 @@
       "roi": 8.2,
       "de": 0.64,
       "qualityScore": 67,
-      "analystEpsGrowth": 73.0,
+      "analystEpsGrowth": 72.9,
       "epsRevPositive": true,
-      "analystPriceTarget": 366.15
+      "analystPriceTarget": 364.23
     },
     {
       "ticker": "ALV",
-      "price": 109.8,
+      "price": 109.76,
       "vsMA200": -6.5,
       "name": "Autoliv, Inc.",
       "sector": "Consumer Cyclical",
@@ -124,10 +124,10 @@
       "qualityScore": 61,
       "analystEpsGrowth": 37.3,
       "epsRevPositive": true,
-      "analystPriceTarget": 134.31
+      "analystPriceTarget": 134.25
     }
   ],
-  "updated": "2026-10-09T20:03:20.474798",
+  "updated": "2026-10-10T11:37:10.879999",
   "count": 9,
   "params": {
     "sma200_min": -30.0,
