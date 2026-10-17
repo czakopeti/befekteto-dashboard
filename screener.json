@@ -2,8 +2,8 @@
   "stocks": [
     {
       "ticker": "WDC",
-      "price": 338.39,
-      "vsMA200": -17.5,
+      "price": 332.0,
+      "vsMA200": -19.1,
       "name": "Western Digital Corporation",
       "sector": "Technology",
       "roe": 130.9,
@@ -15,37 +15,51 @@
       "analystPriceTarget": 668.5
     },
     {
+      "ticker": "AVGO",
+      "price": 328.75,
+      "vsMA200": -10.4,
+      "name": "Broadcom Inc.",
+      "sector": "Technology",
+      "roe": 44.2,
+      "roi": 15.4,
+      "de": 0.6,
+      "qualityScore": 82,
+      "analystEpsGrowth": 155.5,
+      "epsRevPositive": true,
+      "analystPriceTarget": 527.59
+    },
+    {
       "ticker": "NFLX",
-      "price": 70.28,
-      "vsMA200": -15.2,
+      "price": 70.53,
+      "vsMA200": -14.9,
       "name": "Netflix, Inc.",
       "sector": "Communication Services",
       "roe": 49.5,
       "roi": 16.1,
       "de": 0.55,
-      "qualityScore": 87,
-      "analystEpsGrowth": 19.6,
+      "qualityScore": 82,
+      "analystEpsGrowth": 19.5,
       "epsRevPositive": true,
-      "analystPriceTarget": 91.95
+      "analystPriceTarget": 91.39
     },
     {
       "ticker": "LRCX",
-      "price": 265.66,
-      "vsMA200": -5.6,
+      "price": 263.94,
+      "vsMA200": -6.2,
       "name": "Lam Research Corporation",
       "sector": "Technology",
       "roe": 65.1,
       "roi": 22.8,
       "de": 0.33,
       "qualityScore": 82,
-      "analystEpsGrowth": 104.3,
+      "analystEpsGrowth": 104.2,
       "epsRevPositive": true,
       "analystPriceTarget": 375.81
     },
     {
       "ticker": "AMAT",
-      "price": 414.52,
-      "vsMA200": -5.4,
+      "price": 409.29,
+      "vsMA200": -6.6,
       "name": "Applied Materials, Inc.",
       "sector": "Technology",
       "roe": 41.1,
@@ -54,12 +68,12 @@
       "qualityScore": 80,
       "analystEpsGrowth": 59.2,
       "epsRevPositive": true,
-      "analystPriceTarget": 632.28
+      "analystPriceTarget": 627.83
     },
     {
       "ticker": "KLAC",
-      "price": 168.06,
-      "vsMA200": -7.0,
+      "price": 165.74,
+      "vsMA200": -8.3,
       "name": "KLA Corporation",
       "sector": "Technology",
       "roe": 87.5,
@@ -71,23 +85,9 @@
       "analystPriceTarget": 232.77
     },
     {
-      "ticker": "AVGO",
-      "price": 330.77,
-      "vsMA200": -9.9,
-      "name": "Broadcom Inc.",
-      "sector": "Technology",
-      "roe": 44.2,
-      "roi": 15.4,
-      "de": 0.6,
-      "qualityScore": 77,
-      "analystEpsGrowth": 155.5,
-      "epsRevPositive": true,
-      "analystPriceTarget": 527.59
-    },
-    {
       "ticker": "CRS",
-      "price": 377.29,
-      "vsMA200": -15.0,
+      "price": 377.09,
+      "vsMA200": -15.1,
       "name": "Carpenter Technology Corporatio",
       "sector": "Industrials",
       "roe": 25.8,
@@ -100,8 +100,8 @@
     },
     {
       "ticker": "PODD",
-      "price": 141.4,
-      "vsMA200": -23.9,
+      "price": 141.1,
+      "vsMA200": -24.0,
       "name": "Insulet Corporation",
       "sector": "Healthcare",
       "roe": 26.0,
@@ -114,8 +114,8 @@
     },
     {
       "ticker": "INTU",
-      "price": 322.46,
-      "vsMA200": -13.3,
+      "price": 325.15,
+      "vsMA200": -12.6,
       "name": "Intuit Inc.",
       "sector": "Technology",
       "roe": 23.6,
@@ -128,7 +128,7 @@
     },
     {
       "ticker": "SYK",
-      "price": 294.47,
+      "price": 294.66,
       "vsMA200": -9.3,
       "name": "Stryker Corporation",
       "sector": "Healthcare",
@@ -136,12 +136,12 @@
       "roi": 8.2,
       "de": 0.64,
       "qualityScore": 57,
-      "analystEpsGrowth": 72.9,
+      "analystEpsGrowth": 66.7,
       "epsRevPositive": true,
       "analystPriceTarget": 362.62
     }
   ],
-  "updated": "2026-10-16T18:42:34.899033",
+  "updated": "2026-10-17T09:55:20.748843",
   "count": 10,
   "params": {
     "sma200_min": -30.0,
