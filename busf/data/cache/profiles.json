@@ -3624,5 +3624,12 @@
     "sector": "Financial Services",
     "industry": "Shell Companies",
     "fetched": "2026-10-10T18:12:51.729577+00:00"
+  },
+  "OKTA": {
+    "symbol": "OKTA",
+    "name": "Okta, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "fetched": "2026-11-07T18:27:37.920804+00:00"
   }
 }
