@@ -10,9 +10,9 @@
       "roi": 53.6,
       "de": 0.17,
       "qualityScore": 100,
-      "analystEpsGrowth": 100.2,
+      "analystEpsGrowth": 100.4,
       "epsRevPositive": true,
-      "analystPriceTarget": 285.35
+      "analystPriceTarget": 283.31
     },
     {
       "ticker": "LRCX",
@@ -66,9 +66,9 @@
       "roi": 17.4,
       "de": 0.25,
       "qualityScore": 90,
-      "analystEpsGrowth": 94.5,
+      "analystEpsGrowth": 95.0,
       "epsRevPositive": true,
-      "analystPriceTarget": 608.28
+      "analystPriceTarget": 588.61
     },
     {
       "ticker": "KLAC",
@@ -96,7 +96,7 @@
       "qualityScore": 77,
       "analystEpsGrowth": 147.9,
       "epsRevPositive": true,
-      "analystPriceTarget": 533.42
+      "analystPriceTarget": 529.24
     },
     {
       "ticker": "GOOGL",
@@ -138,7 +138,7 @@
       "qualityScore": 75,
       "analystEpsGrowth": 6.3,
       "epsRevPositive": true,
-      "analystPriceTarget": 167.75
+      "analystPriceTarget": 167.5
     },
     {
       "ticker": "PODD",
@@ -155,7 +155,7 @@
       "analystPriceTarget": 178.57
     }
   ],
-  "updated": "2026-11-13T21:19:13.810682",
+  "updated": "2026-11-14T12:44:06.408267",
   "count": 11,
   "params": {
     "sma200_min": -30.0,
