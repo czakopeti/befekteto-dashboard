@@ -1343,7 +1343,7 @@
   },
   "BRK.B": {
     "symbol": "BRK.B",
-    "fetched": "2026-11-14T18:56:24.459866+00:00",
+    "fetched": "2026-11-21T20:21:08.379049+00:00",
     "broken": true
   },
   "BBY": {
@@ -1656,7 +1656,7 @@
   },
   "BF.B": {
     "symbol": "BF.B",
-    "fetched": "2026-11-14T18:56:25.635775+00:00",
+    "fetched": "2026-11-21T20:21:08.754056+00:00",
     "broken": true
   },
   "BLDR": {
@@ -4411,7 +4411,7 @@
   },
   "FISV": {
     "symbol": "FISV",
-    "fetched": "2026-11-14T18:56:26.724592+00:00",
+    "fetched": "2026-11-21T20:21:09.444173+00:00",
     "broken": true
   },
   "F": {
@@ -11126,20 +11126,20 @@
   },
   "HONA": {
     "symbol": "HONA",
-    "fetched": "2026-10-17T16:49:37.466879+00:00",
-    "revenue_ttm": 17915000832,
+    "fetched": "2026-11-21T20:21:09.752059+00:00",
+    "revenue_ttm": 18026000384,
     "gp_to_assets": null,
-    "op_margin_ttm": 0.14684,
-    "net_margin_ttm": 0.10862,
+    "op_margin_ttm": 0.21058,
+    "net_margin_ttm": 0.1125,
     "debt_to_equity": null,
     "operating_income_positive_count": 3,
-    "gross_margin_ttm": 0.34535,
+    "gross_margin_ttm": 0.34644002,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": 0.051692962405178094,
+    "roce_ttm": 0.0681775956054897,
     "fcf_margin": null,
     "fcf_to_ocf": null,
-    "rev_cagr_3y": 0.054,
+    "rev_cagr_3y": 0.024,
     "gm_trend_3y": null,
     "op_margin_trend_2y": null,
     "rd_intensity": null,
@@ -11148,20 +11148,20 @@
   },
   "FERG": {
     "symbol": "FERG",
-    "fetched": "2026-10-17T16:49:36.729050+00:00",
-    "revenue_ttm": 31446200320,
+    "fetched": "2026-11-21T20:21:09.135996+00:00",
+    "revenue_ttm": 32227201024,
     "gp_to_assets": null,
-    "op_margin_ttm": 0.10159001,
-    "net_margin_ttm": 0.063200004,
-    "debt_to_equity": 1.11063,
+    "op_margin_ttm": 0.0861,
+    "net_margin_ttm": 0.06043,
+    "debt_to_equity": 1.22886,
     "operating_income_positive_count": 3,
-    "gross_margin_ttm": 0.30633,
+    "gross_margin_ttm": 0.30521,
     "roa_ttm": null,
     "roe_ttm": null,
-    "roce_ttm": 0.059907619288500406,
+    "roce_ttm": 0.05853481108281183,
     "fcf_margin": null,
     "fcf_to_ocf": null,
-    "rev_cagr_3y": 0.046,
+    "rev_cagr_3y": 0.095,
     "gm_trend_3y": null,
     "op_margin_trend_2y": null,
     "rd_intensity": null,
