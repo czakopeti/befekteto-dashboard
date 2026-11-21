@@ -10,7 +10,7 @@
       "roi": 17.1,
       "de": 0.6,
       "qualityScore": 92,
-      "analystEpsGrowth": 9.0,
+      "analystEpsGrowth": 8.9,
       "epsRevPositive": true,
       "analystPriceTarget": 84.76
     },
@@ -54,7 +54,7 @@
       "qualityScore": 85,
       "analystEpsGrowth": -20.1,
       "epsRevPositive": false,
-      "analystPriceTarget": 400.15
+      "analystPriceTarget": 397.13
     },
     {
       "ticker": "GOOG",
@@ -96,7 +96,7 @@
       "qualityScore": 80,
       "analystEpsGrowth": 63.5,
       "epsRevPositive": true,
-      "analystPriceTarget": 407.08
+      "analystPriceTarget": 392.66
     },
     {
       "ticker": "PODD",
@@ -136,7 +136,7 @@
       "roi": 16.0,
       "de": 1.03,
       "qualityScore": 73,
-      "analystEpsGrowth": 57.6,
+      "analystEpsGrowth": 56.9,
       "epsRevPositive": true,
       "analystPriceTarget": 106.97
     },
@@ -146,13 +146,13 @@
       "vsMA200": -5.1,
       "name": "Ross Stores, Inc.",
       "sector": "Consumer Cyclical",
-      "roe": 42.6,
-      "roi": 12.8,
-      "de": 0.7,
+      "roe": 43.0,
+      "roi": 13.6,
+      "de": 0.71,
       "qualityScore": 73,
-      "analystEpsGrowth": 9.1,
+      "analystEpsGrowth": 4.9,
       "epsRevPositive": true,
-      "analystPriceTarget": 270.47
+      "analystPriceTarget": 265.11
     },
     {
       "ticker": "CSCO",
@@ -192,7 +192,7 @@
       "roi": 13.0,
       "de": 1.25,
       "qualityScore": 62,
-      "analystEpsGrowth": 4.1,
+      "analystEpsGrowth": 3.5,
       "epsRevPositive": true,
       "analystPriceTarget": 165.55
     },
@@ -251,24 +251,10 @@
       "analystEpsGrowth": 67.3,
       "epsRevPositive": true,
       "analystPriceTarget": 272.32
-    },
-    {
-      "ticker": "GAP",
-      "price": 20.94,
-      "vsMA200": -6.4,
-      "name": "Gap, Inc. (The)",
-      "sector": "Consumer Cyclical",
-      "roe": 33.6,
-      "roi": 8.5,
-      "de": 1.37,
-      "qualityScore": 48,
-      "analystEpsGrowth": -16.7,
-      "epsRevPositive": false,
-      "analystPriceTarget": 26.26
     }
   ],
-  "updated": "2026-11-20T22:11:06.866664",
-  "count": 19,
+  "updated": "2026-11-21T13:55:21.299309",
+  "count": 18,
   "params": {
     "sma200_min": -30.0,
     "sma200_max": -5.0,
