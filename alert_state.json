@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-22",
-  "vix": 35.9,
-  "spx": 6910,
+  "date": "2026-11-23",
+  "vix": 27.6,
+  "spx": 7254,
   "gex_neg": true,
   "af_lila": false,
-  "trigger_weight": 7
+  "trigger_weight": 3
 }
