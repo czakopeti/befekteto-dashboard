@@ -10,7 +10,7 @@
       "roi": 56.0,
       "de": 0.14,
       "qualityScore": 100,
-      "analystEpsGrowth": 78.4,
+      "analystEpsGrowth": 77.0,
       "epsRevPositive": true,
       "analystPriceTarget": 242.43
     },
@@ -24,7 +24,7 @@
       "roi": 17.4,
       "de": 0.25,
       "qualityScore": 95,
-      "analystEpsGrowth": 96.3,
+      "analystEpsGrowth": 89.7,
       "epsRevPositive": true,
       "analystPriceTarget": 557.37
     },
@@ -66,7 +66,7 @@
       "roi": 17.1,
       "de": 0.6,
       "qualityScore": 92,
-      "analystEpsGrowth": 8.9,
+      "analystEpsGrowth": 6.2,
       "epsRevPositive": true,
       "analystPriceTarget": 84.55
     },
@@ -164,12 +164,12 @@
       "roi": 10.5,
       "de": 0.41,
       "qualityScore": 57,
-      "analystEpsGrowth": 95.7,
+      "analystEpsGrowth": 90.1,
       "epsRevPositive": true,
       "analystPriceTarget": 411.89
     }
   ],
-  "updated": "2026-11-27T23:18:36.441574",
+  "updated": "2026-11-28T14:46:38.608276",
   "count": 12,
   "params": {
     "sma200_min": -30.0,
